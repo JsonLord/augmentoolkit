@@ -5,7 +5,7 @@ colorFrom: blue
 colorTo: gray
 sdk: docker
 app_port: 7860
-license: apache-2.0
+license: mit
 ---
 
 Separate stateless PP-OCRv6 Small CPU worker. This is not the existing Augmentoolkit

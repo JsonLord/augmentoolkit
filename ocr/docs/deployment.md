@@ -12,7 +12,7 @@ application is necessary. Keep TLS and package/model checksum verification enabl
 ```sh
 python3.11 -m venv /tmp/ocr-venv
 /tmp/ocr-venv/bin/pip install --require-hashes -r ocr/requirements.lock
-/tmp/ocr-venv/bin/pip install pytest==9.1.1 pytest-asyncio==1.4.0
+/tmp/ocr-venv/bin/pip install -r ocr/requirements-dev.txt
 export OCR_MODELS_DIR=/opt/ocr-models  # select an operator-writable location
 /tmp/ocr-venv/bin/python -m ocr.download_models
 /tmp/ocr-venv/bin/python -m pytest -c pytest-ocr.ini

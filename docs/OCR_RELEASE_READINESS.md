@@ -138,5 +138,40 @@ No database migration or rollback of existing services is required.
 
 ## Validation addendum
 
-Pending final committed-source two-CPU container measurement. No release-ready
-claim is made while the external gates above remain unresolved.
+Implementation commit: `8ddd0399fb5f1b4ebcefee6b5d4d19583d8f2a81`.
+The subsequent release-evidence commit adds benchmark aggregates, tests, development-check configuration and license/
+documentation metadata; it does not change runtime Python code. Obtain that final
+review commit with `git rev-parse HEAD` on `implement/hybrid-ocr`.
+
+Tested image: `hybrid-ocr-cpu:8ddd039`, immutable image ID
+`sha256:32d30b74a9dafb3bd9acabfc5704f7000b91facb59626a494fed5cbbea0ad907`.
+Runtime Python source SHA256 (excluding tests):
+`38d3e21011ee66c34b7210dc09accac1c18f394bb30c7ec7edc32fddfdb3f0e0`.
+The final source tree was independently compared with that measured digest.
+
+Final suite with real CPU enabled: **57 passed, 1 skipped** (live alias deferred).
+Offline suite: **55 passed, 3 skipped** (two CPU live tests and one alias live test).
+Ruff check passes. CLI DE scanned PDF and EN raster both completed with the real
+CPU engine. Final committed-image HTTP smoke passed liveness, warmed readiness,
+authenticated OCR, normalized geometry and rejection of unauthorized requests.
+Test bearer token and OCR text were confirmed absent from worker logs. The test
+container had networking disabled, a read-only root, 2 CPU/2 GiB limits and no host
+ports. It was removed after validation; original listeners stayed unchanged.
+
+Final measurements: `docs/ocr-benchmarks/two-cpu-container.json`. The runtime
+cgroup files confirmed `cpu.max = 200000 100000` and `memory.max = 2147483648`.
+Python 3.11.17, Linux/glibc 2.36, ORT intra-op 2/inter-op 1, OpenCV 2 threads.
+16 fixtures x 3 runs, zero backend fixture failures (quality errors still occur).
+Model init **3.60 s**; OCR p50 **1.89 s**, p95 **3.59 s**, p99 **3.83 s**;
+peak process RSS **930.4 MiB**, CPU time **411.48 s**, measured wall **206.93 s**.
+20 mixed pages: **19.19 s / 62.52 pages per minute**; 100 mixed pages:
+**102.72 s / 58.41 pages per minute**. Both stayed ordered with half embedded/half
+CPU routes; GPU calls were zero. Clean printed DE/EN fixtures had CER/WER zero
+on this synthetic corpus. Final blur CER **3.23%**, WER recorded in the aggregate;
+rotation CER **78.49%**. Both receive review flags. Table rulings can also trigger
+the conservative contrast proxy; it is not a calibrated universal quality score.
+
+Reproduction commands are in `ocr/docs/benchmark.md`. These results validate this
+local constrained container, not an actual HF CPU Basic Space or live hybrid lane.
+Overflow remains off and D2 remote routing remains blocked. Production release
+qualification remains incomplete for the external and corpus gates above.

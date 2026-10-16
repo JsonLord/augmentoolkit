@@ -99,3 +99,49 @@ def test_untrusted_geometry_rejected():
         with pytest.raises(ValidationError):
             Block(bbox_1000=box)
     assert Block(text="plain Markdown").bbox_1000 is None
+
+
+@pytest.mark.parametrize("valid", [True, False])
+async def test_probe_does_not_qualify_destination(monkeypatch, valid):
+    monkeypatch.setattr("secrets.token_hex", lambda n: "abcd99")
+
+    def handle(request):
+        body = json.loads(request.content)
+        assert "ABCD99" not in body["messages"][0]["content"][1]["text"]
+        return httpx.Response(
+            200,
+            json={
+                "model": "lightonai/LightOnOCR-3-4B",
+                "provider": "helmholtz",
+                "choices": [
+                    {
+                        "finish_reason": "stop",
+                        "message": {"content": "OCR ABCD99" if valid else "empty white image"},
+                    }
+                ],
+            },
+        )
+
+    a = FreeLLMAlias("http://127.0.0.1:1/v1", "fake", transport=httpx.MockTransport(handle))
+    try:
+        if valid:
+            report = await a.probe()
+            assert report["multimodal_verified"] and report["observed_provider"] == "helmholtz"
+            assert not report["d2_qualified"] and not report["effective_destination_verified"]
+            assert not (await a.capabilities()).grounding_verified
+            from ocr.config import Settings
+            from ocr.security import authorize
+
+            with pytest.raises(SafeError, match="no_authorized_destination"):
+                authorize(
+                    a,
+                    OCROptions(sensitivity="D2"),
+                    Settings(gpu_enabled=True),
+                    await a.capabilities(),
+                )
+        else:
+            with pytest.raises(SafeError, match="alias_multimodal_probe_failed"):
+                await a.probe()
+            assert not a.qualified
+    finally:
+        await a.close()

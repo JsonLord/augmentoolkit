@@ -1,0 +1,307 @@
+{
+  "schema_version": "ocr-benchmark/v1",
+  "commit": "8ddd0399fb5f1b4ebcefee6b5d4d19583d8f2a81",
+  "runtime_sha256": "38d3e21011ee66c34b7210dc09accac1c18f394bb30c7ec7edc32fddfdb3f0e0",
+  "cpu_quota": "200000 100000",
+  "memory_limit": "2147483648",
+  "platform": "Linux-6.18.44-x86_64-with-glibc2.36",
+  "python": "3.11.17",
+  "logical_cpus": 5,
+  "engine": "PP-OCRv6 Small / RapidOCR 3.10.0 / ORT CPU 1.24.1",
+  "model_init_ms": 3595.959178999692,
+  "warm_latency_ms": {
+    "50": 1889.9117270002534,
+    "95": 3590.965072749941,
+    "99": 3830.9482667899997
+  },
+  "failed_fixtures": 0,
+  "process_threads": 6,
+  "peak_rss_mib": 930.37890625,
+  "cpu_seconds": 411.47800997999997,
+  "wall_seconds": 206.93127284900038,
+  "rows": [
+    {
+      "fixture": "en-100.png",
+      "category": "printed",
+      "source": "cpu_ocr",
+      "latency_ms": [
+        1622.9421879997972,
+        1905.572631000723,
+        1764.586624999538
+      ],
+      "cer": 0.0,
+      "wer": 0.0,
+      "lines": 3,
+      "flags": [],
+      "box_bounds_valid": true
+    },
+    {
+      "fixture": "en-200.png",
+      "category": "printed",
+      "source": "cpu_ocr",
+      "latency_ms": [
+        1480.2038199995877,
+        1282.0434150007713,
+        1974.4739679999839
+      ],
+      "cer": 0.0,
+      "wer": 0.0,
+      "lines": 3,
+      "flags": [],
+      "box_bounds_valid": true
+    },
+    {
+      "fixture": "en-300.png",
+      "category": "printed",
+      "source": "cpu_ocr",
+      "latency_ms": [
+        3397.7931999997963,
+        3586.3856309997573,
+        2198.0088099999193
+      ],
+      "cer": 0.0,
+      "wer": 0.0,
+      "lines": 3,
+      "flags": [],
+      "box_bounds_valid": true
+    },
+    {
+      "fixture": "en-text.pdf",
+      "category": "embedded",
+      "source": "embedded_text",
+      "latency_ms": [
+        0.6552490003741696,
+        0.391794000279333,
+        0.3862859994114842
+      ],
+      "cer": 0.0,
+      "wer": 0.0,
+      "lines": 0,
+      "flags": [
+        "text_layer_heuristic"
+      ],
+      "box_bounds_valid": true
+    },
+    {
+      "fixture": "de-100.png",
+      "category": "printed",
+      "source": "cpu_ocr",
+      "latency_ms": [
+        1443.5009799999534,
+        1284.3015250000462,
+        1469.1681079993941
+      ],
+      "cer": 0.0,
+      "wer": 0.0,
+      "lines": 3,
+      "flags": [],
+      "box_bounds_valid": true
+    },
+    {
+      "fixture": "de-200.png",
+      "category": "printed",
+      "source": "cpu_ocr",
+      "latency_ms": [
+        2794.6715409998433,
+        1723.2652120001148,
+        1706.5190089997486
+      ],
+      "cer": 0.0,
+      "wer": 0.0,
+      "lines": 3,
+      "flags": [],
+      "box_bounds_valid": true
+    },
+    {
+      "fixture": "de-300.png",
+      "category": "printed",
+      "source": "cpu_ocr",
+      "latency_ms": [
+        1997.1221129999321,
+        3629.874625999946,
+        3970.6774070000392
+      ],
+      "cer": 0.0,
+      "wer": 0.0,
+      "lines": 3,
+      "flags": [],
+      "box_bounds_valid": true
+    },
+    {
+      "fixture": "de-text.pdf",
+      "category": "embedded",
+      "source": "embedded_text",
+      "latency_ms": [
+        0.5543650004256051,
+        0.3310329993837513,
+        0.280702000054589
+      ],
+      "cer": 0.0,
+      "wer": 0.0,
+      "lines": 0,
+      "flags": [
+        "text_layer_heuristic"
+      ],
+      "box_bounds_valid": true
+    },
+    {
+      "fixture": "en-contrast.png",
+      "category": "contrast",
+      "source": "cpu_ocr",
+      "latency_ms": [
+        1799.9242880005113,
+        1336.0294280000744,
+        1274.3297469996833
+      ],
+      "cer": 0.0,
+      "wer": 0.0,
+      "lines": 3,
+      "flags": [
+        "low_contrast_or_blur",
+        "needs_review"
+      ],
+      "box_bounds_valid": true
+    },
+    {
+      "fixture": "en-blur.png",
+      "category": "blur",
+      "source": "cpu_ocr",
+      "latency_ms": [
+        2212.158717999955,
+        2062.101241000164,
+        1756.4150359994528
+      ],
+      "cer": 0.03225806451612903,
+      "wer": 0.3125,
+      "lines": 3,
+      "flags": [
+        "low_contrast_or_blur",
+        "needs_review"
+      ],
+      "box_bounds_valid": true
+    },
+    {
+      "fixture": "en-rotated.png",
+      "category": "rotated",
+      "source": "cpu_ocr",
+      "latency_ms": [
+        1961.3100289998329,
+        1640.0255359994844,
+        1256.888875000186
+      ],
+      "cer": 0.7849462365591398,
+      "wer": 1.0,
+      "lines": 3,
+      "flags": [
+        "low_confidence",
+        "needs_review"
+      ],
+      "box_bounds_valid": true
+    },
+    {
+      "fixture": "en-table.png",
+      "category": "table",
+      "source": "cpu_ocr",
+      "latency_ms": [
+        2851.843047999864,
+        2134.4047780003166,
+        2115.047854000295
+      ],
+      "cer": 0.0,
+      "wer": 0.0,
+      "lines": 3,
+      "flags": [
+        "low_contrast_or_blur",
+        "needs_review"
+      ],
+      "box_bounds_valid": true
+    },
+    {
+      "fixture": "columns.png",
+      "category": "columns",
+      "source": "cpu_ocr",
+      "latency_ms": [
+        1874.2508229997838,
+        2136.505866999869,
+        1749.9334659996748
+      ],
+      "cer": 0.0,
+      "wer": 0.0,
+      "lines": 4,
+      "flags": [],
+      "box_bounds_valid": true
+    },
+    {
+      "fixture": "receipt.png",
+      "category": "receipt",
+      "source": "cpu_ocr",
+      "latency_ms": [
+        2070.2654509996137,
+        3591.206095999951,
+        2915.891162999287
+      ],
+      "cer": 0.0,
+      "wer": 0.0,
+      "lines": 4,
+      "flags": [],
+      "box_bounds_valid": true
+    },
+    {
+      "fixture": "blank.png",
+      "category": "blank",
+      "source": "cpu_ocr",
+      "latency_ms": [
+        1395.098737999433,
+        718.4612890005155,
+        591.3523819999682
+      ],
+      "cer": 0.0,
+      "wer": 0.0,
+      "lines": 0,
+      "flags": [],
+      "box_bounds_valid": true
+    },
+    {
+      "fixture": "de-scan.pdf",
+      "category": "scanned_pdf",
+      "source": "cpu_ocr",
+      "latency_ms": [
+        1209.4452700002876,
+        1969.5916669998041,
+        2016.748410999753
+      ],
+      "cer": 0.0,
+      "wer": 0.0,
+      "lines": 3,
+      "flags": [],
+      "box_bounds_valid": true
+    }
+  ],
+  "batches": [
+    {
+      "pages": 20,
+      "seconds": 19.194309996999436,
+      "pages_per_minute": 62.518527635929125,
+      "ordered": true,
+      "embedded": 10,
+      "cpu": 10,
+      "mode": "cpu_only",
+      "gpu_calls": 0
+    },
+    {
+      "pages": 100,
+      "seconds": 102.7156528509995,
+      "pages_per_minute": 58.413687042457575,
+      "ordered": true,
+      "embedded": 50,
+      "cpu": 50,
+      "mode": "cpu_only",
+      "gpu_calls": 0
+    }
+  ],
+  "limitations": [
+    "Synthetic printed ground truth only; no human handwriting corpus",
+    "No live GPU, quota/cost, HF Basic, OpenVINO, table semantics or ground-truth box IoU qualification",
+    "No mixed CPU/GPU throughput gain measured; overflow remains disabled"
+  ]
+}

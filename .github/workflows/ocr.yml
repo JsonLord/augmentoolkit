@@ -15,5 +15,7 @@ jobs:
         with:
           python-version: '3.11'
       - run: python -m pip install --require-hashes -r ocr/requirements.lock
-      - run: python -m pip install pytest==9.1.1 pytest-asyncio==1.4.0
+      - run: python -m pip install -r ocr/requirements-dev.txt
+      - run: ruff check ocr
+      - run: ruff format --check ocr
       - run: python -m pytest -c pytest-ocr.ini
