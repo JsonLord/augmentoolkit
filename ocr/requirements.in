@@ -1,0 +1,11 @@
+rapidocr==3.10.0
+onnxruntime==1.24.1
+fastapi==0.143.3
+uvicorn==0.54.0
+httpx==0.28.1
+python-multipart==0.0.32
+pydantic==2.14.1
+pypdf==6.21.0
+pypdfium2==5.14.0
+Pillow==12.3.0
+psutil==7.2.2

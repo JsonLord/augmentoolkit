@@ -1,0 +1,296 @@
+{
+  "schema_version": "ocr-benchmark/v1",
+  "commit": "fe293a173364dfbfc0166f9dd26b0ed1eaef8c57",
+  "working_tree": "implementation under test",
+  "platform": "Linux-6.18.44-x86_64-with-glibc2.41",
+  "python": "3.11.17",
+  "logical_cpus": 5,
+  "engine": "PP-OCRv6 Small / RapidOCR 3.10.0 / ORT CPU 1.24.1",
+  "model_init_ms": 4382.919903000129,
+  "warm_latency_ms": {
+    "50": 1764.1342699998859,
+    "95": 3874.6057756996343,
+    "99": 4640.501022019865
+  },
+  "failed_fixtures": 0,
+  "process_threads": 8,
+  "peak_rss_mib": 855.80859375,
+  "cpu_seconds": 514.7974853359999,
+  "wall_seconds": 210.88657422799997,
+  "rows": [
+    {
+      "fixture": "en-100.png",
+      "category": "printed",
+      "source": "cpu_ocr",
+      "latency_ms": [
+        1265.6978420000087,
+        1083.183882999947,
+        1773.6152170000423
+      ],
+      "cer": 0.0,
+      "wer": 0.0,
+      "lines": 3,
+      "flags": [],
+      "box_bounds_valid": true
+    },
+    {
+      "fixture": "en-200.png",
+      "category": "printed",
+      "source": "cpu_ocr",
+      "latency_ms": [
+        1598.67793300009,
+        1644.8701419999452,
+        1664.9824769997394
+      ],
+      "cer": 0.0,
+      "wer": 0.0,
+      "lines": 3,
+      "flags": [],
+      "box_bounds_valid": true
+    },
+    {
+      "fixture": "en-300.png",
+      "category": "printed",
+      "source": "cpu_ocr",
+      "latency_ms": [
+        4874.460214999999,
+        4303.8280369996755,
+        2747.2261489997436
+      ],
+      "cer": 0.0,
+      "wer": 0.0,
+      "lines": 3,
+      "flags": [],
+      "box_bounds_valid": true
+    },
+    {
+      "fixture": "en-text.pdf",
+      "category": "embedded",
+      "source": "embedded_text",
+      "latency_ms": [
+        0.07334200017794501,
+        0.011021999853255693,
+        0.0057579995882406365
+      ],
+      "cer": 0.0,
+      "wer": 0.0,
+      "lines": 0,
+      "flags": [
+        "text_layer_heuristic"
+      ],
+      "box_bounds_valid": true
+    },
+    {
+      "fixture": "de-100.png",
+      "category": "printed",
+      "source": "cpu_ocr",
+      "latency_ms": [
+        1930.6157880000683,
+        1339.0913429998363,
+        1301.3972249996186
+      ],
+      "cer": 0.0,
+      "wer": 0.0,
+      "lines": 3,
+      "flags": [],
+      "box_bounds_valid": true
+    },
+    {
+      "fixture": "de-200.png",
+      "category": "printed",
+      "source": "cpu_ocr",
+      "latency_ms": [
+        1754.6533229997294,
+        1720.525386999725,
+        1331.3606930000788
+      ],
+      "cer": 0.0,
+      "wer": 0.0,
+      "lines": 3,
+      "flags": [],
+      "box_bounds_valid": true
+    },
+    {
+      "fixture": "de-300.png",
+      "category": "printed",
+      "source": "cpu_ocr",
+      "latency_ms": [
+        2348.95799800006,
+        3027.4807689997942,
+        3038.23642999987
+      ],
+      "cer": 0.0,
+      "wer": 0.0,
+      "lines": 3,
+      "flags": [],
+      "box_bounds_valid": true
+    },
+    {
+      "fixture": "de-text.pdf",
+      "category": "embedded",
+      "source": "embedded_text",
+      "latency_ms": [
+        0.05251199991107569,
+        0.01047000023390865,
+        0.006723999831592664
+      ],
+      "cer": 0.0,
+      "wer": 0.0,
+      "lines": 0,
+      "flags": [
+        "text_layer_heuristic"
+      ],
+      "box_bounds_valid": true
+    },
+    {
+      "fixture": "en-contrast.png",
+      "category": "contrast",
+      "source": "cpu_ocr",
+      "latency_ms": [
+        1698.406824000358,
+        1228.6145500002021,
+        1068.322013999932
+      ],
+      "cer": 0.0,
+      "wer": 0.0,
+      "lines": 3,
+      "flags": [],
+      "box_bounds_valid": true
+    },
+    {
+      "fixture": "en-blur.png",
+      "category": "blur",
+      "source": "cpu_ocr",
+      "latency_ms": [
+        1620.7388220000212,
+        1876.565649999975,
+        1376.9645409997793
+      ],
+      "cer": 0.043010752688172046,
+      "wer": 0.375,
+      "lines": 3,
+      "flags": [],
+      "box_bounds_valid": true
+    },
+    {
+      "fixture": "en-rotated.png",
+      "category": "rotated",
+      "source": "cpu_ocr",
+      "latency_ms": [
+        2383.857558999807,
+        3914.726031999635,
+        3070.725073000176
+      ],
+      "cer": 0.7849462365591398,
+      "wer": 0.9375,
+      "lines": 3,
+      "flags": [
+        "low_confidence",
+        "needs_review"
+      ],
+      "box_bounds_valid": true
+    },
+    {
+      "fixture": "en-table.png",
+      "category": "table",
+      "source": "cpu_ocr",
+      "latency_ms": [
+        2361.17147799996,
+        1952.0562789998621,
+        3112.3209059996952
+      ],
+      "cer": 0.0,
+      "wer": 0.0,
+      "lines": 3,
+      "flags": [],
+      "box_bounds_valid": true
+    },
+    {
+      "fixture": "columns.png",
+      "category": "columns",
+      "source": "cpu_ocr",
+      "latency_ms": [
+        2325.3139290000036,
+        1948.3778409999104,
+        2023.9306980001857
+      ],
+      "cer": 0.0,
+      "wer": 0.0,
+      "lines": 4,
+      "flags": [],
+      "box_bounds_valid": true
+    },
+    {
+      "fixture": "receipt.png",
+      "category": "receipt",
+      "source": "cpu_ocr",
+      "latency_ms": [
+        2093.9039139998386,
+        2162.063024999952,
+        2636.5405890001057
+      ],
+      "cer": 0.0,
+      "wer": 0.0,
+      "lines": 4,
+      "flags": [],
+      "box_bounds_valid": true
+    },
+    {
+      "fixture": "blank.png",
+      "category": "blank",
+      "source": "cpu_ocr",
+      "latency_ms": [
+        1093.0446730003496,
+        920.1276039998447,
+        790.6798320000235
+      ],
+      "cer": 0.0,
+      "wer": 0.0,
+      "lines": 0,
+      "flags": [],
+      "box_bounds_valid": true
+    },
+    {
+      "fixture": "de-scan.pdf",
+      "category": "scanned_pdf",
+      "source": "cpu_ocr",
+      "latency_ms": [
+        1332.6442329998827,
+        1718.4528220000175,
+        1599.6464889999515
+      ],
+      "cer": 0.0,
+      "wer": 0.0,
+      "lines": 3,
+      "flags": [],
+      "box_bounds_valid": true
+    }
+  ],
+  "batches": [
+    {
+      "pages": 20,
+      "seconds": 21.305876757000078,
+      "pages_per_minute": 56.322488564369365,
+      "ordered": true,
+      "embedded": 10,
+      "cpu": 10,
+      "mode": "cpu_only",
+      "gpu_calls": 0
+    },
+    {
+      "pages": 100,
+      "seconds": 103.1034494569999,
+      "pages_per_minute": 58.193979266448764,
+      "ordered": true,
+      "embedded": 50,
+      "cpu": 50,
+      "mode": "cpu_only",
+      "gpu_calls": 0
+    }
+  ],
+  "limitations": [
+    "Synthetic printed ground truth only; no human handwriting corpus",
+    "No live GPU, quota/cost, HF Basic, OpenVINO, table semantics or ground-truth box IoU qualification",
+    "No mixed CPU/GPU throughput gain measured; overflow remains disabled"
+  ]
+}
