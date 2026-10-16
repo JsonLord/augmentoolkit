@@ -33,3 +33,16 @@ download_model.py
 !outputs/.gitkeep
 !external_configs/.gitkeep
 !models/.gitkeep
+
+docs/
+cli_utils/
+images/
+tests/
+api_README.md
+linux.sh
+local_linux.sh
+local_macos.sh
+macos.sh
+pytest-ocr.ini
+spec.md
+spec (10).md

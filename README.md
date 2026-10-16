@@ -1,5 +1,5 @@
 ---
-title: Augmentoolkit
+title: agent-0
 sdk: docker
 app_port: 7860
 ---
