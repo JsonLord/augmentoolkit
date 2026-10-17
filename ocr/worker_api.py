@@ -1,9 +1,10 @@
 import asyncio
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, File, Form, UploadFile
+from fastapi import Depends, FastAPI, File, Form, UploadFile
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
+from fastapi.security import HTTPBearer
 
 from .classify import features
 from .config import Settings
@@ -11,6 +12,8 @@ from .http_security import Guard
 from .ingest import decode_image, encode
 from .openai_facade import ChatRequest, completion, image_from_request
 from .schemas import OCROptions, RasterPage, SafeError
+
+security = HTTPBearer()
 
 
 def create_app(settings=None, backend=None):
@@ -54,16 +57,16 @@ def create_app(settings=None, backend=None):
     async def health():
         return {"status": "ok"}
 
-    @app.get("/ready")
+    @app.get("/ready", dependencies=[Depends(security)])
     async def ready():
         h = await backend.health()
         return JSONResponse({"ready": h.ready}, status_code=200 if h.ready else 503)
 
-    @app.get("/internal/capabilities")
+    @app.get("/internal/capabilities", dependencies=[Depends(security)])
     async def capabilities():
         return await backend.capabilities()
 
-    @app.post("/internal/ocr/page")
+    @app.post("/internal/ocr/page", dependencies=[Depends(security)])
     async def page(
         file: UploadFile = File(...),
         request_id: str = Form(""),
@@ -96,21 +99,25 @@ def create_app(settings=None, backend=None):
                 raise SafeError("model_not_ready")
             return await backend.recognize(p, OCROptions())
 
-
-    @app.get("/v1/models")
+    @app.get("/v1/models", dependencies=[Depends(security)])
     async def list_models():
         return {
             "object": "list",
             "data": [
-                {"id": "ocr-cpu", "object": "model", "created": 1677610602, "owned_by": "augmentoolkit"}
-            ]
+                {
+                    "id": "ocr-cpu",
+                    "object": "model",
+                    "created": 1677610602,
+                    "owned_by": "augmentoolkit",
+                }
+            ],
         }
 
-    @app.get("/v1/ocr/capabilities")
+    @app.get("/v1/ocr/capabilities", dependencies=[Depends(security)])
     async def v1_capabilities():
         return await backend.capabilities()
 
-    @app.post("/v1/ocr/page")
+    @app.post("/v1/ocr/page", dependencies=[Depends(security)])
     async def v1_page(
         file: UploadFile = File(...),
         sensitivity: str = Form(...),
@@ -152,7 +159,7 @@ def create_app(settings=None, backend=None):
                 raise SafeError("model_not_ready")
             return await backend.recognize(p, OCROptions(sensitivity="D0"))
 
-    @app.post("/v1/chat/completions")
+    @app.post("/v1/chat/completions", dependencies=[Depends(security)])
     async def v1_chat_completions(req: ChatRequest):
         if req.model != "ocr-cpu":
             raise SafeError("unsupported_model")
@@ -195,7 +202,6 @@ def create_app(settings=None, backend=None):
 
             result = await backend.recognize(p, opts)
             return completion(result, req.model)
-
 
     return app
 

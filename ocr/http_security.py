@@ -21,9 +21,8 @@ class Guard:
             return await self.app(scope, receive, send)
         headers = dict(scope.get("headers", []))
         path = scope["path"]
-        # Health is content-free; readiness and capabilities remain authenticated.
-        # Only /health is unauthenticated
-        if path != "/health":
+        # Only /health and documentation endpoints are unauthenticated
+        if path not in ("/health", "/docs", "/openapi.json", "/redoc"):
             if not self.token:
                 return await JSONResponse({"code": "service_unconfigured"}, status_code=503)(
                     scope, receive, send
