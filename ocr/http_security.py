@@ -22,13 +22,15 @@ class Guard:
         headers = dict(scope.get("headers", []))
         path = scope["path"]
         # Health is content-free; readiness and capabilities remain authenticated.
+        # Only /health is unauthenticated
         if path != "/health":
-            auth = headers.get(b"authorization", b"")
             if not self.token:
                 return await JSONResponse({"code": "service_unconfigured"}, status_code=503)(
                     scope, receive, send
                 )
-            if not hmac.compare_digest(auth, b"Bearer " + self.token.encode("utf-8")):
+            auth = headers.get(b"authorization", b"")
+            expected = b"Bearer " + self.token.encode("utf-8")
+            if not hmac.compare_digest(auth, expected):
                 return await JSONResponse({"code": "unauthorized"}, status_code=401)(
                     scope, receive, send
                 )
