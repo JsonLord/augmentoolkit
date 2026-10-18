@@ -3,6 +3,7 @@
 import re
 
 from .schemas import Entity
+from .status import StatusPolicy
 from .terminology import ReligiousTerminology
 
 DEFAULT_TERMINOLOGY = ReligiousTerminology()
@@ -32,6 +33,6 @@ def detect_contacts(text):
     return found
 
 
-def detect(text, *, terminology=DEFAULT_TERMINOLOGY):
+def detect(text, *, terminology=DEFAULT_TERMINOLOGY, status=StatusPolicy()):
     """Protect literal religious/status terms as well as contact identifiers."""
-    return detect_contacts(text) + terminology.detect(text)
+    return detect_contacts(text) + terminology.detect(text) + status.detect(text)

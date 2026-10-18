@@ -13,14 +13,14 @@ import uuid
 
 from ocr.schemas import SafeError
 
-from .schemas import Approval, Destination, ReleaseCandidate, VerifiedReview
+from .schemas import Approval, Destination, LegacyReleaseCandidate, ReleaseCandidate, VerifiedReview
 
 
 def digest(candidate):
     try:
-        if type(candidate) is not ReleaseCandidate:
+        if type(candidate) not in (LegacyReleaseCandidate, ReleaseCandidate):
             raise ValueError()
-        validated = ReleaseCandidate.model_validate(candidate)
+        validated = type(candidate).model_validate(candidate)
         if not validated.pages or any(
             p.original_sensitivity != validated.sensitivity for p in validated.pages
         ):

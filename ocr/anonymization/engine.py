@@ -6,16 +6,28 @@ from ocr.schemas import OCRResult, SafeError
 
 from .detectors import detect
 from .model import MODEL_REVISION
+from .provenance import provenance
 from .replacement import replace, validate_entities
 from .schemas import LABELS, CandidatePage, ReleaseCandidate
+from .status import StatusPolicy
 from .terminology import DEFAULT_TERMS, ReligiousTerminology
 
 
 class AnonymizationEngine:
-    def __init__(self, recognizer, *, placeholders=None, religion_terms=DEFAULT_TERMS):
+    def __init__(
+        self,
+        recognizer,
+        *,
+        placeholders=None,
+        religion_terms=DEFAULT_TERMS,
+        status_policy=StatusPolicy(),
+    ):
         self.recognizer = recognizer
         self.placeholders = placeholders
         self.terminology = ReligiousTerminology(religion_terms)
+        if type(status_policy) is not StatusPolicy:
+            raise SafeError("invalid_status_configuration")
+        self.status_policy = status_policy
 
     def transform(self, text):
         try:
@@ -38,7 +50,9 @@ class AnonymizationEngine:
             ):
                 raise SafeError("invalid_entity_provenance")
             output, tags = replace(
-                text, predictions + detect(text, terminology=self.terminology), self.placeholders
+                text,
+                predictions + detect(text, terminology=self.terminology, status=self.status_policy),
+                self.placeholders,
             )
             return output, tags, not predictions
         except SafeError as exc:
@@ -79,6 +93,9 @@ class AnonymizationEngine:
             # Sensitivity mismatches are rejected, never silently downgraded.
             if any(p.sensitivity != result.sensitivity for p in result.pages):
                 raise SafeError("classification_mismatch")
+            commitment = provenance(
+                self.recognizer, self.terminology, self.status_policy, self.placeholders
+            )
             pages, empty = [], False
             for p in result.pages:
                 text, tags, no_predictions = self.transform(p.text)
@@ -92,6 +109,10 @@ class AnonymizationEngine:
                         original_sensitivity=p.sensitivity,
                     )
                 )
+            if commitment != provenance(
+                self.recognizer, self.terminology, self.status_policy, self.placeholders
+            ):
+                raise SafeError("recognition_configuration_changed")
             reasons = ("recognition_incomplete_possible",) + (
                 ("empty_prediction",) if empty else ()
             )
@@ -103,6 +124,7 @@ class AnonymizationEngine:
                 pages=tuple(pages),
                 model_revision=self.recognizer.revision,
                 review_reasons=reasons,
+                provenance=commitment,
             )
         except SafeError:
             raise

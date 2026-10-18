@@ -76,19 +76,36 @@ def test_gate03d_selected_hybrid_development_regression():
 
 
 @pytest.mark.skipif(
-    os.getenv("RUN_GATE03D_HOLDOUT") != "1", reason="Opt-in new independent first-result holdout"
+    os.getenv("RUN_GATE03D_HOLDOUT") != "1",
+    reason="Opt-in historical Gate03d first-result acceptance",
 )
 def test_gate03d_recorded_first_holdout_acceptance():
     # The standalone first-result command performs inference once. This test
     # checks that actual recorded gate without rerunning or overwriting it.
-    from ocr.anonymization.qualify03d import verify_freeze
+    from ocr.anonymization.historical import verify_historical
 
-    _, freeze, cases = verify_freeze()
-    report = json.loads(Path(os.environ["GATE03D_HOLDOUT_OUTPUT"]).read_bytes())
+    _, freeze, cases, report = verify_historical()
     assert report["corpus_sha256"] == freeze["sha256"]
     assert report["model_revision"] == freeze["model_revision"]
     assert report["implementation_sha256"] == freeze["implementation_sha256"]
     assert {p["case_id"] for p in report["per_case"]} == {c["id"] for c in cases}
     assert report["evaluation"]["qualification_passed"], (
-        "Gate03d untouched holdout FAILED; first result preserved, release blocked"
+        "Historical Gate03d first result FAILED; not a benchmark of the updated candidate"
     )
+
+
+@pytest.mark.skipif(
+    os.getenv("RUN_GATE03E_MODEL") != "1",
+    reason="Opt-in current development candidate coverage gate",
+)
+def test_gate03e_recorded_current_candidate_coverage_gate():
+    report = json.loads(Path(os.environ["GATE03E_DEVELOPMENT_OUTPUT"]).read_bytes())
+    assert report["independent_qualification"] is False
+    selected = report["experiments"]["status_scoped_ocr"]
+    # Measured returned-candidate coverage remains a failing development gate
+    # if any partial or full canary survives. Blocking is reported separately.
+    assert all(
+        sum(s["candidate_partial_canaries"].values()) == 0
+        and sum(s["candidate_fully_unmasked_canaries"].values()) == 0
+        for s in selected.values()
+    ), "Current Gate03e returned candidate still has a canary; model qualification remains NO-GO"

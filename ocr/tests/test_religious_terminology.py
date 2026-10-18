@@ -79,6 +79,9 @@ def test_engine_keeps_d2_and_review_flags_with_only_terminology_evidence():
     from ocr.tests.test_anonymization_security import evidence
 
     class LocalEmpty:
+        from ocr.anonymization.recognizer import DEFAULT_PROMPTS
+
+        threshold, prompts = 0.5, DEFAULT_PROMPTS.copy()
         local, revision, categories = True, MODEL_REVISION, LABELS
 
         def recognize(self, text):
@@ -132,13 +135,13 @@ def test_custom_operator_terminology_uses_same_provenance_validation():
     assert not detect("Rastafari")
 
 
-def test_new_frozen_holdout_is_independent_well_formed_and_complete():
+def test_historical_frozen_holdout_is_unchanged_well_formed_and_complete():
     import json
     from pathlib import Path
 
-    from ocr.anonymization.qualify03d import verify_freeze
+    from ocr.anonymization.historical import verify_historical
 
-    root, freeze, cases = verify_freeze()
+    root, freeze, cases, _ = verify_historical()
     assert len(cases) >= 150 and freeze["evaluation_run_before_freeze"] is False
     assert sum(c["language"] == "de" for c in cases) == 80
     assert sum(c["language"] == "en" for c in cases) == 80

@@ -6,7 +6,7 @@ from unittest.mock import Mock
 import pytest
 from ocr.anonymization import AnonymizationEngine, Entity
 from ocr.anonymization.model import MODEL_REVISION
-from ocr.anonymization.recognizer import GLiNERRecognizer
+from ocr.anonymization.recognizer import DEFAULT_PROMPTS, GLiNERRecognizer
 from ocr.anonymization.replacement import replace
 from ocr.anonymization.schemas import LABELS
 from ocr.handoff import anonymization_handoff
@@ -16,6 +16,8 @@ CANARY = "SYNTHETIC_UNREDACTED_SECRET"
 
 
 class StubRecognizer:
+    threshold = 0.5
+    prompts = DEFAULT_PROMPTS.copy()
     local = True
     revision = MODEL_REVISION
     categories = LABELS

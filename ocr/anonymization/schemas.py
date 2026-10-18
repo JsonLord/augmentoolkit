@@ -2,7 +2,7 @@
 
 from typing import Literal
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 Label = Literal["PERSON", "CITY", "RELIGION", "EMAIL", "PHONE", "ORGANIZATION"]
 LABELS = ("PERSON", "CITY", "RELIGION", "EMAIL", "PHONE", "ORGANIZATION")
@@ -28,7 +28,9 @@ class Entity(StrictModel):
     score: float | None = Field(default=None, ge=0, le=1, allow_inf_nan=False)
     source: Literal["multilingual_ner", "deterministic"]
     model_revision: str = Field(pattern=r"^[a-zA-Z0-9._-]{1,64}$")
-    normalization: Literal["identity", "dehyphenation-v1"] = "identity"
+    normalization: Literal[
+        "identity", "dehyphenation-v1", "status-ocr-v1", "dehyphenation-status-ocr-v1"
+    ] = "identity"
 
 
 class Replacement(StrictModel):
@@ -39,7 +41,9 @@ class Replacement(StrictModel):
     score: float | None = Field(default=None, ge=0, le=1, allow_inf_nan=False)
     source: Literal["multilingual_ner", "deterministic"]
     model_revision: str = Field(pattern=r"^[a-zA-Z0-9._-]{1,64}$")
-    normalization: Literal["identity", "dehyphenation-v1"] = "identity"
+    normalization: Literal[
+        "identity", "dehyphenation-v1", "status-ocr-v1", "dehyphenation-status-ocr-v1"
+    ] = "identity"
 
 
 class CandidatePage(StrictModel):
@@ -50,7 +54,7 @@ class CandidatePage(StrictModel):
     original_sensitivity: Literal["D0", "D1", "D2"]
 
 
-class ReleaseCandidate(StrictModel):
+class LegacyReleaseCandidate(StrictModel):
     schema_version: Literal["ocr-anonymization-candidate/v1"] = "ocr-anonymization-candidate/v1"
     candidate_id: str = Field(pattern=r"^[a-f0-9]{32}$")
     sensitivity: Literal["D0", "D1", "D2"]
@@ -61,6 +65,37 @@ class ReleaseCandidate(StrictModel):
     release_approved: Literal[False] = False
     automated_release_eligible: Literal[False] = False
     review_reasons: tuple[Literal["recognition_incomplete_possible", "empty_prediction"], ...]
+
+    @model_validator(mode="after")
+    def legacy_normalization(self):
+        if self.schema_version == "ocr-anonymization-candidate/v1" and any(
+            tag.normalization not in ("identity", "dehyphenation-v1")
+            for page in self.pages
+            for tag in page.tags
+        ):
+            raise ValueError("unsupported_legacy_normalization")
+        return self
+
+
+class RecognitionProvenance(StrictModel):
+    schema_version: Literal["recognition-provenance/v1"] = "recognition-provenance/v1"
+    model_revision: str = Field(pattern=r"^[a-f0-9]{40}$")
+    configuration_digest: str = Field(pattern=r"^[a-f0-9]{64}$")
+    terminology_version: Literal["religious-terminology-v1"] = "religious-terminology-v1"
+    status_version: Literal["religious-status-v1"] = "religious-status-v1"
+    replacement_version: Literal["enclosing-spans-failclosed-v1"] = "enclosing-spans-failclosed-v1"
+    normalization_version: Literal["source-codepoint-v1"] = "source-codepoint-v1"
+
+
+class ReleaseCandidate(LegacyReleaseCandidate):
+    schema_version: Literal["ocr-anonymization-candidate/v2"] = "ocr-anonymization-candidate/v2"
+    provenance: RecognitionProvenance
+
+    @model_validator(mode="after")
+    def consistent_provenance(self):
+        if self.model_revision != self.provenance.model_revision:
+            raise ValueError("candidate_provenance_mismatch")
+        return self
 
 
 class Destination(StrictModel):

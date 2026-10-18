@@ -8,6 +8,8 @@ from ocr.schemas import SafeError
 
 from .schemas import LABELS, Entity, Replacement
 
+REPLACEMENT_POLICY_VERSION = "enclosing-spans-failclosed-v1"
+
 
 def validate_entities(text, predictions):
     try:
