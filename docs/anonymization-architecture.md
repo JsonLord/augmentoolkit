@@ -1,5 +1,10 @@
 # Local span anonymization architecture
 
+> Gate03g security update: v1/v2 approval/export now requires explicit operator
+> `legacy_policy` / host `legacy_release_allowed`; absent policy denies. V3 still
+> requires its separate correction policy and original-evidence binding. See the
+> [current security review and migration rules](anonymization-gate03g-security-review.md).
+
 The supported workflow is `anonymization_handoff(ocr_result, AnonymizationEngine(recognizer))`
 or `python -m ocr.anonymization`. It creates a **classified review candidate**, not an
 anonymous public document. Original `OCRResult` objects remain unchanged and must

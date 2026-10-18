@@ -1,5 +1,10 @@
 # Private review and candidate-provenance contract (Gate03e)
 
+> Gate03g security update: v1/v2 approval/export now requires explicit operator
+> `legacy_policy` / host `legacy_release_allowed`; absent policy denies. V3 still
+> requires its separate correction policy and original-evidence binding. See the
+> [current security review and migration rules](anonymization-gate03g-security-review.md).
+
 This is an in-process private-host interface, not a public API, UI or identity
 provider. Production identity/review/application integration is **BLOCKED**.
 Review material and original pages remain classified. None of these objects can

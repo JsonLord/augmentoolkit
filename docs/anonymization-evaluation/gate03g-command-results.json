@@ -1,0 +1,215 @@
+{
+  "source_sha": "9d4d8c103271ef62fee3d06603180aa9ca74267e",
+  "commands": [
+    {
+      "name": "ruff",
+      "source_sha": "9d4d8c103271ef62fee3d06603180aa9ca74267e",
+      "argv": [
+        "/workspace/.ocr-venv/bin/ruff",
+        "check",
+        "ocr",
+        "augmentoolkit/utils/offline_chunking.py"
+      ],
+      "environment_overrides": {},
+      "started_at": "2026-10-18T20:55:08.230234+00:00",
+      "elapsed_seconds": 0.015336260003095958,
+      "exit_code": 0,
+      "summary": [
+        "All checks passed!"
+      ],
+      "log_sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "name": "format",
+      "source_sha": "9d4d8c103271ef62fee3d06603180aa9ca74267e",
+      "argv": [
+        "/workspace/.ocr-venv/bin/ruff",
+        "format",
+        "--check",
+        "ocr",
+        "augmentoolkit/utils/offline_chunking.py"
+      ],
+      "environment_overrides": {},
+      "started_at": "2026-10-18T20:55:08.246081+00:00",
+      "elapsed_seconds": 0.010424701998999808,
+      "exit_code": 0,
+      "summary": [
+        "96 files already formatted"
+      ],
+      "log_sha256": "4327c987299d88b4f4a357992babe2c2d610c2ee6ae4106455f5eda8158364cc"
+    },
+    {
+      "name": "default",
+      "source_sha": "9d4d8c103271ef62fee3d06603180aa9ca74267e",
+      "argv": [
+        "/workspace/.ocr-venv/bin/python",
+        "-m",
+        "pytest",
+        "-c",
+        "pytest-ocr.ini"
+      ],
+      "environment_overrides": {},
+      "started_at": "2026-10-18T20:55:08.256832+00:00",
+      "elapsed_seconds": 13.864129421999678,
+      "exit_code": 0,
+      "summary": [
+        "================= 387 passed, 13 skipped, 1 warning in 13.03s =================="
+      ],
+      "log_sha256": "3865d893d542349d6524c2dee03ade13fdb168cd5ff1c0f80ab4e90a34331cbc"
+    },
+    {
+      "name": "security-corrections",
+      "source_sha": "9d4d8c103271ef62fee3d06603180aa9ca74267e",
+      "argv": [
+        "/workspace/.ocr-venv/bin/python",
+        "-m",
+        "pytest",
+        "-c",
+        "pytest-ocr.ini",
+        "ocr/tests/test_anonymization_security.py",
+        "ocr/tests/test_anonymization_release_policy.py",
+        "ocr/tests/test_private_host_adapters.py",
+        "ocr/tests/test_gate03c_runtime_state.py",
+        "ocr/tests/test_gate03e_provenance_review.py",
+        "ocr/tests/test_reviewed_corrections.py",
+        "ocr/tests/test_gate03g_security_audit.py"
+      ],
+      "environment_overrides": {},
+      "started_at": "2026-10-18T20:55:22.122443+00:00",
+      "elapsed_seconds": 2.600158866000129,
+      "exit_code": 0,
+      "summary": [
+        "============================= 230 passed in 1.93s =============================="
+      ],
+      "log_sha256": "9deec329a0008ea940d7f3caf6d6bb110fa8a0d2105316a6b39c2aad7ceb07ba"
+    },
+    {
+      "name": "legacy-compatibility",
+      "source_sha": "9d4d8c103271ef62fee3d06603180aa9ca74267e",
+      "argv": [
+        "/workspace/.ocr-venv/bin/python",
+        "-m",
+        "pytest",
+        "-c",
+        "pytest-ocr.ini",
+        "ocr/tests/test_gate03e_provenance_review.py",
+        "ocr/tests/test_gate03g_security_audit.py",
+        "-k",
+        "old_candidate or legacy or coercion or unsupported_or_forged"
+      ],
+      "environment_overrides": {},
+      "started_at": "2026-10-18T20:55:24.723180+00:00",
+      "elapsed_seconds": 1.0150307130024885,
+      "exit_code": 0,
+      "summary": [
+        "====================== 19 passed, 39 deselected in 0.26s ======================="
+      ],
+      "log_sha256": "8d8839885e88d083d693cf03fc6f354414cc33bf5c8d8b134f26cb5b13881ca7"
+    },
+    {
+      "name": "offline",
+      "source_sha": "9d4d8c103271ef62fee3d06603180aa9ca74267e",
+      "argv": [
+        "/workspace/.ocr-venv/bin/python",
+        "-m",
+        "pytest",
+        "-c",
+        "pytest-ocr.ini",
+        "ocr/tests/test_anonymization_runtime_safety.py",
+        "ocr/tests/test_gate03c_holdout_utf8.py"
+      ],
+      "environment_overrides": {},
+      "started_at": "2026-10-18T20:55:25.738705+00:00",
+      "elapsed_seconds": 0.8002779060043395,
+      "exit_code": 0,
+      "summary": [
+        "============================== 18 passed in 0.14s =============================="
+      ],
+      "log_sha256": "7d86e58055ec4bebb87c016d4f4ef744eda64427a879fc8cf1f58e0de2172736"
+    },
+    {
+      "name": "pinned-model-correction-demo",
+      "source_sha": "9d4d8c103271ef62fee3d06603180aa9ca74267e",
+      "argv": [
+        "/workspace/.anonymization-venv/bin/python",
+        "-m",
+        "ocr.anonymization.demonstrate03f",
+        "--cache",
+        "/workspace/.anonymization-model",
+        "--output",
+        "docs/anonymization-evaluation/gate03g-corrections-live.json"
+      ],
+      "environment_overrides": {
+        "HF_HUB_OFFLINE": "1",
+        "TRANSFORMERS_OFFLINE": "1",
+        "HF_HUB_DISABLE_TELEMETRY": "1"
+      },
+      "started_at": "2026-10-18T20:55:26.539516+00:00",
+      "elapsed_seconds": 23.798544058001426,
+      "exit_code": 0,
+      "summary": [
+        "{\"cases\": 9, \"manual_corrections\": 6, \"all_seeded_canaries_covered\": true, \"all_release_blocked\": true}"
+      ],
+      "log_sha256": "5fdf885a24a9e1ae9c8bec260489df51bc6152f8ced50852198cc85e7b5d8f01"
+    },
+    {
+      "name": "pinned-model-correct-controls",
+      "source_sha": "9d4d8c103271ef62fee3d06603180aa9ca74267e",
+      "argv": [
+        "/workspace/.anonymization-venv/bin/python",
+        "-m",
+        "ocr.anonymization.demonstrate03f",
+        "--cache",
+        "/workspace/.anonymization-model",
+        "--output",
+        "docs/anonymization-evaluation/gate03g-correct-controls-live.json",
+        "--correct-controls-only"
+      ],
+      "environment_overrides": {
+        "HF_HUB_OFFLINE": "1",
+        "TRANSFORMERS_OFFLINE": "1",
+        "HF_HUB_DISABLE_TELEMETRY": "1"
+      },
+      "started_at": "2026-10-18T20:55:50.338819+00:00",
+      "elapsed_seconds": 29.113328614999773,
+      "exit_code": 0,
+      "summary": [
+        "{\"cases\": 2, \"manual_corrections\": 0, \"all_seeded_canaries_covered\": true, \"all_release_blocked\": true}"
+      ],
+      "log_sha256": "a40dc3942ce3557e19dc04b044bd92011d611697a7e6cb8d323c79625a83bfde"
+    },
+    {
+      "name": "optin-quality-and-correction-evidence",
+      "source_sha": "9d4d8c103271ef62fee3d06603180aa9ca74267e",
+      "argv": [
+        "/workspace/.anonymization-venv/bin/python",
+        "-m",
+        "pytest",
+        "-c",
+        "pytest-ocr.ini",
+        "ocr/tests/test_anonymization_integration.py"
+      ],
+      "environment_overrides": {
+        "HF_HUB_OFFLINE": "1",
+        "TRANSFORMERS_OFFLINE": "1",
+        "HF_HUB_DISABLE_TELEMETRY": "1",
+        "RUN_GATE03D_HOLDOUT": "1",
+        "RUN_GATE03E_MODEL": "1",
+        "RUN_GATE03F_MODEL": "1",
+        "GATE03E_DEVELOPMENT_OUTPUT": "docs/anonymization-evaluation/gate03e-development.json",
+        "GATE03F_CORRECTION_OUTPUT": "docs/anonymization-evaluation/gate03g-corrections-live.json",
+        "GATE03F_CONTROLS_OUTPUT": "docs/anonymization-evaluation/gate03g-correct-controls-live.json",
+        "RUN_ANONYMIZATION_MODEL": "0",
+        "RUN_GATE03C_HOLDOUT": "0",
+        "RUN_GATE03D_MODEL": "0"
+      },
+      "started_at": "2026-10-18T20:56:19.454565+00:00",
+      "elapsed_seconds": 0.880265234001854,
+      "exit_code": 1,
+      "summary": [
+        "==================== 2 failed, 1 passed, 4 skipped in 0.16s ===================="
+      ],
+      "log_sha256": "4b86e8a9ababfaed2d6c4cc04758b003c3341ad9b93b4321be42bb7f2ad8905f"
+    }
+  ]
+}
