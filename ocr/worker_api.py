@@ -77,7 +77,11 @@ def create_app(settings=None, backend=None):
                         try:
                             return await self.cpu.recognize(page, options)
                         except Exception:
-                            if self.alias and (await self.alias.health()).ready and options.sensitivity == "D0":
+                            if (
+                                self.alias
+                                and (await self.alias.health()).ready
+                                and options.sensitivity == "D0"
+                            ):
                                 return await self.alias.recognize(page, options)
                             raise SafeError("model_not_ready") from None
 
@@ -172,12 +176,14 @@ def create_app(settings=None, backend=None):
             try:
                 h = await app.state.backend.alias.health()
                 if h.ready:
-                    models.append({
-                        "id": "ocr-alias",
-                        "object": "model",
-                        "created": 1677610602,
-                        "owned_by": "augmentoolkit",
-                    })
+                    models.append(
+                        {
+                            "id": "ocr-alias",
+                            "object": "model",
+                            "created": 1677610602,
+                            "owned_by": "augmentoolkit",
+                        }
+                    )
             except Exception:
                 pass
 

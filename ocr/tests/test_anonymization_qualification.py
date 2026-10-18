@@ -11,71 +11,263 @@ from PIL import Image, ImageDraw
 # 1. Synthetic dataset generation
 SYNTHETIC_CASES = [
     # German Personal Names
-    {"text": "Lina Wolkenstein wohnt in Berlin.", "expected": "[PERSON] wohnt in [CITY].", "entities": {"PERSON": 1, "CITY": 1, "RELIGION": 0}, "canaries": ["Lina Wolkenstein", "Berlin"]},
-    {"text": "Hans Müller kauft ein.", "expected": "[PERSON] kauft ein.", "entities": {"PERSON": 1, "CITY": 0, "RELIGION": 0}, "canaries": ["Hans Müller"]},
-    {"text": "Das Auto von Dr. Klaus Schmidt.", "expected": "Das Auto von Dr. [PERSON].", "entities": {"PERSON": 1, "CITY": 0, "RELIGION": 0}, "canaries": ["Klaus Schmidt"]},
-    {"text": "Friedrich Wilhelm geht nach Hause.", "expected": "[PERSON] geht nach Hause.", "entities": {"PERSON": 1, "CITY": 0, "RELIGION": 0}, "canaries": ["Friedrich Wilhelm"]},
-    {"text": "Ich kenne Frau Anne-Marie Schneider nicht.", "expected": "Ich kenne Frau [PERSON] nicht.", "entities": {"PERSON": 1, "CITY": 0, "RELIGION": 0}, "canaries": ["Anne-Marie Schneider"]},
-
+    {
+        "text": "Lina Wolkenstein wohnt in Berlin.",
+        "expected": "[PERSON] wohnt in [CITY].",
+        "entities": {"PERSON": 1, "CITY": 1, "RELIGION": 0},
+        "canaries": ["Lina Wolkenstein", "Berlin"],
+    },
+    {
+        "text": "Hans Müller kauft ein.",
+        "expected": "[PERSON] kauft ein.",
+        "entities": {"PERSON": 1, "CITY": 0, "RELIGION": 0},
+        "canaries": ["Hans Müller"],
+    },
+    {
+        "text": "Das Auto von Dr. Klaus Schmidt.",
+        "expected": "Das Auto von Dr. [PERSON].",
+        "entities": {"PERSON": 1, "CITY": 0, "RELIGION": 0},
+        "canaries": ["Klaus Schmidt"],
+    },
+    {
+        "text": "Friedrich Wilhelm geht nach Hause.",
+        "expected": "[PERSON] geht nach Hause.",
+        "entities": {"PERSON": 1, "CITY": 0, "RELIGION": 0},
+        "canaries": ["Friedrich Wilhelm"],
+    },
+    {
+        "text": "Ich kenne Frau Anne-Marie Schneider nicht.",
+        "expected": "Ich kenne Frau [PERSON] nicht.",
+        "entities": {"PERSON": 1, "CITY": 0, "RELIGION": 0},
+        "canaries": ["Anne-Marie Schneider"],
+    },
     # English Personal Names
-    {"text": "John Doe is a good man.", "expected": "[PERSON] is a good man.", "entities": {"PERSON": 1, "CITY": 0, "RELIGION": 0}, "canaries": ["John Doe"]},
-    {"text": "Alice and Bob went to the store.", "expected": "[PERSON] and [PERSON] went to the store.", "entities": {"PERSON": 2, "CITY": 0, "RELIGION": 0}, "canaries": ["Alice", "Bob"]},
-    {"text": "Is Mary Johnson there?", "expected": "Is [PERSON] there?", "entities": {"PERSON": 1, "CITY": 0, "RELIGION": 0}, "canaries": ["Mary Johnson"]},
-    {"text": "Meeting with Mr. Charles Montgomery.", "expected": "Meeting with Mr. [PERSON].", "entities": {"PERSON": 1, "CITY": 0, "RELIGION": 0}, "canaries": ["Charles Montgomery"]},
-    {"text": "Elizabeth Taylor was famous.", "expected": "[PERSON] was famous.", "entities": {"PERSON": 1, "CITY": 0, "RELIGION": 0}, "canaries": ["Elizabeth Taylor"]},
-
+    {
+        "text": "John Doe is a good man.",
+        "expected": "[PERSON] is a good man.",
+        "entities": {"PERSON": 1, "CITY": 0, "RELIGION": 0},
+        "canaries": ["John Doe"],
+    },
+    {
+        "text": "Alice and Bob went to the store.",
+        "expected": "[PERSON] and [PERSON] went to the store.",
+        "entities": {"PERSON": 2, "CITY": 0, "RELIGION": 0},
+        "canaries": ["Alice", "Bob"],
+    },
+    {
+        "text": "Is Mary Johnson there?",
+        "expected": "Is [PERSON] there?",
+        "entities": {"PERSON": 1, "CITY": 0, "RELIGION": 0},
+        "canaries": ["Mary Johnson"],
+    },
+    {
+        "text": "Meeting with Mr. Charles Montgomery.",
+        "expected": "Meeting with Mr. [PERSON].",
+        "entities": {"PERSON": 1, "CITY": 0, "RELIGION": 0},
+        "canaries": ["Charles Montgomery"],
+    },
+    {
+        "text": "Elizabeth Taylor was famous.",
+        "expected": "[PERSON] was famous.",
+        "entities": {"PERSON": 1, "CITY": 0, "RELIGION": 0},
+        "canaries": ["Elizabeth Taylor"],
+    },
     # Cities and Locations
-    {"text": "I live in New York.", "expected": "I live in [CITY].", "entities": {"PERSON": 0, "CITY": 1, "RELIGION": 0}, "canaries": ["New York"]},
-    {"text": "Der Zug nach München fährt ab.", "expected": "Der Zug nach [CITY] fährt ab.", "entities": {"PERSON": 0, "CITY": 1, "RELIGION": 0}, "canaries": ["München"]},
-    {"text": "Paris is beautiful in spring.", "expected": "[CITY] is beautiful in spring.", "entities": {"PERSON": 0, "CITY": 1, "RELIGION": 0}, "canaries": ["Paris"]},
-    {"text": "Flug von Frankfurt nach Tokyo.", "expected": "Flug von [CITY] nach [CITY].", "entities": {"PERSON": 0, "CITY": 2, "RELIGION": 0}, "canaries": ["Frankfurt", "Tokyo"]},
-    {"text": "Welcome to Los Angeles, California.", "expected": "Welcome to [CITY], [CITY].", "entities": {"PERSON": 0, "CITY": 2, "RELIGION": 0}, "canaries": ["Los Angeles", "California"]},
-
+    {
+        "text": "I live in New York.",
+        "expected": "I live in [CITY].",
+        "entities": {"PERSON": 0, "CITY": 1, "RELIGION": 0},
+        "canaries": ["New York"],
+    },
+    {
+        "text": "Der Zug nach München fährt ab.",
+        "expected": "Der Zug nach [CITY] fährt ab.",
+        "entities": {"PERSON": 0, "CITY": 1, "RELIGION": 0},
+        "canaries": ["München"],
+    },
+    {
+        "text": "Paris is beautiful in spring.",
+        "expected": "[CITY] is beautiful in spring.",
+        "entities": {"PERSON": 0, "CITY": 1, "RELIGION": 0},
+        "canaries": ["Paris"],
+    },
+    {
+        "text": "Flug von Frankfurt nach Tokyo.",
+        "expected": "Flug von [CITY] nach [CITY].",
+        "entities": {"PERSON": 0, "CITY": 2, "RELIGION": 0},
+        "canaries": ["Frankfurt", "Tokyo"],
+    },
+    {
+        "text": "Welcome to Los Angeles, California.",
+        "expected": "Welcome to [CITY], [CITY].",
+        "entities": {"PERSON": 0, "CITY": 2, "RELIGION": 0},
+        "canaries": ["Los Angeles", "California"],
+    },
     # Religious Affiliations
-    {"text": "Ihre Religionszugehörigkeit ist evangelisch.", "expected": "Ihre Religionszugehörigkeit ist [RELIGION].", "entities": {"PERSON": 0, "CITY": 0, "RELIGION": 1}, "canaries": ["evangelisch"]},
-    {"text": "Er ist katholisch.", "expected": "Er ist [RELIGION].", "entities": {"PERSON": 0, "CITY": 0, "RELIGION": 1}, "canaries": ["katholisch"]},
-    {"text": "They practice Judaism.", "expected": "They practice [RELIGION].", "entities": {"PERSON": 0, "CITY": 0, "RELIGION": 1}, "canaries": ["Judaism"]},
-    {"text": "He is a devout Muslim.", "expected": "He is a devout [RELIGION].", "entities": {"PERSON": 0, "CITY": 0, "RELIGION": 1}, "canaries": ["Muslim"]},
-    {"text": "Buddhist monks live there.", "expected": "[RELIGION] monks live there.", "entities": {"PERSON": 0, "CITY": 0, "RELIGION": 1}, "canaries": ["Buddhist"]},
-
+    {
+        "text": "Ihre Religionszugehörigkeit ist evangelisch.",
+        "expected": "Ihre Religionszugehörigkeit ist [RELIGION].",
+        "entities": {"PERSON": 0, "CITY": 0, "RELIGION": 1},
+        "canaries": ["evangelisch"],
+    },
+    {
+        "text": "Er ist katholisch.",
+        "expected": "Er ist [RELIGION].",
+        "entities": {"PERSON": 0, "CITY": 0, "RELIGION": 1},
+        "canaries": ["katholisch"],
+    },
+    {
+        "text": "They practice Judaism.",
+        "expected": "They practice [RELIGION].",
+        "entities": {"PERSON": 0, "CITY": 0, "RELIGION": 1},
+        "canaries": ["Judaism"],
+    },
+    {
+        "text": "He is a devout Muslim.",
+        "expected": "He is a devout [RELIGION].",
+        "entities": {"PERSON": 0, "CITY": 0, "RELIGION": 1},
+        "canaries": ["Muslim"],
+    },
+    {
+        "text": "Buddhist monks live there.",
+        "expected": "[RELIGION] monks live there.",
+        "entities": {"PERSON": 0, "CITY": 0, "RELIGION": 1},
+        "canaries": ["Buddhist"],
+    },
     # Multiple entities per sentence
-    {"text": "John Doe from New York met Lina Wolkenstein in Berlin.", "expected": "[PERSON] from [CITY] met [PERSON] in [CITY].", "entities": {"PERSON": 2, "CITY": 2, "RELIGION": 0}, "canaries": ["John Doe", "New York", "Lina Wolkenstein", "Berlin"]},
-    {"text": "David is Catholic and lives in Rome.", "expected": "[PERSON] is [RELIGION] and lives in [CITY].", "entities": {"PERSON": 1, "CITY": 1, "RELIGION": 1}, "canaries": ["David", "Catholic", "Rome"]},
-
+    {
+        "text": "John Doe from New York met Lina Wolkenstein in Berlin.",
+        "expected": "[PERSON] from [CITY] met [PERSON] in [CITY].",
+        "entities": {"PERSON": 2, "CITY": 2, "RELIGION": 0},
+        "canaries": ["John Doe", "New York", "Lina Wolkenstein", "Berlin"],
+    },
+    {
+        "text": "David is Catholic and lives in Rome.",
+        "expected": "[PERSON] is [RELIGION] and lives in [CITY].",
+        "entities": {"PERSON": 1, "CITY": 1, "RELIGION": 1},
+        "canaries": ["David", "Catholic", "Rome"],
+    },
     # Repeated entities
-    {"text": "John likes John's new car.", "expected": "[PERSON] likes [PERSON]'s new car.", "entities": {"PERSON": 2, "CITY": 0, "RELIGION": 0}, "canaries": ["John", "John"]},
-    {"text": "Berlin, oh Berlin, my favorite city.", "expected": "[CITY], oh [CITY], my favorite city.", "entities": {"PERSON": 0, "CITY": 2, "RELIGION": 0}, "canaries": ["Berlin", "Berlin"]},
-
+    {
+        "text": "John likes John's new car.",
+        "expected": "[PERSON] likes [PERSON]'s new car.",
+        "entities": {"PERSON": 2, "CITY": 0, "RELIGION": 0},
+        "canaries": ["John", "John"],
+    },
+    {
+        "text": "Berlin, oh Berlin, my favorite city.",
+        "expected": "[CITY], oh [CITY], my favorite city.",
+        "entities": {"PERSON": 0, "CITY": 2, "RELIGION": 0},
+        "canaries": ["Berlin", "Berlin"],
+    },
     # Ambiguous names and place names
-    {"text": "Washington is the capital.", "expected": "[CITY] is the capital.", "entities": {"PERSON": 0, "CITY": 1, "RELIGION": 0}, "canaries": ["Washington"]},
-    {"text": "George Washington was the president.", "expected": "[PERSON] was the president.", "entities": {"PERSON": 1, "CITY": 0, "RELIGION": 0}, "canaries": ["George Washington"]},
-    {"text": "I visited the Jordan river.", "expected": "I visited the [CITY] river.", "entities": {"PERSON": 0, "CITY": 1, "RELIGION": 0}, "canaries": ["Jordan"]},
-    {"text": "Michael Jordan is a basketball player.", "expected": "[PERSON] is a basketball player.", "entities": {"PERSON": 1, "CITY": 0, "RELIGION": 0}, "canaries": ["Michael Jordan"]},
-
+    {
+        "text": "Washington is the capital.",
+        "expected": "[CITY] is the capital.",
+        "entities": {"PERSON": 0, "CITY": 1, "RELIGION": 0},
+        "canaries": ["Washington"],
+    },
+    {
+        "text": "George Washington was the president.",
+        "expected": "[PERSON] was the president.",
+        "entities": {"PERSON": 1, "CITY": 0, "RELIGION": 0},
+        "canaries": ["George Washington"],
+    },
+    {
+        "text": "I visited the Jordan river.",
+        "expected": "I visited the [CITY] river.",
+        "entities": {"PERSON": 0, "CITY": 1, "RELIGION": 0},
+        "canaries": ["Jordan"],
+    },
+    {
+        "text": "Michael Jordan is a basketball player.",
+        "expected": "[PERSON] is a basketball player.",
+        "entities": {"PERSON": 1, "CITY": 0, "RELIGION": 0},
+        "canaries": ["Michael Jordan"],
+    },
     # Names split over lines (Simulating OCR artifacts)
-    {"text": "Mr. Smith-\nson", "expected": "Mr. [PERSON]", "entities": {"PERSON": 1, "CITY": 0, "RELIGION": 0}, "canaries": ["Smith-\nson"]},
-    {"text": "Ber-\nlin", "expected": "[CITY]", "entities": {"PERSON": 0, "CITY": 1, "RELIGION": 0}, "canaries": ["Ber-\nlin"]},
-
+    {
+        "text": "Mr. Smith-\nson",
+        "expected": "Mr. [PERSON]",
+        "entities": {"PERSON": 1, "CITY": 0, "RELIGION": 0},
+        "canaries": ["Smith-\nson"],
+    },
+    {
+        "text": "Ber-\nlin",
+        "expected": "[CITY]",
+        "entities": {"PERSON": 0, "CITY": 1, "RELIGION": 0},
+        "canaries": ["Ber-\nlin"],
+    },
     # OCR spelling errors
-    {"text": "Jchn D0e went home.", "expected": "[PERSON] went home.", "entities": {"PERSON": 1, "CITY": 0, "RELIGION": 0}, "canaries": ["Jchn D0e"]},
-    {"text": "Welcome to Nevv Y0rk.", "expected": "Welcome to [CITY].", "entities": {"PERSON": 0, "CITY": 1, "RELIGION": 0}, "canaries": ["Nevv Y0rk"]},
-
+    {
+        "text": "Jchn D0e went home.",
+        "expected": "[PERSON] went home.",
+        "entities": {"PERSON": 1, "CITY": 0, "RELIGION": 0},
+        "canaries": ["Jchn D0e"],
+    },
+    {
+        "text": "Welcome to Nevv Y0rk.",
+        "expected": "Welcome to [CITY].",
+        "entities": {"PERSON": 0, "CITY": 1, "RELIGION": 0},
+        "canaries": ["Nevv Y0rk"],
+    },
     # Documents without sensitive entities
-    {"text": "The cat sat on the mat.", "expected": "The cat sat on the mat.", "entities": {"PERSON": 0, "CITY": 0, "RELIGION": 0}, "canaries": []},
-    {"text": "12345 is a number.", "expected": "12345 is a number.", "entities": {"PERSON": 0, "CITY": 0, "RELIGION": 0}, "canaries": []},
-    {"text": "This is a simple test.", "expected": "This is a simple test.", "entities": {"PERSON": 0, "CITY": 0, "RELIGION": 0}, "canaries": []},
-
+    {
+        "text": "The cat sat on the mat.",
+        "expected": "The cat sat on the mat.",
+        "entities": {"PERSON": 0, "CITY": 0, "RELIGION": 0},
+        "canaries": [],
+    },
+    {
+        "text": "12345 is a number.",
+        "expected": "12345 is a number.",
+        "entities": {"PERSON": 0, "CITY": 0, "RELIGION": 0},
+        "canaries": [],
+    },
+    {
+        "text": "This is a simple test.",
+        "expected": "This is a simple test.",
+        "entities": {"PERSON": 0, "CITY": 0, "RELIGION": 0},
+        "canaries": [],
+    },
     # Email addresses, phone numbers, organizations (Unsupported)
-    {"text": "My email is test@example.com.", "expected": "My email is test@example.com.", "entities": {"PERSON": 0, "CITY": 0, "RELIGION": 0}, "canaries": ["test@example.com"]},
-    {"text": "Call me at 555-0199.", "expected": "Call me at 555-0199.", "entities": {"PERSON": 0, "CITY": 0, "RELIGION": 0}, "canaries": ["555-0199"]},
-    {"text": "I work for Google Inc.", "expected": "I work for Google Inc.", "entities": {"PERSON": 0, "CITY": 0, "RELIGION": 0}, "canaries": ["Google Inc."]},
-    {"text": "Contact info@company.de", "expected": "Contact info@company.de", "entities": {"PERSON": 0, "CITY": 0, "RELIGION": 0}, "canaries": ["info@company.de"]},
-    {"text": "The UN is an organization.", "expected": "The UN is an organization.", "entities": {"PERSON": 0, "CITY": 0, "RELIGION": 0}, "canaries": ["UN"]}
+    {
+        "text": "My email is test@example.com.",
+        "expected": "My email is test@example.com.",
+        "entities": {"PERSON": 0, "CITY": 0, "RELIGION": 0},
+        "canaries": ["test@example.com"],
+    },
+    {
+        "text": "Call me at 555-0199.",
+        "expected": "Call me at 555-0199.",
+        "entities": {"PERSON": 0, "CITY": 0, "RELIGION": 0},
+        "canaries": ["555-0199"],
+    },
+    {
+        "text": "I work for Google Inc.",
+        "expected": "I work for Google Inc.",
+        "entities": {"PERSON": 0, "CITY": 0, "RELIGION": 0},
+        "canaries": ["Google Inc."],
+    },
+    {
+        "text": "Contact info@company.de",
+        "expected": "Contact info@company.de",
+        "entities": {"PERSON": 0, "CITY": 0, "RELIGION": 0},
+        "canaries": ["info@company.de"],
+    },
+    {
+        "text": "The UN is an organization.",
+        "expected": "The UN is an organization.",
+        "entities": {"PERSON": 0, "CITY": 0, "RELIGION": 0},
+        "canaries": ["UN"],
+    },
 ]
+
 
 def tagger_wrapper(text):
     result_text = anonymize_text(text)
     return {"text": result_text, "tags": []}
+
 
 class TestAnonymizationQualification:
     def evaluate_metrics(self):
@@ -86,7 +278,7 @@ class TestAnonymizationQualification:
         metrics = {
             "PERSON": {"tp": 0, "fp": 0, "fn": 0},
             "CITY": {"tp": 0, "fp": 0, "fn": 0},
-            "RELIGION": {"tp": 0, "fp": 0, "fn": 0}
+            "RELIGION": {"tp": 0, "fp": 0, "fn": 0},
         }
 
         unredacted_canaries = 0
@@ -108,9 +300,9 @@ class TestAnonymizationQualification:
                 # and any missed is a False Negative.
                 metrics[entity]["tp"] += min(expected_count, actual_count)
                 if actual_count > expected_count:
-                    metrics[entity]["fp"] += (actual_count - expected_count)
+                    metrics[entity]["fp"] += actual_count - expected_count
                 if actual_count < expected_count:
-                    metrics[entity]["fn"] += (expected_count - actual_count)
+                    metrics[entity]["fn"] += expected_count - actual_count
 
             # Check for unredacted canaries
             for canary in case["canaries"]:
@@ -132,7 +324,7 @@ class TestAnonymizationQualification:
                 "recall": recall,
                 "f1": f1,
                 "false_positives": fp,
-                "false_negatives": fn
+                "false_negatives": fn,
             }
 
         results["unredacted_canaries"] = unredacted_canaries
@@ -161,7 +353,10 @@ class TestAnonymizationQualification:
         If NLTK fails, it returns the original text (fail-open), which is a security flaw.
         We simulate an exception in word_tokenize to trigger the exception block.
         """
-        with patch("augmentoolkit.utils.anonymization.word_tokenize", side_effect=Exception("Simulated failure")):
+        with patch(
+            "augmentoolkit.utils.anonymization.word_tokenize",
+            side_effect=Exception("Simulated failure"),
+        ):
             original_text = "Lina Wolkenstein wohnt in Berlin."
             anonymized = anonymize_text(original_text)
 
@@ -179,7 +374,9 @@ class TestAnonymizationQualification:
         and expect fallback.
         """
         # If chunks fail, we return original text.
-        with patch("augmentoolkit.utils.anonymization.ne_chunk", side_effect=Exception("Missing Resource")):
+        with patch(
+            "augmentoolkit.utils.anonymization.ne_chunk", side_effect=Exception("Missing Resource")
+        ):
             original_text = "Alice goes to Paris."
             anonymized = anonymize_text(original_text)
 
@@ -193,9 +390,16 @@ class TestAnonymizationQualification:
         """
         # When Presidio is available but initialization fails
         # It logs a warning, doesn't crash, and falls back to NLTK.
-        with patch("augmentoolkit.utils.anonymization.AnalyzerEngine", side_effect=Exception("Presidio init failed"), create=True):
+        with patch(
+            "augmentoolkit.utils.anonymization.AnalyzerEngine",
+            side_effect=Exception("Presidio init failed"),
+            create=True,
+        ):
             # Also patch NLTK to prove we reached the fallback
-            with patch("augmentoolkit.utils.anonymization.anonymize_text_nltk", return_value="FALLBACK_NLTK"):
+            with patch(
+                "augmentoolkit.utils.anonymization.anonymize_text_nltk",
+                return_value="FALLBACK_NLTK",
+            ):
                 anonymized = anonymize_text("Some text")
                 assert anonymized == "FALLBACK_NLTK"
 
@@ -232,7 +436,7 @@ class TestAnonymizationQualification:
             sensitivity="D2",
             source="cpu_ocr",
             engine="tesseract",
-            provider_destination="local"
+            provider_destination="local",
         )
         result = OCRResult(
             schema_version="1",
@@ -246,7 +450,7 @@ class TestAnonymizationQualification:
             status="completed",
             sensitivity="D2",
             pages=[page],
-            stats={"duration": 1.0, "estimated_cost": 0.0}
+            stats={"duration": 1.0, "estimated_cost": 0.0},
         )
 
         def bad_tagger(text):
@@ -263,7 +467,7 @@ class TestAnonymizationQualification:
         """
         text = "Lina Wolkenstein wohnt in Berlin. Ihre Religionszugehoerigkeit ist evangelisch."
         img_path = tmp_path / "test_ocr.png"
-        img = Image.new('RGB', (800, 100), color=(255, 255, 255))
+        img = Image.new("RGB", (800, 100), color=(255, 255, 255))
         d = ImageDraw.Draw(img)
         d.text((10, 10), text, fill=(0, 0, 0))
         img.save(img_path)
@@ -277,11 +481,11 @@ class TestAnonymizationQualification:
             markdown=ocr_text,
             image_width=800,
             image_height=100,
-            blocks=[Block(id="b1", bbox=[0,0,10,10], text=ocr_text, confidence=0.9)],
+            blocks=[Block(id="b1", bbox=[0, 0, 10, 10], text=ocr_text, confidence=0.9)],
             sensitivity="D2",
             source="cpu_ocr",
             engine="tesseract",
-            provider_destination="local"
+            provider_destination="local",
         )
         result = OCRResult(
             schema_version="1",
@@ -295,7 +499,7 @@ class TestAnonymizationQualification:
             status="completed",
             sensitivity="D2",
             pages=[page],
-            stats={"duration": 1.0, "estimated_cost": 0.0}
+            stats={"duration": 1.0, "estimated_cost": 0.0},
         )
 
         handoff_result = anonymization_handoff(result, tagger_wrapper)
