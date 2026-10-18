@@ -35,7 +35,7 @@ def create_app(settings=None, backend=None):
 
             alias_backend = None
             openai_url = os.getenv("OPENAI_COMPATIBLE_URL")
-            openai_key = os.getenv("OPENAI_COMPATIBLE_KEY")
+            openai_key = os.getenv("OPENAI_COMPATIBLE_API")
             openai_model = os.getenv("OPENAI_COMPATIBLE_MODEL", "alias-ocr")
 
             if openai_url and openai_key:
