@@ -1,5 +1,6 @@
 """Publish a complete private file atomically, without overwriting any target."""
 
+import fcntl
 import os
 import tempfile
 from pathlib import Path
@@ -8,9 +9,11 @@ from ocr.schemas import SafeError
 
 
 def write_candidate(path, data):
-    temporary = None
+    temporary, directory = None, None
     try:
         path = Path(path)
+        directory = os.open(path.parent, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
+        fcntl.flock(directory, fcntl.LOCK_SH)
         # Same-directory staging guarantees a same-filesystem atomic hard link.
         fd, temporary = tempfile.mkstemp(prefix=".anonymization-", dir=path.parent)
         with os.fdopen(fd, "wb") as stream:
@@ -33,3 +36,6 @@ def write_candidate(path, data):
                 # Never print classified bytes or paths on cleanup failure. A
                 # leftover staging file is private (0600), never an approved export.
                 pass
+
+        if directory is not None:
+            os.close(directory)

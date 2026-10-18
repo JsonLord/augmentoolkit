@@ -59,4 +59,52 @@ class OfflineTokenizer:
         tokenizer = self._load()
         if tokenizer is not None:
             return tokenizer.decode(tokens, **kwargs)
-        return bytes(t for t in tokens if 0 <= t < 256).decode("utf-8", errors="ignore")
+        from ocr.schemas import SafeError
+
+        try:
+            tokens = tuple(tokens)
+            if any(type(t) is not int or not 0 <= t <= 257 for t in tokens):
+                raise ValueError()
+            return bytes(t for t in tokens if t < 256).decode("utf-8", errors="strict")
+        except (TypeError, ValueError, UnicodeError):
+            raise SafeError("tokenizer_invalid_or_truncated_utf8") from None
+
+    def truncate_tokens(self, tokens, limit, *, keep="prefix"):
+        """Return an explicit bounded prefix on a complete UTF-8 boundary.
+
+        Invalid leading/interior byte sequences fail; only incomplete trailing
+        codepoints are trimmed, as part of the requested truncation operation.
+        """
+        if type(limit) is not int or limit < 0 or keep not in ("prefix", "suffix"):
+            raise ValueError("invalid_token_limit")
+        prefix = (
+            (tokens[:limit] if keep == "prefix" else tokens[-limit:]) if limit else []
+        )
+        if self._load() is not None:
+            return prefix
+        from ocr.schemas import SafeError
+
+        # Validate the entire source before deciding which prefix to retain.
+        self.decode(tokens)
+        try:
+            self.decode(prefix)
+            return prefix
+        except SafeError:
+            payload = bytes(t for t in prefix if t < 256)
+            if keep == "suffix":
+                while payload and payload[0] & 0xC0 == 0x80:
+                    payload = payload[1:]
+                try:
+                    payload.decode("utf-8", errors="strict")
+                except UnicodeError:
+                    raise SafeError("tokenizer_invalid_or_truncated_utf8") from None
+                return list(payload) + ([257] if prefix and prefix[-1] == 257 else [])
+            try:
+                payload.decode("utf-8", errors="strict")
+            except UnicodeDecodeError as exc:
+                if exc.reason != "unexpected end of data":
+                    raise SafeError("tokenizer_invalid_or_truncated_utf8") from None
+                return ([256] if prefix and prefix[0] == 256 else []) + list(
+                    payload[: exc.start]
+                )
+            raise

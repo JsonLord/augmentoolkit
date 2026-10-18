@@ -87,7 +87,7 @@ def application(tmp_path, *, level="D2"):
             and dest.destination_id == PRIVATE.destination_id
         )
     )
-    ledger = SQLiteApprovalLedger(tmp_path / "approvals.sqlite")
+    ledger = SQLiteApprovalLedger(tmp_path / "approvals.sqlite", initialize=True)
     authority = ReleaseAuthority(
         b"x" * 32,
         authorizer,

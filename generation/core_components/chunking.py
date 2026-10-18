@@ -961,7 +961,7 @@ def format_conversation_history(message_list):
         # Encode the string to get tokens
         encoded_tokens = tokenizer.encode(conv_history_str)
         # Keep only the last 30000 tokens
-        truncated_tokens = encoded_tokens[-30000:]
+        truncated_tokens = tokenizer.truncate_tokens(encoded_tokens, 30000, keep="suffix")
         # Decode back to string, skipping special tokens that might be added
         truncated_str = tokenizer.decode(truncated_tokens, skip_special_tokens=True)
         # Prepend the truncation indicator

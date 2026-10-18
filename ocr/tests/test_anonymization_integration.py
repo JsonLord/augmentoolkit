@@ -42,3 +42,21 @@ def test_real_synthetic_canary_release_qualification():
     assert all(r["qualification_passed"] for r in reports), (
         "Pinned recognizer has leakage; automated release blocked"
     )
+
+
+@pytest.mark.skipif(
+    os.getenv("RUN_GATE03C_HOLDOUT") != "1", reason="Opt-in frozen independent holdout"
+)
+def test_gate03c_frozen_holdout_canary_acceptance():
+    import hashlib
+
+    root = Path(__file__).parents[1] / "anonymization/fixtures/holdout03c"
+    frozen = json.loads((root / "freeze.json").read_text())
+    data = (root / "cases.json").read_bytes()
+    assert hashlib.sha256(data).hexdigest() == frozen["sha256"]
+    model = GLiNERRecognizer(os.environ["ANONYMIZATION_MODEL_CACHE"])
+    assert model.prompts == frozen["control_prompts"] and model.threshold == frozen["threshold"]
+    report = score_cases(model, json.loads(data))
+    assert report["qualification_passed"], (
+        "Fresh holdout canary gate FAILED; sensitive processing and automatic release blocked"
+    )

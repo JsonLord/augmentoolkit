@@ -31,6 +31,7 @@ def metrics(counts):
 def score_cases(recognizer, cases):
     ner_counts, combined_counts, leaks, failures = Counter(), Counter(), Counter(), Counter()
     literal_leaks = Counter()
+    partial_canaries, uncovered_canaries, coverage = Counter(), Counter(), Counter()
     durations, exact, blocked = [], 0, 0
     groups = {}
     for case in cases:
@@ -62,13 +63,19 @@ def score_cases(recognizer, cases):
         for s in case["spans"]:
             if actual is None or s["text"].casefold() in actual.casefold():
                 literal_leaks[s["label"]] += 1
-            # A partially masked identifier is still a canary failure, even if
-            # the complete original string no longer occurs in the output.
-            if actual is None or any(
-                text[i].isalnum() and not any(left <= i < right for left, right, _ in predicted)
-                for i in range(s["start"], s["end"])
-            ):
+            sensitive_positions = [i for i in range(s["start"], s["end"]) if text[i].isalnum()]
+            covered = sum(
+                actual is not None and any(left <= i < right for left, right, _ in predicted)
+                for i in sensitive_positions
+            )
+            coverage[(s["label"], "total")] += len(sensitive_positions)
+            coverage[(s["label"], "covered")] += covered
+            if covered < len(sensitive_positions):
                 leaks[s["label"]] += 1
+                if covered:
+                    partial_canaries[s["label"]] += 1
+                else:
+                    uncovered_canaries[s["label"]] += 1
         group = case.get("language", "unspecified")
         stats = groups.setdefault(group, dict(documents=0, exact_matches=0, false_negatives=0))
         stats["documents"] += 1
@@ -87,6 +94,11 @@ def score_cases(recognizer, cases):
         combined_entity_metrics=metrics(combined_counts),
         unredacted_canaries={k: leaks[k] for k in LABELS},
         literal_unredacted_canaries={k: literal_leaks[k] for k in LABELS},
+        partial_canaries={k: partial_canaries[k] for k in LABELS},
+        fully_uncovered_canaries={k: uncovered_canaries[k] for k in LABELS},
+        alphanumeric_canary_coverage={
+            k: dict(covered=coverage[(k, "covered")], total=coverage[(k, "total")]) for k in LABELS
+        },
         document_exact_match_rate=exact / len(cases),
         groups=groups,
         blocked_documents=blocked,

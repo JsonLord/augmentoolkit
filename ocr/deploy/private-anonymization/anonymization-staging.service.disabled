@@ -1,0 +1,36 @@
+# TEMPLATE ONLY. Not installed/enabled; deployment and real host bindings BLOCKED.
+[Unit]
+Description=Private anonymization staging host (manual approval required)
+ConditionPathExists=/etc/private-anonymization/APPROVED-STAGING-CONFIG
+
+[Service]
+Type=simple
+User=augmentanon
+Group=augmentanon
+UMask=0077
+EnvironmentFile=/etc/private-anonymization/host.env
+Environment=HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 HF_HUB_DISABLE_TELEMETRY=1
+WorkingDirectory=/opt/private-anonymization/current
+# PRIVATE_ANONYMIZATION_HOST_MODULE must be the separately audited real host app.
+# No default/mock module is supplied and this template must not be enabled as-is.
+ExecStart=/opt/private-anonymization/venv/bin/python -m ${PRIVATE_ANONYMIZATION_HOST_MODULE}
+Restart=no
+TimeoutStopSec=30
+StateDirectory=private-anonymization
+StateDirectoryMode=0700
+MemoryMax=8G
+CPUQuota=400%
+TasksMax=64
+NoNewPrivileges=yes
+PrivateNetwork=yes
+RestrictAddressFamilies=AF_UNIX
+IPAddressDeny=any
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=yes
+ReadWritePaths=/var/lib/private-anonymization
+ReadOnlyPaths=/var/cache/private-anonymization/model
+LoadCredential=release-signing-key:/etc/private-anonymization/release-signing-key
+
+[Install]
+WantedBy=multi-user.target
