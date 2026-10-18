@@ -568,3 +568,52 @@ def test_corrupt_private_records_fail_sanitized(mode, caplog):
         service.propose(host.author_credential, "original-review", (edit,))
     assert "PrivateSyntheticName" not in str(caught.value) + caplog.text
     assert len(host.contexts) == 1 and not host.proposals
+
+
+@pytest.mark.parametrize("first_page", [0, 1])
+def test_unicode_multipage_corrections_use_original_codepoints(first_page):
+    texts = ("🧭 Grüße SyntheticAlpha.", "漢字 SecondSyntheticName.")
+    result = evidence("D2", texts)
+    for index, page in enumerate(result.pages, first_page):
+        page.page_index = index
+    context = prepare_review(
+        AnonymizationEngine(Recognizer(())),
+        result,
+        review_ref="original-review",
+        environment_id="synthetic-room",
+        expires_at=int(time.time()) + 600,
+    )
+    host = CorrectionHostFixture(
+        context, dict(enumerate(texts, first_page)), separate_approver=True
+    )
+    service = CorrectionService(host)
+    edits = tuple(
+        edit_for(host, word, "PERSON", "missing_entity", page=page)
+        for page, word in enumerate(("SyntheticAlpha", "SecondSyntheticName"), first_page)
+    )
+    proposal = service.propose(host.author_credential, "original-review", edits)
+    receipt = service.apply(host.author_credential, proposal.correction_id)
+    candidate = host.candidates[receipt.candidate_digest]
+    assert tuple(p.anonymized_text for p in candidate.pages) == (
+        "🧭 Grüße [PERSON].",
+        "漢字 [PERSON].",
+    )
+    for edit, page, text in zip(edits, candidate.pages, texts, strict=True):
+        assert edit.span.start == page.tags[0].start
+        assert len(text[: edit.span.start].encode()) > edit.span.start
+
+
+@pytest.mark.parametrize("version", ["v1", "v2"])
+def test_human_tags_cannot_be_disguised_as_legacy_candidate(version):
+    host = host_fixture()
+    _, _, corrected = apply_one(
+        host, edit_for(host, "Silver Lantern Archives", "ORGANIZATION", "incomplete_boundary")
+    )
+    payload = corrected.model_dump(mode="json")
+    payload["schema_version"] = "ocr-anonymization-candidate/" + version
+    del payload["correction"]
+    payload["review_reasons"] = ["recognition_incomplete_possible"]
+    if version == "v1":
+        del payload["provenance"]
+    with pytest.raises(SafeError, match="^unsupported_or_invalid_candidate$"):
+        parse_candidate(json.dumps(payload))
