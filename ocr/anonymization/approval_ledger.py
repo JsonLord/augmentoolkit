@@ -72,6 +72,10 @@ class SQLiteApprovalLedger:
             with closing(self._connect()) as connection, connection:
                 connection.execute("PRAGMA synchronous=FULL")
                 connection.execute("BEGIN IMMEDIATE")
+                # Lock acquisition may have waited beyond approval expiration.
+                # Recheck at the consumption transaction, not only before waiting.
+                if expires_at <= int(time.time()):
+                    return False
                 if connection.execute("SELECT id FROM identity").fetchone() != (self.ledger_id,):
                     raise ValueError()
                 # Retain consumed IDs: clock rollback must not resurrect approvals

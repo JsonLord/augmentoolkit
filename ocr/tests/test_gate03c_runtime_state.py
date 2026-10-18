@@ -46,6 +46,7 @@ def test_persistent_multiprocess_race_restart_and_rotation(tmp_path):
         app.authorizer,
         verify_review=app.verifier,
         consume_approval=app.ledger.consume,
+        legacy_policy=app.authority._legacy_policy,
         destinations=(PRIVATE,),
     )
     with pytest.raises(SafeError):

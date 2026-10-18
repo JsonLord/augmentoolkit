@@ -52,6 +52,7 @@ class HostSecurityAdapter(Protocol):
     ) -> bool: ...
     def destination(self, destination_id: str) -> Destination: ...
     def corrected_release_allowed(self, candidate, review: VerifiedReview) -> bool: ...
+    def legacy_release_allowed(self, candidate, review: VerifiedReview) -> bool: ...
 
 
 class HostAuthorizationBridge:
@@ -102,10 +103,16 @@ class HostAuthorizationBridge:
         )
 
     def corrected_release(self, candidate, review):
-        # Missing production integration denies corrected candidates. Existing
-        # v1/v2 approvals never invoke this new callback.
+        # Missing production integration denies corrected candidates.
         try:
             return self.host.corrected_release_allowed(candidate, review) is True
+        except Exception:
+            return False
+
+    def legacy_release(self, candidate, review):
+        # v1/v2 require an explicit authoritative source/schema eligibility policy.
+        try:
+            return self.host.legacy_release_allowed(candidate, review) is True
         except Exception:
             return False
 
@@ -116,6 +123,7 @@ class HostAuthorizationBridge:
             verify_review=self.review,
             consume_approval=ledger.consume,
             correction_policy=self.corrected_release,
+            legacy_policy=self.legacy_release,
             destinations=tuple(self.host.destination(i) for i in destination_ids),
             **kwargs,
         )
@@ -141,6 +149,7 @@ class HostAuthorizationBridge:
                 or not review.completed
                 or review.revoked
                 or review.expires_at <= time.time()
+                or review.attestation.review_id != record.review_id
                 or review.attestation.candidate_digest != record.candidate_digest
                 or review.attestation.evidence_digest != record.review_evidence_digest
                 or review.attestation.sensitivity != sensitivity

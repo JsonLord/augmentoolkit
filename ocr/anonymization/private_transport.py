@@ -114,6 +114,20 @@ class PrivateFileTransport:
                     raise ValueError()
                 stream.flush()
                 os.fsync(stream.fileno())
+            # Disk I/O may outlast a session/ACL/review/destination authorization.
+            # Recheck immediately before the atomic publication point. A real
+            # host must serialize revocation/publication if it needs stronger
+            # cross-store atomic semantics; this callback is not a transaction.
+            metadata = os.fstat(directory)
+            if (
+                metadata.st_mode & 0o077
+                or metadata.st_uid != os.getuid()
+                or self._authorize(
+                    credential, artifact_digest, payload["sensitivity"], destination_id
+                )
+                is not True
+            ):
+                raise ValueError()
             os.link(
                 temporary,
                 artifact_digest + ".json",

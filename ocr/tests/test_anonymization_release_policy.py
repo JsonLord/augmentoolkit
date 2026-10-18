@@ -93,6 +93,7 @@ def application(tmp_path, *, level="D2"):
         authorizer,
         verify_review=verifier,
         consume_approval=ledger.consume,
+        legacy_policy=lambda c, r: digest(c) == r.candidate_digest,
         destinations=(PRIVATE, OTHER, PUBLIC),
     )
     return ApplicationFixture(value, review, authority, ledger, authorizer, verifier)
@@ -250,6 +251,7 @@ def test_replay_ledger_persists_across_authority_instances_and_races(tmp_path):
         app.authorizer,
         verify_review=app.verifier,
         consume_approval=restarted_ledger.consume,
+        legacy_policy=app.authority._legacy_policy,
         destinations=(PRIVATE,),
     )
 

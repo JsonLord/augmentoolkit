@@ -48,12 +48,14 @@ class ReleaseAuthority:
         destinations,
         ttl=900,
         correction_policy=None,
+        legacy_policy=None,
     ):
         if (
             not isinstance(key, bytes)
             or len(key) < 32
             or not all(callable(c) for c in (authorize, verify_review, consume_approval))
             or (correction_policy is not None and not callable(correction_policy))
+            or (legacy_policy is not None and not callable(legacy_policy))
             or type(ttl) is not int
             or not 1 <= ttl <= 900
         ):
@@ -69,6 +71,7 @@ class ReleaseAuthority:
         self._verify_review, self._consume = verify_review, consume_approval
         self.ttl = ttl
         self._correction_policy = correction_policy
+        self._legacy_policy = legacy_policy
 
     def _destination(self, identifier, sensitivity, format):
         if format not in ("json", "text"):
@@ -103,16 +106,21 @@ class ReleaseAuthority:
         except Exception:
             raise SafeError("release_not_approved") from None
 
-    def _corrected_review(self, candidate, review):
-        if type(candidate) is CorrectedCandidate:
-            try:
-                if (
-                    self._correction_policy is None
-                    or self._correction_policy(candidate, review) is not True
-                ):
+    def _candidate_policy(self, candidate, review):
+        try:
+            if type(candidate) is CorrectedCandidate:
+                if review.evidence_digest != candidate.correction.original_evidence_digest:
                     raise ValueError()
-            except Exception:
-                raise SafeError("release_not_approved") from None
+                policy = self._correction_policy
+            else:
+                # v1/v2 do not carry correction history. The operator must
+                # explicitly attest authoritative schema/source eligibility;
+                # removing v3 metadata cannot select an implicit allow branch.
+                policy = self._legacy_policy
+            if policy is None or policy(candidate, review) is not True:
+                raise ValueError()
+        except Exception:
+            raise SafeError("release_not_approved") from None
 
     def _signature(self, fields):
         payload = json.dumps(fields, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
@@ -122,7 +130,7 @@ class ReleaseAuthority:
         value = digest(candidate)
         target = self._destination(destination, candidate.sensitivity, format)
         review = self._review(actor, review_id, value, candidate.sensitivity, target)
-        self._corrected_review(candidate, review)
+        self._candidate_policy(candidate, review)
         now = int(time.time())
         fields = dict(
             schema_version="ocr-review-approval/v2",
@@ -161,7 +169,7 @@ class ReleaseAuthority:
         review = self._review(
             actor, approval.review.review_id, value, candidate.sensitivity, target
         )
-        self._corrected_review(candidate, review)
+        self._candidate_policy(candidate, review)
         if review != approval.review:
             raise SafeError("release_not_approved")
         text = "\n\n".join(p.anonymized_text for p in candidate.pages)
@@ -191,4 +199,15 @@ class ReleaseAuthority:
                 raise ValueError()
         except Exception:
             raise SafeError("release_approval_consumed_or_unavailable") from None
+        # Persistent consumption can wait for a database lock. Reauthorize
+        # after it completes, before classified bytes leave this boundary. A
+        # failed final check burns the nonce; it never rolls the ledger back.
+        final_review = self._review(
+            actor, approval.review.review_id, value, candidate.sensitivity, target
+        )
+        self._candidate_policy(candidate, final_review)
+        if final_review != approval.review or not (
+            approval.issued_at <= int(time.time()) < approval.expires_at
+        ):
+            raise SafeError("release_not_approved")
         return output

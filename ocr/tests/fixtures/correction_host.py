@@ -89,6 +89,12 @@ class CorrectionHostFixture:
         self.context_reads, self.proposal_reads = 0, 0
         self.before_publish = None
 
+    def legacy_release_allowed(self, candidate, review):
+        return (
+            self.candidates.get(digest(candidate)) == candidate
+            and digest(candidate) == review.candidate_digest
+        )
+
     def authenticate(self, credential):
         return self.identities[credential]
 

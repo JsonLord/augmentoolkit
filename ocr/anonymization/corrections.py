@@ -231,6 +231,14 @@ class CorrectionReview(StrictModel):
 
 
 class CorrectionHost(PrivateReviewHost, Protocol):
+    """Required host contract, NOT a durable storage implementation.
+
+    store/publish must durably commit reauthorization, compare-and-swap of the
+    active head, immutable records and single-use publication in one transaction.
+    An RLock fixture demonstrates only in-process semantics. Crash/restart and
+    multi-process durability remain unqualified until a real adapter is supplied.
+    """
+
     def load_correction_context(self, review_ref: str) -> CorrectionContext: ...
     def correction_binding(self, correction_id: str) -> str: ...
     def load_correction(self, correction_id: str) -> StoredProposal: ...

@@ -62,6 +62,9 @@ class IsolatedHostAdapter:
             )
         }
 
+    def legacy_release_allowed(self, candidate, review):
+        return digest(candidate) in self.candidates and digest(candidate) == review.candidate_digest
+
     def authenticate(self, credential):
         if credential is not self.credential:
             raise PermissionError("fixture_credentials_rejected")
