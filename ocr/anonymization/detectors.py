@@ -3,6 +3,9 @@
 import re
 
 from .schemas import Entity
+from .terminology import ReligiousTerminology
+
+DEFAULT_TERMINOLOGY = ReligiousTerminology()
 
 EMAIL = re.compile(r"(?<![\w.+-])[\w.!#$%&'*+/=?^`{|}~-]+@[\w-]+(?:\.[\w-]+)+(?![\w-])")
 PHONE = re.compile(
@@ -10,7 +13,7 @@ PHONE = re.compile(
 )
 
 
-def detect(text):
+def detect_contacts(text):
     found = []
     for label, pattern in (("EMAIL", EMAIL), ("PHONE", PHONE)):
         for match in pattern.finditer(text):
@@ -27,3 +30,8 @@ def detect(text):
                 )
             )
     return found
+
+
+def detect(text, *, terminology=DEFAULT_TERMINOLOGY):
+    """Protect literal religious/status terms as well as contact identifiers."""
+    return detect_contacts(text) + terminology.detect(text)

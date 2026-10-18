@@ -8,12 +8,14 @@ from .detectors import detect
 from .model import MODEL_REVISION
 from .replacement import replace, validate_entities
 from .schemas import LABELS, CandidatePage, ReleaseCandidate
+from .terminology import DEFAULT_TERMS, ReligiousTerminology
 
 
 class AnonymizationEngine:
-    def __init__(self, recognizer, *, placeholders=None):
+    def __init__(self, recognizer, *, placeholders=None, religion_terms=DEFAULT_TERMS):
         self.recognizer = recognizer
         self.placeholders = placeholders
+        self.terminology = ReligiousTerminology(religion_terms)
 
     def transform(self, text):
         try:
@@ -35,7 +37,9 @@ class AnonymizationEngine:
                 for p in predictions
             ):
                 raise SafeError("invalid_entity_provenance")
-            output, tags = replace(text, predictions + detect(text), self.placeholders)
+            output, tags = replace(
+                text, predictions + detect(text, terminology=self.terminology), self.placeholders
+            )
             return output, tags, not predictions
         except SafeError as exc:
             allowed = {

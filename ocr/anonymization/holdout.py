@@ -10,6 +10,7 @@ import time
 from pathlib import Path
 
 from .atomic_output import write_candidate
+from .detectors import detect_contacts
 from .evaluate import score_cases
 from .model import MODEL_REVISION
 from .recognizer import GLiNERRecognizer
@@ -54,7 +55,7 @@ def run(cache, output):
             k: importlib.metadata.version(k)
             for k in ("gliner", "torch", "transformers", "numpy", "pydantic")
         },
-        evaluation=score_cases(recognizer, json.loads(data)),
+        evaluation=score_cases(recognizer, json.loads(data), detector=detect_contacts),
         peak_rss_mib=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024,
         denied_network_calls=denied,
         automated_release_eligible=False,

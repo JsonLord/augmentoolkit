@@ -28,7 +28,7 @@ def metrics(counts):
     return output
 
 
-def score_cases(recognizer, cases):
+def score_cases(recognizer, cases, *, detector=detect, case_reports=None):
     ner_counts, combined_counts, leaks, failures = Counter(), Counter(), Counter(), Counter()
     literal_leaks = Counter()
     partial_canaries, uncovered_canaries, coverage = Counter(), Counter(), Counter()
@@ -42,13 +42,15 @@ def score_cases(recognizer, cases):
                 raise SafeError("invalid_evaluation_fixture")
         start = time.perf_counter()
         actual, predicted, ner = None, set(), set()
+        raw, combined, error_code = [], [], None
         try:
             raw = validate_entities(text, recognizer.recognize(text))
             ner = {(s.start, s.end, s.label) for s in raw}
-            combined = resolve_overlaps(validate_entities(text, raw + detect(text)))
+            combined = resolve_overlaps(validate_entities(text, raw + detector(text)))
             predicted = {(s.start, s.end, s.label) for s in combined}
             actual, _ = replace(text, combined)
         except SafeError as e:
+            error_code = e.code
             failures[e.code] += 1
             blocked += 1
         durations.append((time.perf_counter() - start) * 1000)
@@ -76,6 +78,34 @@ def score_cases(recognizer, cases):
                     partial_canaries[s["label"]] += 1
                 else:
                     uncovered_canaries[s["label"]] += 1
+        if case_reports is not None:
+            case_reports.append(
+                dict(
+                    case_id=case["id"],
+                    scenario=case.get("scenario"),
+                    predictions=[s.model_dump() for s in raw],
+                    combined_predictions=[s.model_dump() for s in combined],
+                    false_positives=sorted(predicted - gold),
+                    false_negatives=sorted(gold - predicted),
+                    exact_match=actual == case["expected"],
+                    error_code=error_code,
+                    canaries=[
+                        dict(
+                            **s,
+                            uncovered_positions=[
+                                i
+                                for i in range(s["start"], s["end"])
+                                if text[i].isalnum()
+                                and (
+                                    actual is None
+                                    or not any(left <= i < right for left, right, _ in predicted)
+                                )
+                            ],
+                        )
+                        for s in case["spans"]
+                    ],
+                )
+            )
         group = case.get("language", "unspecified")
         stats = groups.setdefault(group, dict(documents=0, exact_matches=0, false_negatives=0))
         stats["documents"] += 1
