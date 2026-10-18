@@ -131,3 +131,27 @@ is not implemented. `automated_release_eligible` stays false for every candidate
 even when synthetic tests pass. Reviewers must examine remaining identifiers in
 addition to detected replacements. See [PR #3 hardening](anonymization-pr3-hardening.md)
 for exact synthetic diagnosis, comparison evidence and separate readiness decisions.
+
+
+## Gate 03c integration hardening
+
+`host_adapter.py` defines the concrete host integration protocol and validation
+bridge: authenticate opaque credentials, retrieve immutable completed review
+evidence, validate authoritative candidate/export digests, recheck expiry,
+revocation, ACLs and live destination policies. A concrete production provider is
+not supplied or configured; the isolated adapter lives only under tests. See
+[Gate 03c](anonymization-gate03c.md) for blockers and actual test evidence.
+
+SQLite now requires explicit one-time provisioning and a pinned ledger identity
+on restart. Mode-rw connections never recreate missing storage; inode replacement,
+corruption and unsafe file/directory permissions fail closed. Consumed IDs are
+retained; automatic expiry garbage collection was removed to avoid replay after
+clock rollback. Local multi-host ledgers must have distinct actual key fingerprints.
+A claimed shared-backend flag is not accepted as shared-durability qualification.
+
+`PrivateFileTransport` implements an explicit separately authorized local delivery
+operation only. It checks an authoritative exported-artifact registry, a fresh
+`anonymization:private-transfer` ACL, a fixed private destination root/inode and
+the typed classified payload. It has no network client, caller paths/URLs, redirects
+or public fallback. Export does not invoke it. Recovery removes only old private
+staging names with exclusive locking and never promises secure erasure.

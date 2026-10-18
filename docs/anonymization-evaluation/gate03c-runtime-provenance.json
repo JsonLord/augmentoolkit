@@ -1,0 +1,27 @@
+{
+  "runtime_python": "3.11.17",
+  "image_id": "sha256:32d30b74a9dafb3bd9acabfc5704f7000b91facb59626a494fed5cbbea0ad907",
+  "image_purpose": "Existing local OCR image used only as a test interpreter; private NER venv site-packages and feature source mounted readonly. Not a deployment image.",
+  "head_at_runtime_probes": "3323715c30f08da8f867e97925462dd965f2693d",
+  "qualification_helpers_uncommitted_at_probe_time": true,
+  "tracked_exact_native_probe_source_commit": "5653ab71ab78aa8b2d5abfd41b6cd59076dec097",
+  "native_probe_source_sha256": "2c7a7166f104d21dbed2ca9352db635188f523d90c907f576475426d483eb54d",
+  "runs": [
+    {
+      "name": "first",
+      "command": "docker --host=unix:///var/run/docker.sock run --rm --name gate03c-first --network none --memory 8g --cpus 4 --read-only --cap-drop ALL --security-opt no-new-privileges --user 1000:1000 --tmpfs /tmp:rw,noexec,nosuid,size=256m --mount type=bind,src=/workspace/.anonymization-venv/lib/python3.11/site-packages,dst=/opt/ner-packages,readonly --mount type=bind,src=/workspace/augmentoolkit-anonymization,dst=/app,readonly --mount type=bind,src=/workspace/.anonymization-model,dst=/models,readonly --mount type=bind,src=/workspace/gate03c-runtime-state,dst=/state --workdir /app -e PYTHONPATH=/opt/ner-packages:/app -e HF_HUB_OFFLINE=1 -e TRANSFORMERS_OFFLINE=1 -e HF_HUB_DISABLE_TELEMETRY=1 -e PYTHONDONTWRITEBYTECODE=1 --entrypoint python sha256:32d30b74a9dafb3bd9acabfc5704f7000b91facb59626a494fed5cbbea0ad907 -m ocr.anonymization.staging_probe --cache /models --output /state/runtime-first.json",
+      "result": "gate03c-runtime-first.json"
+    },
+    {
+      "name": "restart",
+      "command": "docker --host=unix:///var/run/docker.sock run --rm --name gate03c-restart --network none --memory 8g --cpus 4 --read-only --cap-drop ALL --security-opt no-new-privileges --user 1000:1000 --tmpfs /tmp:rw,noexec,nosuid,size=256m --mount type=bind,src=/workspace/.anonymization-venv/lib/python3.11/site-packages,dst=/opt/ner-packages,readonly --mount type=bind,src=/workspace/augmentoolkit-anonymization,dst=/app,readonly --mount type=bind,src=/workspace/.anonymization-model,dst=/models,readonly --mount type=bind,src=/workspace/gate03c-runtime-state,dst=/state --workdir /app -e PYTHONPATH=/opt/ner-packages:/app -e HF_HUB_OFFLINE=1 -e TRANSFORMERS_OFFLINE=1 -e HF_HUB_DISABLE_TELEMETRY=1 -e PYTHONDONTWRITEBYTECODE=1 --entrypoint python sha256:32d30b74a9dafb3bd9acabfc5704f7000b91facb59626a494fed5cbbea0ad907 -m ocr.anonymization.staging_probe --cache /models --output /state/runtime-restart.json",
+      "result": "gate03c-runtime-restart.json"
+    },
+    {
+      "name": "native-verification",
+      "command": "docker --host=unix:///var/run/docker.sock run --rm --name gate03c-native-verification --network none --memory 8g --cpus 4 --read-only --cap-drop ALL --security-opt no-new-privileges --user 1000:1000 --tmpfs /tmp:rw,noexec,nosuid,size=256m --mount type=bind,src=/workspace/.anonymization-venv/lib/python3.11/site-packages,dst=/opt/ner-packages,readonly --mount type=bind,src=/workspace/augmentoolkit-anonymization,dst=/app,readonly --mount type=bind,src=/workspace/.anonymization-model,dst=/models,readonly --mount type=bind,src=/workspace/gate03c-runtime-state,dst=/state --workdir /app -e PYTHONPATH=/opt/ner-packages:/app -e HF_HUB_OFFLINE=1 -e TRANSFORMERS_OFFLINE=1 -e HF_HUB_DISABLE_TELEMETRY=1 -e PYTHONDONTWRITEBYTECODE=1 --entrypoint python sha256:32d30b74a9dafb3bd9acabfc5704f7000b91facb59626a494fed5cbbea0ad907 -m ocr.anonymization.staging_probe --cache /models --output /state/runtime-native-verification.json",
+      "result": "gate03c-runtime-native-verification.json"
+    }
+  ],
+  "observation": "First/restart capture pre-observer versions by per-result source hash. Native-verification source is byte-identical to tracked commit 5653ab7. Resource measurements are cloud-only, not production-host qualification."
+}

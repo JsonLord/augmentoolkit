@@ -69,7 +69,9 @@ candidate = anonymization_handoff(original_result, engine)
 # Separate operation AFTER a human reviews this exact candidate for this sink.
 # These are real application integrations, deliberately NOT implemented as
 # allow-all callbacks. See the architecture doc for their mandatory contracts.
-ledger = SQLiteApprovalLedger('/private/state/release-approvals.sqlite')
+# Provision ONCE during separately authorized setup; pin its returned ledger_id.
+ledger = SQLiteApprovalLedger('/private/state/release-approvals.sqlite',
+                              expected_id=private_settings.ledger_id)
 destination = Destination(destination_id='reviewed-private-archive',
                           destination_class='private',
                           allowed_sensitivities=('D0', 'D1', 'D2'))
@@ -167,3 +169,13 @@ or automated export is enabled by the candidate CLI or service startup.
 
 The current actual-model follow-up results and decisions supersede the initial
 failed canary run: see [PR #3 hardening](anonymization-pr3-hardening.md).
+
+
+## Gate 03c supersedes staging readiness
+
+The [Gate 03c report](anonymization-gate03c.md) records a fresh frozen 120-case
+holdout with two unmasked religion canaries. Real identity/review integration is
+BLOCKED. Private deployment, sensitive-document processing and automatic release
+remain NO-GO. The [disabled staging specification](../ocr/deploy/private-anonymization/README.md)
+defines explicit ledger provisioning, key domains, resource limits and rollback.
+Normal ledger startup never creates missing storage; pass the pinned ledger ID.

@@ -1,5 +1,10 @@
 # Anonymization Qualification Report
 
+Current staging/sensitive-processing decision: **NO-GO**. The fresh 120-case
+[Gate 03c holdout](anonymization-gate03c.md) has two unmasked religious-reference
+canaries; real identity integration remains BLOCKED. Earlier findings below are
+preserved as historical evidence.
+
 ## Mission Objective
 Investigate and test the existing anonymization implementation before integrating it into the OCR workflow.
 
