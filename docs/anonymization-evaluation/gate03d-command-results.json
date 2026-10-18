@@ -1,0 +1,166 @@
+{
+  "source_sha": "d6dac617d0d62c8d5356cc0ce351b837a4ef0ec2",
+  "started_utc": "2026-10-18T10:37:15.538266+00:00",
+  "python": "Python 3.11.17",
+  "runs": [
+    {
+      "name": "new-holdout-first",
+      "command": [
+        "/workspace/.anonymization-venv/bin/python",
+        "-m",
+        "ocr.anonymization.qualify03d",
+        "--cache",
+        "/workspace/.anonymization-model",
+        "--output",
+        "docs/anonymization-evaluation/gate03d-holdout-first.json"
+      ],
+      "environment_overrides": {
+        "HF_HUB_OFFLINE": "1",
+        "TRANSFORMERS_OFFLINE": "1",
+        "HF_HUB_DISABLE_TELEMETRY": "1"
+      },
+      "source_sha": "d6dac617d0d62c8d5356cc0ce351b837a4ef0ec2",
+      "started_utc": "2026-10-18T10:37:15.542063+00:00",
+      "elapsed_seconds": 27.96027344200047,
+      "exit_code": 1,
+      "summary": [
+        "{\"qualification_passed\": false, \"automated_release_eligible\": false}"
+      ],
+      "log_path": "/tmp/gate03d-new-holdout-first.log"
+    },
+    {
+      "name": "ruff",
+      "command": [
+        "/workspace/.ocr-venv/bin/ruff",
+        "check",
+        "ocr",
+        "augmentoolkit/utils/offline_chunking.py"
+      ],
+      "environment_overrides": {},
+      "source_sha": "d6dac617d0d62c8d5356cc0ce351b837a4ef0ec2",
+      "started_utc": "2026-10-18T10:37:43.502769+00:00",
+      "elapsed_seconds": 0.009629435997339897,
+      "exit_code": 0,
+      "summary": [
+        "All checks passed!"
+      ],
+      "log_path": "/tmp/gate03d-ruff.log"
+    },
+    {
+      "name": "format",
+      "command": [
+        "/workspace/.ocr-venv/bin/ruff",
+        "format",
+        "--check",
+        "ocr",
+        "augmentoolkit/utils/offline_chunking.py"
+      ],
+      "environment_overrides": {},
+      "source_sha": "d6dac617d0d62c8d5356cc0ce351b837a4ef0ec2",
+      "started_utc": "2026-10-18T10:37:43.512747+00:00",
+      "elapsed_seconds": 0.010240737999993144,
+      "exit_code": 0,
+      "summary": [
+        "82 files already formatted"
+      ],
+      "log_path": "/tmp/gate03d-format.log"
+    },
+    {
+      "name": "default",
+      "command": [
+        "/workspace/.ocr-venv/bin/python",
+        "-m",
+        "pytest",
+        "-c",
+        "pytest-ocr.ini"
+      ],
+      "environment_overrides": {},
+      "source_sha": "d6dac617d0d62c8d5356cc0ce351b837a4ef0ec2",
+      "started_utc": "2026-10-18T10:37:43.523272+00:00",
+      "elapsed_seconds": 9.098816203000752,
+      "exit_code": 0,
+      "summary": [
+        "================== 240 passed, 11 skipped, 1 warning in 8.55s =================="
+      ],
+      "log_path": "/tmp/gate03d-default.log"
+    },
+    {
+      "name": "security",
+      "command": [
+        "/workspace/.ocr-venv/bin/python",
+        "-m",
+        "pytest",
+        "-c",
+        "pytest-ocr.ini",
+        "ocr/tests/test_private_host_adapters.py",
+        "ocr/tests/test_gate03c_runtime_state.py",
+        "ocr/tests/test_anonymization_release_policy.py",
+        "ocr/tests/test_anonymization_security.py",
+        "ocr/tests/test_religious_terminology.py",
+        "-q"
+      ],
+      "environment_overrides": {},
+      "source_sha": "d6dac617d0d62c8d5356cc0ce351b837a4ef0ec2",
+      "started_utc": "2026-10-18T10:37:52.622896+00:00",
+      "elapsed_seconds": 1.19788281000001,
+      "exit_code": 0,
+      "summary": [
+        "148 passed in 0.82s"
+      ],
+      "log_path": "/tmp/gate03d-security.log"
+    },
+    {
+      "name": "offline",
+      "command": [
+        "/workspace/.ocr-venv/bin/python",
+        "-m",
+        "pytest",
+        "-c",
+        "pytest-ocr.ini",
+        "ocr/tests/test_gate03c_holdout_utf8.py",
+        "ocr/tests/test_anonymization_runtime_safety.py",
+        "-q"
+      ],
+      "environment_overrides": {},
+      "source_sha": "d6dac617d0d62c8d5356cc0ce351b837a4ef0ec2",
+      "started_utc": "2026-10-18T10:37:53.821185+00:00",
+      "elapsed_seconds": 0.4491827790006937,
+      "exit_code": 0,
+      "summary": [
+        "18 passed in 0.10s"
+      ],
+      "log_path": "/tmp/gate03d-offline.log"
+    },
+    {
+      "name": "actual-model",
+      "command": [
+        "/workspace/.anonymization-venv/bin/python",
+        "-m",
+        "pytest",
+        "-c",
+        "pytest-ocr.ini",
+        "ocr/tests/test_anonymization_integration.py",
+        "-q"
+      ],
+      "environment_overrides": {
+        "HF_HUB_OFFLINE": "1",
+        "TRANSFORMERS_OFFLINE": "1",
+        "HF_HUB_DISABLE_TELEMETRY": "1",
+        "RUN_ANONYMIZATION_MODEL": "1",
+        "RUN_GATE03C_HOLDOUT": "1",
+        "RUN_GATE03D_MODEL": "1",
+        "RUN_GATE03D_HOLDOUT": "1",
+        "ANONYMIZATION_MODEL_CACHE": "/workspace/.anonymization-model",
+        "GATE03D_HOLDOUT_OUTPUT": "docs/anonymization-evaluation/gate03d-holdout-first.json"
+      },
+      "source_sha": "d6dac617d0d62c8d5356cc0ce351b837a4ef0ec2",
+      "started_utc": "2026-10-18T10:37:54.270748+00:00",
+      "elapsed_seconds": 80.72744877099831,
+      "exit_code": 1,
+      "summary": [
+        "2 failed, 3 passed in 79.57s (0:01:19)"
+      ],
+      "log_path": "/tmp/gate03d-actual-model.log"
+    }
+  ]
+}

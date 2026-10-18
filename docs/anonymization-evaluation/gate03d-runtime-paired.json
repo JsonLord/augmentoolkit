@@ -1,0 +1,47 @@
+{
+  "probe": "single-worker-with-1536MiB-concurrent-CPU-memory-load",
+  "recognition_path": "hybrid-terminology",
+  "integrity_ms": 1239.3949280012748,
+  "loading_ms": 12671.86369999763,
+  "warm_ms": [
+    304.78017199857277,
+    132.26178799959598,
+    126.14416200085543,
+    1068.2479220013192,
+    119.60736800028826,
+    120.91376600074,
+    266.8547129978833,
+    124.85915399884107
+  ],
+  "same_text_control_ms": [
+    288.0761589985923,
+    206.01728499968885,
+    130.90190200091456,
+    833.6258179988363,
+    120.69666900060838,
+    127.02024700047332,
+    121.01365100170369,
+    120.2718209970044
+  ],
+  "process_peak_rss_mib": 3020.609375,
+  "cgroup_memory_limit_mib": 8192.0,
+  "cgroup_current_mib": 3468.1640625,
+  "cgroup_peak_mib": 4495.859375,
+  "measured_headroom_mib": 3696.140625,
+  "cpu_quota": "400000 100000",
+  "denied_network_calls": [
+    {
+      "event": "socket.bind",
+      "callsite": [
+        "exec_module",
+        "_call_with_frames_removed",
+        "<module>",
+        "_has_ipv6",
+        "audit"
+      ]
+    }
+  ],
+  "native_tcp_listeners_at_measurement": 0,
+  "source_sha256": "3920d5bd9f7f404d9531b8085050bcdfbc92ac9aaa3ad7ca39413465dff59e8b",
+  "automated_release_eligible": false
+}

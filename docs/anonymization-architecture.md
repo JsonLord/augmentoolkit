@@ -11,7 +11,8 @@ stay in the caller's authorized evidence store. No public API or listener was ad
 `VAGOsolutions/SauerkrautLM-GLiNER@ba967ee030b7e679dd5422cb16fcd1b379da38e1`.
 The model card declares MIT and training in English, German, French, Italian and
 Spanish, using the multilingual ModernBERT/mmBERT encoder. This implementation
-qualifies only the supplied German/English synthetic corpora.
+evaluates supplied German/English synthetic corpora; independent Gate03d
+recognition qualification fails (see the linked current report).
 
 Candidates considered:
 
@@ -155,3 +156,18 @@ operation only. It checks an authoritative exported-artifact registry, a fresh
 the typed classified payload. It has no network client, caller paths/URLs, redirects
 or public fallback. Export does not invoke it. Recovery removes only old private
 staging names with exclusive locking and never promises secure erasure.
+
+## Gate 03d recognition supplement
+
+The engine now combines the unchanged pinned model/prompts/threshold with
+`ReligiousTerminology`, a bounded, operator-configurable literal EN/DE terminology
+detector. It maps case-folded/dehyphenated matches back to exact source slices and
+records deterministic provenance with no confidence score. Terms, topics,
+negations and quotations are protected as text, never evidence of an individual's
+faith. No person-to-religion relation is inferred. Conflicting model/rule spans
+still block the entire document. Operators must retain the exact custom term list
+as private policy evidence; the rule version alone is not a configuration hash.
+
+The selected hybrid covers both old religion canaries but adds measured false
+positives. The new 160-case independent first qualification fails. See
+[Gate03d](anonymization-gate03d.md) for exact metrics and NO-GO decisions.

@@ -179,3 +179,19 @@ BLOCKED. Private deployment, sensitive-document processing and automatic release
 remain NO-GO. The [disabled staging specification](../ocr/deploy/private-anonymization/README.md)
 defines explicit ledger provisioning, key domains, resource limits and rollback.
 Normal ledger startup never creates missing storage; pass the pinned ledger ID.
+
+## Gate 03d current recognition status
+
+The default engine adds bounded literal religious/status term protection. To set
+a trusted operator terminology policy in Python, pass
+`AnonymizationEngine(model, religion_terms=("Shinto", "religionslos"))`; this replaces
+the default list and must be reviewed/recorded by the host. Do not expose this
+configuration as a request parameter. No remote model path or review bypass exists.
+
+Human review must show both immutable original evidence and the candidate in the
+authorized private application. That application/identity integration is still
+BLOCKED. The [Gate03d first independent result](anonymization-gate03d.md) fails;
+private deployment, sensitive-document processing and automatic release stay NO-GO.
+Use the recorded first-result command and opt-in test environment from that report
+for reproduction. Old 03c control tests intentionally still fail and selected-hybrid
+development tests are separate; never replace qualification with a smoke test.

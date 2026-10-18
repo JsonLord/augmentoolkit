@@ -1,3 +1,8 @@
+> Current result: [Gate03d religious terminology qualification](anonymization-gate03d.md)
+> preserves the failed Gate03c result, compares limited fixes, and records a FAILED
+> new independent 160-case first holdout. Model recognition, real sensitive processing,
+> private deployment and automated release remain NO-GO. Earlier sections are history.
+
 # Anonymization Qualification Report
 
 Current staging/sensitive-processing decision: **NO-GO**. The fresh 120-case
