@@ -140,6 +140,7 @@ class SyntheticReviewHost(IsolatedHostAdapter):
             sources=(
                 SourcePageReference(
                     evidence_ref="b" * 64,
+                    sensitivity="D2",
                     page_index=0,
                     sha256=hashlib.sha256(self.source).hexdigest(),
                     characters=len(CANARY),
@@ -334,3 +335,35 @@ def test_revocation_while_loading_review_material_prevents_return():
     host.load_review_material = changed
     with pytest.raises(SafeError, match="^private_review_access_denied$"):
         PrivateReviewBridge(host).open(host.credential, host.binding.review_ref)
+
+
+def test_source_reference_classification_cannot_be_downgraded():
+    host = SyntheticReviewHost()
+    host.material = host.material.model_copy(
+        update={"sources": (host.material.sources[0].model_copy(update={"sensitivity": "D0"}),)}
+    )
+    with pytest.raises(SafeError, match="^private_review_access_denied$"):
+        PrivateReviewBridge(host).source_page(host.credential, host.binding.review_ref, 0)
+
+
+@pytest.mark.parametrize("text", ["Grüße aus dem Testlabor", "漢字🙂synthetic", "नमस्ते"])
+def test_private_source_preserves_full_unicode(text):
+    host = SyntheticReviewHost()
+    value = AnonymizationEngine(StubRecognizer()).handoff(evidence("D2", (text,)))
+    host.source = text.encode("utf-8")
+    host.candidates = frozenset((digest(value),))
+    source = host.material.sources[0].model_copy(
+        update={"sha256": hashlib.sha256(host.source).hexdigest(), "characters": len(text)}
+    )
+    host.material = host.material.model_copy(
+        update={
+            "candidate": value,
+            "candidate_digest": digest(value),
+            "provenance": value.provenance,
+            "sources": (source,),
+        }
+    )
+    assert (
+        PrivateReviewBridge(host).source_page(host.credential, host.binding.review_ref, 0).text
+        == text
+    )

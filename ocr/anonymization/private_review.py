@@ -30,6 +30,7 @@ class ReviewBinding(StrictModel):
 class SourcePageReference(StrictModel):
     evidence_ref: str = Field(pattern=r"^[a-f0-9]{64}$")
     page_index: int = Field(ge=0)
+    sensitivity: Literal["D0", "D1", "D2"]
     sha256: str = Field(pattern=r"^[a-f0-9]{64}$")
     characters: int = Field(ge=0, le=2_000_000)
 
@@ -51,7 +52,11 @@ class PrivateReviewMaterial(StrictModel):
     @model_validator(mode="after")
     def consistent_record(self):
         sources = {p.page_index: p for p in self.sources}
-        if len(sources) != len(self.sources) or sum(p.characters for p in self.sources) > 2_000_000:
+        if (
+            len(sources) != len(self.sources)
+            or sum(p.characters for p in self.sources) > 2_000_000
+            or any(p.sensitivity != self.binding.sensitivity for p in self.sources)
+        ):
             raise ValueError("invalid_private_review_material")
         if self.candidate is None:
             if (
@@ -112,7 +117,7 @@ class PrivateReviewMaterial(StrictModel):
 
 @dataclass(frozen=True)
 class ClassifiedPageView:
-    sensitivity: str
+    sensitivity: Literal["D0", "D1", "D2"]
     page_index: int
     text: str = field(repr=False)
 
