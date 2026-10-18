@@ -6,6 +6,7 @@ creates release permission. Original pages must be reviewed, not only detected s
 """
 
 import hashlib
+import re
 import time
 from dataclasses import dataclass, field
 from typing import Literal, Protocol
@@ -135,6 +136,8 @@ class PrivateReviewBridge:
         self.authorization = HostAuthorizationBridge(host)
 
     def _binding(self, credential, review_ref):
+        if type(review_ref) is not str or not re.fullmatch(r"[a-zA-Z0-9_-]{1,128}", review_ref):
+            raise ValueError()
         identity = self.authorization.identity(credential)
         binding = ReviewBinding.model_validate(self.host.review_binding(review_ref))
         if (

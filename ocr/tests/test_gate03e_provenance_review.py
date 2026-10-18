@@ -367,3 +367,16 @@ def test_private_source_preserves_full_unicode(text):
         PrivateReviewBridge(host).source_page(host.credential, host.binding.review_ref, 0).text
         == text
     )
+
+
+@pytest.mark.parametrize(
+    "reference", ["https://example.invalid", "../private-file", "x" * 129, {"approved": True}]
+)
+def test_caller_reference_rejected_before_host_lookup(reference):
+    from unittest.mock import Mock
+
+    host = SyntheticReviewHost()
+    host.review_binding = Mock(side_effect=AssertionError("must not reach host lookup"))
+    with pytest.raises(SafeError, match="^private_review_access_denied$"):
+        PrivateReviewBridge(host).open(host.credential, reference)
+    host.review_binding.assert_not_called()
