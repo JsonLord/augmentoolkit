@@ -25,6 +25,9 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--cache", required=True)
     parser.add_argument("--output", required=True)
+    parser.add_argument(
+        "--hybrid", action="store_true", help="Measure selected model + terminology path"
+    )
     args = parser.parse_args()
     denied = []
 
@@ -56,12 +59,17 @@ def main():
         start = time.perf_counter()
         model = GLiNERRecognizer(args.cache)
         loading_ms = (time.perf_counter() - start) * 1000
+        from .engine import AnonymizationEngine
+
+        engine = AnonymizationEngine(model) if args.hybrid else None
         samples = []
         for _ in range(8):
             start = time.perf_counter()
-            entities = model.recognize(
-                "Synthetic reviewer Petra Ashcroft works at Harbor Research in Norwich."
-            )
+            text = "Synthetic reviewer Petra Ashcroft works at Harbor Research in Norwich."
+            if engine is None:
+                entities = model.recognize(text)
+            else:
+                _, entities, _ = engine.transform(text + " Religious status: agnostic.")
             if not entities:
                 raise RuntimeError("model_not_ready")
             samples.append((time.perf_counter() - start) * 1000)
@@ -74,6 +82,7 @@ def main():
                 listening += line.split()[3] == "0A"
         result = dict(
             probe="single-worker-with-1536MiB-concurrent-CPU-memory-load",
+            recognition_path="hybrid-terminology" if args.hybrid else "model-only",
             integrity_ms=integrity_ms,
             loading_ms=loading_ms,
             warm_ms=samples,
