@@ -199,3 +199,17 @@ Production approval storage, identity integration, CUDA, live Debian-Devil execu
 and a reviewed destination for D1/D2 export remain operator integration work. No
 public Debian port was opened, HF deployment changed, production service restarted,
 or PR automatically merged.
+
+
+---
+
+## PR #3 follow-up — recognition and private release hardening
+
+The [follow-up report](anonymization-pr3-hardening.md) supersedes the initial new-engine
+results above while retaining them as historical evidence. The actual final model
+tests now both pass; zero canaries remain in 40 qualification + 10 validation cases
+after the general CITY `location` prompt fix. Strict per-category errors are still
+reported; no gold corpus changes were made. Approval exports now require verified
+review evidence, destination binding and durable single-use replay protection.
+Automated release and deployment remain **NO-GO**. See the linked report for all
+comparison metrics, security regressions and four separate readiness decisions.

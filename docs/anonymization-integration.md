@@ -40,9 +40,14 @@ export HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 HF_HUB_DISABLE_TELEMETRY=1
   --output /private/review/candidate.json
 ```
 
-The CLI reads a bounded OCRResult JSON file and exclusively creates the output
-with mode 0600. It never overwrites an existing output, publishes content or creates
-an approval. It prints only a constant status/code. No automatic NLTK/download
+The CLI reads a bounded OCRResult JSON file, stages a complete output with mode
+0600 in the target directory, checks full write/flush/fsync, then atomically hard-links
+it into place without replacing any existing file or symlink. The filesystem must
+support atomic hard links. Disk/write failures leave no partial target. Staging is
+removed on ordinary errors; a process kill or cleanup failure can leave a hidden
+0600 staging file, which stays classified and is never an approved export. The
+content is fsynced before publication; directory-entry persistence after power loss
+is not promised. The CLI never overwrites a target, publishes content or creates an approval. It prints only a constant status/code. No automatic NLTK/download
 fallback exists. Model loading occurs explicitly at startup/command initialization,
 not as a download during requests.
 
@@ -51,6 +56,8 @@ not as a download during requests.
 ```python
 from ocr.anonymization import AnonymizationEngine, ReleaseAuthority
 from ocr.anonymization.recognizer import GLiNERRecognizer
+from ocr.anonymization.schemas import Destination
+from ocr.anonymization.approval_ledger import SQLiteApprovalLedger
 from ocr.handoff import anonymization_handoff
 
 # Startup on the private host; not on the public HF worker.
@@ -59,13 +66,31 @@ engine = AnonymizationEngine(model)
 # original_result is a completed, authorized OCRResult retained by the caller.
 candidate = anonymization_handoff(original_result, engine)
 
-# Separate operation AFTER a human reviews this exact candidate.
-# Supply real application identity/ACL checks, not a constant-True function.
-authority = ReleaseAuthority(private_settings.release_signing_key, app_authorizer)
-approval = authority.approve(candidate, actor=authenticated_reviewer,
-                             review_completed=True)
-reviewed_json = authority.export(candidate, approval, format='json')
-# Send/store only according to its RETAINED sensitivity and approved destination.
+# Separate operation AFTER a human reviews this exact candidate for this sink.
+# These are real application integrations, deliberately NOT implemented as
+# allow-all callbacks. See the architecture doc for their mandatory contracts.
+ledger = SQLiteApprovalLedger('/private/state/release-approvals.sqlite')
+destination = Destination(destination_id='reviewed-private-archive',
+                          destination_class='private',
+                          allowed_sensitivities=('D0', 'D1', 'D2'))
+authority = ReleaseAuthority(
+    private_settings.release_signing_key,
+    app_release_acl,
+    verify_review=app_authenticated_completed_review,
+    consume_approval=ledger.consume,
+    destinations=(destination,),
+)
+approval = authority.approve(
+    candidate, actor=authenticated_reviewer_session,
+    review_id=completed_review_record_id,
+    destination='reviewed-private-archive',
+)
+reviewed_json = authority.export(
+    candidate, approval, actor=authenticated_reviewer_session,
+    destination='reviewed-private-archive', format='json',
+)
+# A second export with that approval is rejected. JSON retains classification
+# and destination and says transmission_authorized=false. No transfer occurs.
 ```
 
 The candidate has per-page `anonymized_text` and typed `tags`, without entity raw
@@ -110,3 +135,35 @@ proof of the new engine's security. No benchmark request hits an external provid
 
 Neither production services nor Agent-0 were deployed/restarted for this feature.
 Do not deploy it to Agent-0; it is a trusted application/dispatcher library and CLI.
+
+## Runtime downloads and approval state
+
+Legacy chunking no longer calls `nltk.download()` or initializes a remote tokenizer
+at import time. It prefers pre-provisioned NLTK sentence data and locally cached
+tokenizers. If sentence data is missing, untrained Punkt (or a simple sentence
+splitter when NLTK itself is unavailable) keeps ordinary chunking operational.
+Without a cached model tokenizer it uses a reversible UTF-8 byte representation
+with two boundary tokens, conservatively overestimating typical BPE counts. This
+can produce smaller chunks; it is not an exact model-specific token count. Setup
+must provision the desired tokenizer/corpus explicitly for exact old behavior.
+`anonymize=True` still blocks and never invokes the historical anonymizer.
+
+The review verifier must authenticate the current session and retrieve completed
+review evidence independently of the request. It returns the exact `VerifiedReview`
+contract documented in the architecture file. The ACL must check the verified
+subject and destination at issuance AND export. A boolean completed flag, arbitrary
+actor string, or signed approval alone is insufficient. Destination IDs and classes
+come from immutable private operator configuration, not upload/request fields.
+The host must separately enforce the actual sink and its D1/D2 approval; this
+library never grants arbitrary external transmission.
+
+Replay consumption must be atomic and durable across all application instances
+sharing a signing key. Put the SQLite ledger in an application-controlled private
+persistent directory (database mode 0600). Do not delete or recreate it while
+approvals remain valid. Rotate the signing key if replay state is lost. A successful
+export consumes the approval; a delivery failure cannot reuse it. Obtain a new
+review-bound authorization rather than retrying the consumed approval. No approval
+or automated export is enabled by the candidate CLI or service startup.
+
+The current actual-model follow-up results and decisions supersede the initial
+failed canary run: see [PR #3 hardening](anonymization-pr3-hardening.md).

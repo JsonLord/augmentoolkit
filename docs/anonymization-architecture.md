@@ -26,7 +26,11 @@ CPU OCR worker. No llama.cpp integration is used. CPU is tested; CUDA is an
 explicit operator choice requiring a separately qualified GPU wheel/environment.
 
 All six categories are mandatory: PERSON, CITY, RELIGION, EMAIL, PHONE and
-ORGANIZATION. Prompt descriptions and bracketed placeholders are configurable;
+ORGANIZATION. The CITY privacy label now uses the general `location` prompt, including cities,
+states and named geographic places as represented in the unchanged qualification
+corpus. This intentionally masks some non-city places too; CITY is a privacy
+placeholder category, not a claim that each place is administratively a city.
+Prompt descriptions and bracketed placeholders are configurable;
 missing/unknown categories, duplicate prompt descriptions and invalid placeholders
 block processing. Model scores are retained only as model scores, not calibrated
 privacy guarantees. Contact regexes have **no invented score** and are conservative
@@ -81,17 +85,49 @@ All candidates have `anonymous=false`, `release_review_required=true`,
 an explicit review reason and never imply successful recognition. Candidates can
 still contain missed sensitive information; they remain classified and private.
 
-`ReleaseAuthority` requires a secret of at least 32 bytes and an application-supplied
-authorizer. It checks the reviewer, scope `anonymization:release`, exact candidate
-digest and source sensitivity, plus an explicit completed review. A 15-minute HMAC
-approval binds the exact serialized candidate. Export rejects missing, modified,
-expired or forged approvals. The host application must authenticate the actor and
-perform genuine review; a permissive example authorizer is not an identity system.
-No secret or approval is generated from document text. This is a local API, not a
-new remotely accessible release service. The key remains in private settings.
+`ReleaseAuthority` now requires a secret of at least 32 bytes, an application
+review verifier, an ACL authorizer, an atomic replay consumer, and an operator-owned
+destination registry. None has a permissive default. The old `review_completed=True`
+boolean and unscoped v1 approvals are no longer accepted.
 
-Approval preserves D0/D1/D2 and does not assert complete anonymity. D1/D2 exports
-require the classified JSON container; bare text exports are restricted to D0.
-Declassification is not implemented. There is no automatic release path, even when
-a synthetic test passes. Reviewers must examine remaining identifiers in addition
-to detected replacements.
+The review verifier must authenticate the actor/session and load an already
+completed immutable review record from the private application's authoritative
+store. It returns `VerifiedReview` with opaque verified reviewer subject, review
+record ID and evidence digest, exact candidate digest, source sensitivity,
+destination ID and completion timestamp. The application must verify who reviewed
+what and that the review is complete; this library does not invent identity or
+review evidence. Simply echoing request fields is an invalid integration.
+
+The ACL callback checks that verified subject, `anonymization:release` scope and
+configured destination. Both verification and authorization run at issuance and
+again at export, so revoked access or changed review evidence fails closed.
+
+V2 approvals sign every field: random approval ID, candidate digest, full review
+attestation, destination registry snapshot, output format, issuance and expiration.
+They expire at most 900 seconds after review completion (configurable shorter TTL).
+Future/stale review timestamps, wrong actors, altered candidates/destinations/formats
+and expired signatures are rejected. Approval must be consumed exactly once through
+persistent atomic replay storage before bytes are returned. `SQLiteApprovalLedger`
+is an optional local implementation, tested across authority instances and racing
+threads; the host may supply an equivalent durable atomic store. All instances
+sharing a signing key must share the same ledger. Losing replay state requires key
+rotation before accepting approvals again. A crash after consumption burns the
+approval; reissuance requires fresh authentication/authorization and valid review.
+
+Destinations are registry IDs with an approved private/public class and explicit
+sensitivity allowlist. Unknown IDs, changed registry entries and every D1/D2 public
+class are denied even if a host ACL callback incorrectly allows them. D1/D2 require
+JSON, with classification and destination retained. Export explicitly states
+`transmission_authorized=false`. A JSON release is not a transport permission.
+The private application's separate destination enforcement must resolve the ID to
+the approved physical sink, verify it remains approved for the class, and forbid
+caller-supplied URLs or external rerouting. No transport, remote processing or
+public release endpoint is added here. Physical destination attestation remains a
+production application responsibility; labeling a remote endpoint private is not
+such attestation.
+
+Approval preserves D0/D1/D2 and does not assert complete anonymity. Declassification
+is not implemented. `automated_release_eligible` stays false for every candidate,
+even when synthetic tests pass. Reviewers must examine remaining identifiers in
+addition to detected replacements. See [PR #3 hardening](anonymization-pr3-hardening.md)
+for exact synthetic diagnosis, comparison evidence and separate readiness decisions.

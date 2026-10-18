@@ -4,11 +4,11 @@ import json
 from unittest.mock import Mock
 
 import pytest
-from ocr.anonymization import AnonymizationEngine, Entity, ReleaseAuthority
+from ocr.anonymization import AnonymizationEngine, Entity
 from ocr.anonymization.model import MODEL_REVISION
 from ocr.anonymization.recognizer import GLiNERRecognizer
 from ocr.anonymization.replacement import replace
-from ocr.anonymization.schemas import LABELS, Approval
+from ocr.anonymization.schemas import LABELS
 from ocr.handoff import anonymization_handoff
 from ocr.schemas import Block, Failure, OCRPageResult, OCRResult, SafeError
 
@@ -174,54 +174,6 @@ def test_empty_predictions_require_review_and_never_claim_success():
     value = AnonymizationEngine(model).handoff(evidence())
     assert "empty_prediction" in value.review_reasons
     assert not value.automated_release_eligible and not value.release_approved
-    authority = ReleaseAuthority(b"x" * 32, lambda *a: True)
-    with pytest.raises(SafeError, match="release_not_approved"):
-        authority.export(value)
-
-
-def test_releases_require_identity_authorization_review_and_matching_candidate():
-    authority = ReleaseAuthority(
-        b"x" * 32,
-        lambda actor, scope, digest, level: (
-            actor == "authorized-reviewer" and scope == "anonymization:release" and level == "D2"
-        ),
-    )
-    value = candidate()
-    for actor, reviewed in [("intruder", True), ("authorized-reviewer", False)]:
-        with pytest.raises(SafeError, match="release_not_approved"):
-            authority.approve(value, actor=actor, review_completed=reviewed)
-    with pytest.raises(SafeError, match="release_not_approved"):
-        authority.export(value)
-    approval = authority.approve(value, actor="authorized-reviewer", review_completed=True)
-    output = json.loads(authority.export(value, approval))
-    assert output["release_approved"] is True and output["sensitivity"] == "D2"
-    assert output["anonymous"] is False and CANARY not in json.dumps(output)
-    with pytest.raises(SafeError, match="classified_export_requires_json"):
-        authority.export(value, approval, format="text")
-    with pytest.raises(SafeError, match="unsupported_release_export"):
-        authority.export(value, approval, format="markdown")
-    with pytest.raises(SafeError, match="release_not_approved"):
-        authority.export(candidate(), approval)
-    with pytest.raises(SafeError, match="release_not_approved"):
-        ReleaseAuthority(b"z" * 32, lambda *a: True).export(value, approval)
-    with pytest.raises(SafeError, match="release_not_approved"):
-        authority.export(
-            value,
-            Approval(
-                candidate_digest=approval.candidate_digest,
-                expires_at=0,
-                signature=approval.signature,
-            ),
-        )
-
-
-def test_legacy_dictionary_is_never_accepted_as_releasable_candidate():
-    value = anonymization_handoff(
-        evidence(), lambda text: {"text": text, "tags": [{"raw": CANARY}]}
-    )
-    authority = ReleaseAuthority(b"x" * 32, lambda *a: True)
-    with pytest.raises(SafeError, match="invalid_release_candidate"):
-        authority.approve(value, actor="authorized", review_completed=True)
 
 
 def test_bad_placeholders_block_transformation():

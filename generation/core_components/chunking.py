@@ -4,12 +4,8 @@ import hashlib
 import json
 import os
 import io
-from nltk.tokenize import sent_tokenize
-import nltk  # NOTE to get this performing at all I need to make it so that chunking is cached and read from that cache instead ofbeing redone each time. Way too slow for large datasets. Which we are doing often and thus need to be cognizant of.
-
-nltk.download("punkt_tab")
 from tqdm import tqdm
-from transformers import AutoTokenizer
+from augmentoolkit.utils.offline_chunking import OfflineTokenizer, sent_tokenize
 from ocr.schemas import SafeError
 
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
@@ -201,7 +197,7 @@ except ImportError as e:
         )
 
 
-tokenizer = AutoTokenizer.from_pretrained("TheBloke/OpenHermes-2.5-Mistral-7B-GPTQ")
+tokenizer = OfflineTokenizer("TheBloke/OpenHermes-2.5-Mistral-7B-GPTQ")
 
 
 def count_tokens(message):
@@ -209,7 +205,7 @@ def count_tokens(message):
 
 
 def count_tokens_specific_model(model):
-    tokenizer = AutoTokenizer.from_pretrained(model)
+    tokenizer = OfflineTokenizer(model)
 
     def inner(message):
         return len(tokenizer.encode(message))

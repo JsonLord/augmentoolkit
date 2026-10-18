@@ -1,12 +1,12 @@
 """Trusted local workflow: OCRResult JSON -> candidate JSON. No release shortcut."""
 
 import argparse
-import os
 from pathlib import Path
 
 from ocr.handoff import anonymization_handoff
 from ocr.schemas import OCRResult, SafeError
 
+from .atomic_output import write_candidate
 from .engine import AnonymizationEngine
 from .recognizer import GLiNERRecognizer
 
@@ -30,10 +30,7 @@ def main():
         evidence = OCRResult.model_validate_json(path.read_bytes())
         model = GLiNERRecognizer(args.model_cache)
         candidate = anonymization_handoff(evidence, AnonymizationEngine(model))
-        # Create exclusively, owner read/write; never overwrite classified evidence.
-        fd = os.open(args.output, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o600)
-        with os.fdopen(fd, "w") as stream:
-            stream.write(candidate.model_dump_json(indent=2) + "\n")
+        write_candidate(args.output, (candidate.model_dump_json(indent=2) + "\n").encode())
     except Exception:
         raise SystemExit("anonymization_candidate_failed") from None
     print("candidate_created_review_required")

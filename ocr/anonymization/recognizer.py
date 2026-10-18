@@ -13,7 +13,9 @@ from .schemas import LABELS, Entity
 
 DEFAULT_PROMPTS = {
     "PERSON": "person",
-    "CITY": "city",
+    # Privacy category includes geopolitical places, matching the existing
+    # qualification taxonomy (cities, states and named geographic locations).
+    "CITY": "location",
     "RELIGION": "religion",
     "EMAIL": "email address",
     "PHONE": "phone number",

@@ -109,6 +109,7 @@ def run(cache, output):
         model=MODEL_ID,
         revision=MODEL_REVISION,
         threshold=recognizer.threshold,
+        prompts=recognizer.prompts,
         runtime_versions={
             k: importlib.metadata.version(k)
             for k in ("gliner", "torch", "transformers", "numpy", "pydantic")

@@ -63,7 +63,33 @@ class ReleaseCandidate(StrictModel):
     review_reasons: tuple[Literal["recognition_incomplete_possible", "empty_prediction"], ...]
 
 
-class Approval(StrictModel):
+class Destination(StrictModel):
+    """Operator-controlled destination registry entry, never a caller supplied URL."""
+
+    destination_id: str = Field(pattern=r"^[a-zA-Z0-9:_-]{1,128}$")
+    destination_class: Literal["private", "public"]
+    allowed_sensitivities: tuple[Literal["D0", "D1", "D2"], ...]
+
+
+class VerifiedReview(StrictModel):
+    """Attestation returned by the host application's authenticated review store."""
+
+    reviewer_subject: str = Field(pattern=r"^[a-zA-Z0-9:_-]{1,128}$")
+    review_id: str = Field(pattern=r"^[a-zA-Z0-9:_-]{1,128}$")
+    evidence_digest: str = Field(pattern=r"^[a-f0-9]{64}$")
     candidate_digest: str = Field(pattern=r"^[a-f0-9]{64}$")
-    expires_at: int
+    sensitivity: Literal["D0", "D1", "D2"]
+    destination_id: str = Field(pattern=r"^[a-zA-Z0-9:_-]{1,128}$")
+    completed_at: int = Field(ge=0)
+
+
+class Approval(StrictModel):
+    schema_version: Literal["ocr-review-approval/v2"] = "ocr-review-approval/v2"
+    approval_id: str = Field(pattern=r"^[a-f0-9]{32}$")
+    candidate_digest: str = Field(pattern=r"^[a-f0-9]{64}$")
+    review: VerifiedReview
+    destination: Destination
+    format: Literal["json", "text"]
+    issued_at: int = Field(ge=0)
+    expires_at: int = Field(ge=0)
     signature: str = Field(pattern=r"^[a-f0-9]{64}$")
