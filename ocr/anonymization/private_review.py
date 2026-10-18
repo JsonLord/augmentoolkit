@@ -80,6 +80,7 @@ class PrivateReviewMaterial(StrictModel):
                 or self.blocking_reason is not None
                 or self.candidate.sensitivity != self.binding.sensitivity
                 or len(self.sources) != len(self.candidate.pages)
+                or {page.page_index for page in self.candidate.pages} != set(sources)
             ):
                 raise ValueError("invalid_private_review_material")
             if type(self.candidate) in (ReleaseCandidate, CorrectedCandidate):

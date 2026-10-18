@@ -34,8 +34,8 @@ class Entity(StrictModel):
 
 
 class Replacement(StrictModel):
-    start: int
-    end: int
+    start: int = Field(ge=0)
+    end: int = Field(gt=0)
     label: Label
     placeholder: str = Field(pattern=r"^\[[A-Z_]{1,40}\]$")
     score: float | None = Field(default=None, ge=0, le=1, allow_inf_nan=False)
@@ -44,6 +44,14 @@ class Replacement(StrictModel):
     normalization: Literal[
         "identity", "dehyphenation-v1", "status-ocr-v1", "dehyphenation-status-ocr-v1"
     ] = "identity"
+
+    @model_validator(mode="after")
+    def original_source_bounds(self):
+        if self.start >= self.end:
+            raise ValueError("invalid_replacement_bounds")
+        # The source length is not the anonymized text length. Its upper bound
+        # is checked by PrivateReviewMaterial when original references exist.
+        return self
 
 
 class CandidatePage(StrictModel):
@@ -58,13 +66,24 @@ class LegacyReleaseCandidate(StrictModel):
     schema_version: Literal["ocr-anonymization-candidate/v1"] = "ocr-anonymization-candidate/v1"
     candidate_id: str = Field(pattern=r"^[a-f0-9]{32}$")
     sensitivity: Literal["D0", "D1", "D2"]
-    pages: tuple[CandidatePage, ...]
+    pages: tuple[CandidatePage, ...] = Field(min_length=1)
     model_revision: str = Field(pattern=r"^[a-f0-9]{40}$")
     anonymous: Literal[False] = False
     release_review_required: Literal[True] = True
     release_approved: Literal[False] = False
     automated_release_eligible: Literal[False] = False
     review_reasons: tuple[Literal["recognition_incomplete_possible", "empty_prediction"], ...]
+
+    @model_validator(mode="after")
+    def document_integrity(self):
+        indexes = [page.page_index for page in self.pages]
+        if len(set(indexes)) != len(indexes) or any(
+            page.original_sensitivity != self.sensitivity for page in self.pages
+        ):
+            raise ValueError("invalid_candidate_document")
+        # No new contiguous numbering rule for valid legacy documents. Exact
+        # source coverage is checked where immutable source references exist.
+        return self
 
     @model_validator(mode="after")
     def legacy_normalization(self):
