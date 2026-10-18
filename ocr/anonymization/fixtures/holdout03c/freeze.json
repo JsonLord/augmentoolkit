@@ -1,0 +1,18 @@
+{
+  "schema_version": "frozen-holdout/v1",
+  "cases": 120,
+  "sha256": "0174fb41d34d0a4db18877c68fb70149eaa67c05da86608d5da4ff8765a52c15",
+  "source_head": "176176a6e13dfb1deb1a6f197b7fa46515b0e1f6",
+  "model_revision": "ba967ee030b7e679dd5422cb16fcd1b379da38e1",
+  "control_prompts": {
+    "PERSON": "person",
+    "CITY": "location",
+    "RELIGION": "religion",
+    "EMAIL": "email address",
+    "PHONE": "phone number",
+    "ORGANIZATION": "organization"
+  },
+  "threshold": 0.5,
+  "evaluation_run_before_freeze": false,
+  "design": "12 novel entity sets x 10 bilingual contexts; 60 de / 60 en; 24 OCR-noise cases. Synthetic/template-based, not a population sample. No holdout-driven tuning permitted before first recorded result."
+}

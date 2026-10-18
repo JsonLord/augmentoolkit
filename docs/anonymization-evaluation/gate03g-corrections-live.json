@@ -1,0 +1,311 @@
+{
+  "schema_version": "gate03f-synthetic-reviewed-correction-demo/v1",
+  "source_sha": "9d4d8c103271ef62fee3d06603180aa9ca74267e",
+  "corpus_sha256": "7180e176f6d8bd259da56ad729ede6fd2c798aca15a786ba0ff0adcd862f21a1",
+  "model_revision": "ba967ee030b7e679dd5422cb16fcd1b379da38e1",
+  "prompts": {
+    "PERSON": "person",
+    "CITY": "location",
+    "RELIGION": "religion",
+    "EMAIL": "email address",
+    "PHONE": "phone number",
+    "ORGANIZATION": "organization"
+  },
+  "threshold": 0.5,
+  "config_digest": "9ea9537bb8cbb7b3e5d21c566acf10a80bebc1ee2a4aad53f3e2618f586d50c8",
+  "actual_inference_calls": 9,
+  "correct_controls_only": false,
+  "loading_ms": 21299.804984999355,
+  "peak_rss_mib": 3025.51953125,
+  "runtime_versions": {
+    "gliner": "0.2.29",
+    "torch": "2.8.0+cpu",
+    "transformers": "4.57.1",
+    "numpy": "2.4.6",
+    "pydantic": "2.14.1"
+  },
+  "denied_network_calls": [
+    "socket.bind"
+  ],
+  "cases": [
+    {
+      "case_id": "holdout03d-001",
+      "original_outcome": "complete_no_measured_leakage",
+      "machine_candidate_digest": "9c52eb0f375f62ee043f6fddaf28dbdfb38349c96eb56e5736d679a2e7799ae1",
+      "machine_observations_digest": "e2b7e30c4c92a0190e17b846c64e7206939f31e7bb488ae092202a5f56088370",
+      "source_canaries_covered_before": true,
+      "proposed_edits": [],
+      "new_candidate_produced": false,
+      "final_candidate_digest": "9c52eb0f375f62ee043f6fddaf28dbdfb38349c96eb56e5736d679a2e7799ae1",
+      "source_canaries_covered_after": true,
+      "document_exact_match_after": false,
+      "final_sensitivity": "D2",
+      "release_blocked": true,
+      "completed_release_reviews": 0,
+      "malformed_correction_rejected": null,
+      "unauthorized_correction_rejected": null,
+      "capture_inference_ms": 117.84820000320906
+    },
+    {
+      "case_id": "holdout03d-002",
+      "original_outcome": "complete_no_measured_leakage",
+      "machine_candidate_digest": "de41949bb68d6d173044d9e8fbe93e104bd3a77b056b6e0edea6423a1691a0ad",
+      "machine_observations_digest": "1a0a29db88c7b5fe87aa21ed102a97a191bf2812341a7c891ba9e953520b9720",
+      "source_canaries_covered_before": true,
+      "proposed_edits": [],
+      "new_candidate_produced": false,
+      "final_candidate_digest": "de41949bb68d6d173044d9e8fbe93e104bd3a77b056b6e0edea6423a1691a0ad",
+      "source_canaries_covered_after": true,
+      "document_exact_match_after": true,
+      "final_sensitivity": "D2",
+      "release_blocked": true,
+      "completed_release_reviews": 0,
+      "malformed_correction_rejected": null,
+      "unauthorized_correction_rejected": null,
+      "capture_inference_ms": 114.45072300557513
+    },
+    {
+      "case_id": "holdout03d-003",
+      "original_outcome": "complete_no_measured_leakage",
+      "machine_candidate_digest": "2e7d8f74876960d859df7b13de9d7e4d5943b89144a66c728aabe95db372da94",
+      "machine_observations_digest": "b9d5c9dcbfdc61fef8e2f99a48e338dde49e607e5548f3a0abb34bf31640c986",
+      "source_canaries_covered_before": true,
+      "proposed_edits": [],
+      "new_candidate_produced": false,
+      "final_candidate_digest": "2e7d8f74876960d859df7b13de9d7e4d5943b89144a66c728aabe95db372da94",
+      "source_canaries_covered_after": true,
+      "document_exact_match_after": false,
+      "final_sensitivity": "D2",
+      "release_blocked": true,
+      "completed_release_reviews": 0,
+      "malformed_correction_rejected": null,
+      "unauthorized_correction_rejected": null,
+      "capture_inference_ms": 107.33563899702858
+    },
+    {
+      "case_id": "holdout03d-055",
+      "original_outcome": "blocked_conflicting_spans",
+      "machine_candidate_digest": null,
+      "machine_observations_digest": "8611906fb7ef65ab61af7a3266e61d417d5ff2b1295f44cfdc2382e0bb83dc3e",
+      "source_canaries_covered_before": null,
+      "proposed_edits": [
+        {
+          "span": {
+            "page_index": 0,
+            "start": 24,
+            "end": 29,
+            "source_span_digest": "de9a32c2f3401f53ae8614a0c595f52ed3cb48d16e610a3060d566e9b30a0234"
+          },
+          "category": "RELIGION",
+          "action": "mask",
+          "rationale": "span_conflict",
+          "target_observation_ids": [
+            "f6bf51013c7449d16ad2508c9fa78210899cf1485e97b05dfe982bd39f3f6952",
+            "f85d173dca986e49cce19a11b3c9ecaf1d08da0434eed094cb73c53900634580"
+          ]
+        }
+      ],
+      "new_candidate_produced": true,
+      "final_candidate_digest": "61ac23799c9b8ad33f174db20cba0e485da26ead0deb85e63273fa2cab2c84e2",
+      "source_canaries_covered_after": true,
+      "document_exact_match_after": true,
+      "final_sensitivity": "D2",
+      "release_blocked": true,
+      "completed_release_reviews": 0,
+      "malformed_correction_rejected": true,
+      "unauthorized_correction_rejected": true,
+      "capture_inference_ms": 99.82792699884158
+    },
+    {
+      "case_id": "holdout03d-063",
+      "original_outcome": "blocked_conflicting_spans",
+      "machine_candidate_digest": null,
+      "machine_observations_digest": "77c5936da86bac2e8fbf4cbca046ca25b3479d0ada0f37d8c7da5574490547b4",
+      "source_canaries_covered_before": null,
+      "proposed_edits": [
+        {
+          "span": {
+            "page_index": 0,
+            "start": 30,
+            "end": 44,
+            "source_span_digest": "ceba5b73db9200fb376c6a518341eb0fb8495a6493cccd5b8f058a69e1ea3cc2"
+          },
+          "category": "RELIGION",
+          "action": "mask",
+          "rationale": "span_conflict",
+          "target_observation_ids": [
+            "496202e00b45d58a086616a232b86b35d201067b7123f2c8090f13111b9b823a",
+            "8b2dec353652f2bfae757bd93792c007420ec87eec3fa6abd3069448ae7e9819"
+          ]
+        }
+      ],
+      "new_candidate_produced": true,
+      "final_candidate_digest": "ba409a926d7ce52e2dba78c481fa202e2abcaec95a7e381cee56f6ddd13583ef",
+      "source_canaries_covered_after": true,
+      "document_exact_match_after": true,
+      "final_sensitivity": "D2",
+      "release_blocked": true,
+      "completed_release_reviews": 0,
+      "malformed_correction_rejected": true,
+      "unauthorized_correction_rejected": true,
+      "capture_inference_ms": 100.89359000266995
+    },
+    {
+      "case_id": "holdout03d-078",
+      "original_outcome": "blocked_conflicting_spans",
+      "machine_candidate_digest": null,
+      "machine_observations_digest": "2e115fdc0a61e47f51af0d9522f9379a49379bb749c84e6bf72bee0f113864fd",
+      "source_canaries_covered_before": null,
+      "proposed_edits": [
+        {
+          "span": {
+            "page_index": 0,
+            "start": 23,
+            "end": 29,
+            "source_span_digest": "576d7ef7f334b67c1da776ab99def5823b9dabc4ffbba29b5adeec5b15b91525"
+          },
+          "category": "RELIGION",
+          "action": "mask",
+          "rationale": "span_conflict",
+          "target_observation_ids": [
+            "2bc6ed52e0229e3d668ba46e5d99c5613e1e30ca521f696a9936ce2cbc031f67",
+            "37f2d96b64b1d112f168b4c6aacfdb2f6d214e51ec3353359f54ced79b4c0647"
+          ]
+        }
+      ],
+      "new_candidate_produced": true,
+      "final_candidate_digest": "281461bce44f144b6da293528fd14603b730f2956055dabb13f0b8ae33841765",
+      "source_canaries_covered_after": true,
+      "document_exact_match_after": true,
+      "final_sensitivity": "D2",
+      "release_blocked": true,
+      "completed_release_reviews": 0,
+      "malformed_correction_rejected": true,
+      "unauthorized_correction_rejected": true,
+      "capture_inference_ms": 112.00264699436957
+    },
+    {
+      "case_id": "holdout03d-125",
+      "original_outcome": "candidate_partial_mask",
+      "machine_candidate_digest": "32e076bd221d248355d67061737c533f8b94b2f91468276d67ec106cae704e07",
+      "machine_observations_digest": "6e04860b289a5517d7d8864d7cec24b9735c76982b9f6b3df690f8af639d805f",
+      "source_canaries_covered_before": false,
+      "proposed_edits": [
+        {
+          "span": {
+            "page_index": 0,
+            "start": 23,
+            "end": 41,
+            "source_span_digest": "8c8b83c9c6801f0c315759bb01c3c2335c86e76c8242531bdea5050c6fc5206e"
+          },
+          "category": "ORGANIZATION",
+          "action": "mask",
+          "rationale": "incomplete_boundary",
+          "target_observation_ids": [
+            "a4428fb06ed9a550213cf87aea7284b4e7cd5668089ee73dad55da3f17c61994"
+          ]
+        }
+      ],
+      "new_candidate_produced": true,
+      "final_candidate_digest": "59bf26e82344a2edcc47a2eb2ef1bf1d33e5f57a9d243fb752fad2561f6dcae6",
+      "source_canaries_covered_after": true,
+      "document_exact_match_after": true,
+      "final_sensitivity": "D2",
+      "release_blocked": true,
+      "completed_release_reviews": 0,
+      "malformed_correction_rejected": true,
+      "unauthorized_correction_rejected": true,
+      "capture_inference_ms": 102.85312899941346
+    },
+    {
+      "case_id": "holdout03d-127",
+      "original_outcome": "blocked_conflicting_spans",
+      "machine_candidate_digest": null,
+      "machine_observations_digest": "abbf912830f3c8300e90a2b48409fa10c4ec70a71a4ebf16fa0368fd22979810",
+      "source_canaries_covered_before": null,
+      "proposed_edits": [
+        {
+          "span": {
+            "page_index": 0,
+            "start": 29,
+            "end": 34,
+            "source_span_digest": "4114582d441e9424a5194f47841d0715a51b93f1d201ac52c632f8f846b1201e"
+          },
+          "category": "RELIGION",
+          "action": "mask",
+          "rationale": "span_conflict",
+          "target_observation_ids": [
+            "14290bf710d45a16095a666bd197ad96f7083049373c2f2f7cdc11c68d8da44d",
+            "855bb1baa04251f720f87b597d77d7266265c623caa340d4c50c672093b4a597"
+          ]
+        }
+      ],
+      "new_candidate_produced": true,
+      "final_candidate_digest": "ed567f0a121db724ff3186a23d6bf1cf2f5f76aed973c6dd285fcea8e91591a3",
+      "source_canaries_covered_after": true,
+      "document_exact_match_after": true,
+      "final_sensitivity": "D2",
+      "release_blocked": true,
+      "completed_release_reviews": 0,
+      "malformed_correction_rejected": true,
+      "unauthorized_correction_rejected": true,
+      "capture_inference_ms": 111.91568600042956
+    },
+    {
+      "case_id": "holdout03d-137",
+      "original_outcome": "blocked_conflicting_spans",
+      "machine_candidate_digest": null,
+      "machine_observations_digest": "1ba59f7b41b0c08b1e3cd36e587d454df650177bea2dbec4b22b5638c473b651",
+      "source_canaries_covered_before": null,
+      "proposed_edits": [
+        {
+          "span": {
+            "page_index": 0,
+            "start": 11,
+            "end": 24,
+            "source_span_digest": "22af93ad3e5483c3b14aff1ea5f7d1f590c1ac6824a09d16e009627fad4b86cd"
+          },
+          "category": "RELIGION",
+          "action": "mask",
+          "rationale": "span_conflict",
+          "target_observation_ids": [
+            "25fd6042418cb4c1509148273126a97df9e4ef6afc6f84cf11e4608d9f23a021",
+            "6a285ec20cdb1c82b32438c4dc405cc859321930e0f014b3c68380ba7d3d8b4d"
+          ]
+        },
+        {
+          "span": {
+            "page_index": 0,
+            "start": 35,
+            "end": 48,
+            "source_span_digest": "68c214c591e179d5794af99663baede8bff2b2944717df1d5e6dd3428c2d1e0a"
+          },
+          "category": "RELIGION",
+          "action": "mask",
+          "rationale": "span_conflict",
+          "target_observation_ids": [
+            "6348935a5a8b07f238a4dca379a78b19c252f6b03cf734a43f8fbe0a2305639c",
+            "b0232c5691fa4ac6cb4c449ddc7d692e5b4446714662852704eb7db7b6e2110e"
+          ]
+        }
+      ],
+      "new_candidate_produced": true,
+      "final_candidate_digest": "f009e9358a0baf9ff67b1fc9596492e1384fecd6e06251f91158787f67b3822c",
+      "source_canaries_covered_after": true,
+      "document_exact_match_after": true,
+      "final_sensitivity": "D2",
+      "release_blocked": true,
+      "completed_release_reviews": 0,
+      "malformed_correction_rejected": true,
+      "unauthorized_correction_rejected": true,
+      "capture_inference_ms": 123.46473199431784
+    }
+  ],
+  "correction_source": "simulated authorized human using existing synthetic gold spans",
+  "production_identity_qualified": false,
+  "durable_correction_store_qualified": false,
+  "independent_qualification": false,
+  "model_qualification_passed": false,
+  "corrected_outputs_count_as_model_true_positives": false,
+  "automated_release_eligible": false
+}

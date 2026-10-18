@@ -1,0 +1,104 @@
+{
+  "schema_version": "gate03g-security-review-findings/v1",
+  "reviewed_head": "6171bcfb536f57676b6912ca2c831fd2894d28e2",
+  "fix_and_verification_source_sha": "9d4d8c103271ef62fee3d06603180aa9ca74267e",
+  "production_incident_claimed": false,
+  "findings": [
+    {
+      "id": "G01",
+      "severity": "High",
+      "title": "Corrected completed review did not bind original OCR digest",
+      "disposition": "fixed",
+      "regression": "ocr/tests/test_gate03g_security_audit.py::test_corrected_completed_review_must_bind_original_ocr_evidence"
+    },
+    {
+      "id": "G02",
+      "severity": "Medium",
+      "title": "Approval could expire while waiting for SQLite write lock",
+      "disposition": "fixed",
+      "regression": "ocr/tests/test_gate03g_security_audit.py::test_expiry_during_real_sqlite_lock_wait_does_not_consume"
+    },
+    {
+      "id": "G03",
+      "severity": "High",
+      "title": "Revocation during ledger consumption could still return classified export",
+      "disposition": "fixed",
+      "regression": "ocr/tests/test_gate03g_security_audit.py::test_revocation_during_consumption_burns_approval_without_returning_output"
+    },
+    {
+      "id": "G04",
+      "severity": "High",
+      "title": "Revocation during private-file write did not prevent publication",
+      "disposition": "fixed",
+      "regression": "ocr/tests/test_gate03g_security_audit.py::test_private_delivery_revocation_during_write_prevents_publication"
+    },
+    {
+      "id": "G05",
+      "severity": "Medium",
+      "title": "Transfer accepted mismatched completed-review lookup identity",
+      "disposition": "fixed",
+      "regression": "ocr/tests/test_gate03g_security_audit.py::test_transfer_rejects_mismatched_completed_review_lookup"
+    },
+    {
+      "id": "G06",
+      "severity": "Medium",
+      "title": "Uncorrected v1/v2 release had no explicit operator eligibility policy",
+      "disposition": "fixed",
+      "regression": "ocr/tests/test_gate03g_security_audit.py::test_uncorrected_release_requires_explicit_operator_policy"
+    }
+  ],
+  "diagnostic_reproductions": [
+    {
+      "repository_head_at_diagnostic": "6171bcfb536f57676b6912ca2c831fd2894d28e2",
+      "working_tree_phase": "reviewed runtime plus uncommitted reproducer tests",
+      "tests_were_uncommitted": true,
+      "argv": [
+        "/workspace/.ocr-venv/bin/python",
+        "-m",
+        "pytest",
+        "-c",
+        "pytest-ocr.ini",
+        "ocr/tests/test_gate03g_security_audit.py"
+      ],
+      "exit_code": 1,
+      "summary": "5 failed",
+      "log_sha256": "e923376b51c16b2ec21336121e4cc9590a728f0f6703aba560aa399d707ea937"
+    },
+    {
+      "repository_head_at_diagnostic": "6171bcfb536f57676b6912ca2c831fd2894d28e2",
+      "working_tree_phase": "working tree after initial fixes but before finalization reauthorization",
+      "tests_were_uncommitted": true,
+      "argv": [
+        "/workspace/.ocr-venv/bin/python",
+        "-m",
+        "pytest",
+        "-c",
+        "pytest-ocr.ini",
+        "ocr/tests/test_gate03g_security_audit.py",
+        "-k",
+        "revocation_during_consumption"
+      ],
+      "exit_code": 1,
+      "summary": "2 failed, 5 deselected",
+      "log_sha256": "e82ea2381eded4090d1a6b65a51824cb999ec3d055c956e51be6991cdcff39f6"
+    }
+  ],
+  "operational_limits": [
+    {
+      "id": "L01",
+      "status": "BLOCKED production integration",
+      "description": "RLock fixture is not a durable multi-process CorrectionHost implementation"
+    },
+    {
+      "id": "L02",
+      "status": "documented and tested",
+      "description": "Post-link sync failure can leave a complete private artifact; no rollback or cross-store transaction is claimed"
+    },
+    {
+      "id": "L03",
+      "status": "BLOCKED production integration",
+      "description": "Real host must define and serialize authorization/revocation linearization across its stores and publication"
+    }
+  ],
+  "automated_release_eligible": false
+}

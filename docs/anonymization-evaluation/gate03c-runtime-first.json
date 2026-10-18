@@ -1,0 +1,27 @@
+{
+  "probe": "single-worker-with-1536MiB-concurrent-CPU-memory-load",
+  "integrity_ms": 1247.4459380027838,
+  "loading_ms": 23588.2747680007,
+  "warm_ms": [
+    152.69418199750362,
+    144.01180999993812,
+    149.53220499955933,
+    147.1124330018938,
+    143.8318859982246,
+    150.69004200267955,
+    146.78120499957004,
+    139.43821199791273
+  ],
+  "process_peak_rss_mib": 3020.4375,
+  "cgroup_memory_limit_mib": 8192.0,
+  "cgroup_current_mib": 3726.44140625,
+  "cgroup_peak_mib": 4508.41015625,
+  "measured_headroom_mib": 3683.58984375,
+  "cpu_quota": "400000 100000",
+  "denied_network_calls": [
+    "socket.bind"
+  ],
+  "listeners_opened": 0,
+  "source_sha256": "4db8f5e9133bf8a58026f9e0a1a8cf7183202a448b2bb9c79e6944d2e69a7085",
+  "automated_release_eligible": false
+}

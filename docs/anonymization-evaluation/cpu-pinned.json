@@ -1,0 +1,315 @@
+{
+  "model": "VAGOsolutions/SauerkrautLM-GLiNER",
+  "revision": "ba967ee030b7e679dd5422cb16fcd1b379da38e1",
+  "threshold": 0.5,
+  "runtime_versions": {
+    "gliner": "0.2.29",
+    "torch": "2.8.0+cpu",
+    "transformers": "4.57.1",
+    "numpy": "2.4.6",
+    "pydantic": "2.14.1"
+  },
+  "device": "cpu",
+  "threads": 2,
+  "loading_ms": 12416.564946004655,
+  "suites": {
+    "qualification": {
+      "documents": 40,
+      "ner_entity_metrics": {
+        "PERSON": {
+          "tp": 18,
+          "fp": 4,
+          "fn": 2,
+          "precision": 0.8181818181818182,
+          "recall": 0.9,
+          "f1": 0.8571428571428572
+        },
+        "CITY": {
+          "tp": 14,
+          "fp": 0,
+          "fn": 3,
+          "precision": 1.0,
+          "recall": 0.8235294117647058,
+          "f1": 0.9032258064516129
+        },
+        "RELIGION": {
+          "tp": 6,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "EMAIL": {
+          "tp": 2,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "PHONE": {
+          "tp": 1,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "ORGANIZATION": {
+          "tp": 1,
+          "fp": 3,
+          "fn": 1,
+          "precision": 0.25,
+          "recall": 0.5,
+          "f1": 0.3333333333333333
+        }
+      },
+      "combined_entity_metrics": {
+        "PERSON": {
+          "tp": 18,
+          "fp": 4,
+          "fn": 2,
+          "precision": 0.8181818181818182,
+          "recall": 0.9,
+          "f1": 0.8571428571428572
+        },
+        "CITY": {
+          "tp": 14,
+          "fp": 0,
+          "fn": 3,
+          "precision": 1.0,
+          "recall": 0.8235294117647058,
+          "f1": 0.9032258064516129
+        },
+        "RELIGION": {
+          "tp": 6,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "EMAIL": {
+          "tp": 2,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "PHONE": {
+          "tp": 1,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "ORGANIZATION": {
+          "tp": 1,
+          "fp": 3,
+          "fn": 1,
+          "precision": 0.25,
+          "recall": 0.5,
+          "f1": 0.3333333333333333
+        }
+      },
+      "unredacted_canaries": {
+        "PERSON": 0,
+        "CITY": 1,
+        "RELIGION": 0,
+        "EMAIL": 0,
+        "PHONE": 0,
+        "ORGANIZATION": 0
+      },
+      "literal_unredacted_canaries": {
+        "PERSON": 0,
+        "CITY": 1,
+        "RELIGION": 0,
+        "EMAIL": 0,
+        "PHONE": 0,
+        "ORGANIZATION": 0
+      },
+      "document_exact_match_rate": 0.825,
+      "groups": {
+        "de": {
+          "documents": 10,
+          "exact_matches": 8,
+          "false_negatives": 1
+        },
+        "en": {
+          "documents": 29,
+          "exact_matches": 24,
+          "false_negatives": 5
+        },
+        "mixed": {
+          "documents": 1,
+          "exact_matches": 1,
+          "false_negatives": 0
+        },
+        "ocr_noise": {
+          "documents": 4,
+          "exact_matches": 2,
+          "false_negatives": 2
+        }
+      },
+      "blocked_documents": 0,
+      "failure_codes": {},
+      "warm_latency_ms": {
+        "median": 89.43450299557298,
+        "max": 335.46846700483
+      },
+      "automated_release_eligible": false,
+      "qualification_passed": false
+    },
+    "validation": {
+      "documents": 10,
+      "ner_entity_metrics": {
+        "PERSON": {
+          "tp": 7,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "CITY": {
+          "tp": 4,
+          "fp": 0,
+          "fn": 1,
+          "precision": 1.0,
+          "recall": 0.8,
+          "f1": 0.888888888888889
+        },
+        "RELIGION": {
+          "tp": 2,
+          "fp": 1,
+          "fn": 0,
+          "precision": 0.6666666666666666,
+          "recall": 1.0,
+          "f1": 0.8
+        },
+        "EMAIL": {
+          "tp": 2,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "PHONE": {
+          "tp": 2,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "ORGANIZATION": {
+          "tp": 2,
+          "fp": 2,
+          "fn": 0,
+          "precision": 0.5,
+          "recall": 1.0,
+          "f1": 0.6666666666666666
+        }
+      },
+      "combined_entity_metrics": {
+        "PERSON": {
+          "tp": 7,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "CITY": {
+          "tp": 4,
+          "fp": 0,
+          "fn": 1,
+          "precision": 1.0,
+          "recall": 0.8,
+          "f1": 0.888888888888889
+        },
+        "RELIGION": {
+          "tp": 2,
+          "fp": 1,
+          "fn": 0,
+          "precision": 0.6666666666666666,
+          "recall": 1.0,
+          "f1": 0.8
+        },
+        "EMAIL": {
+          "tp": 2,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "PHONE": {
+          "tp": 2,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "ORGANIZATION": {
+          "tp": 2,
+          "fp": 2,
+          "fn": 0,
+          "precision": 0.5,
+          "recall": 1.0,
+          "f1": 0.6666666666666666
+        }
+      },
+      "unredacted_canaries": {
+        "PERSON": 0,
+        "CITY": 0,
+        "RELIGION": 0,
+        "EMAIL": 0,
+        "PHONE": 0,
+        "ORGANIZATION": 0
+      },
+      "literal_unredacted_canaries": {
+        "PERSON": 0,
+        "CITY": 0,
+        "RELIGION": 0,
+        "EMAIL": 0,
+        "PHONE": 0,
+        "ORGANIZATION": 0
+      },
+      "document_exact_match_rate": 0.7,
+      "groups": {
+        "de": {
+          "documents": 5,
+          "exact_matches": 3,
+          "false_negatives": 1
+        },
+        "en": {
+          "documents": 5,
+          "exact_matches": 4,
+          "false_negatives": 0
+        },
+        "ocr_noise": {
+          "documents": 2,
+          "exact_matches": 2,
+          "false_negatives": 0
+        }
+      },
+      "blocked_documents": 0,
+      "failure_codes": {},
+      "warm_latency_ms": {
+        "median": 96.27475600427715,
+        "max": 121.70219999097753
+      },
+      "automated_release_eligible": false,
+      "qualification_passed": true
+    }
+  },
+  "peak_rss_mib": 3061.1875,
+  "automated_release_eligible": false,
+  "recognition_qualification_passed": false
+}

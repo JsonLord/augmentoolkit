@@ -1,0 +1,13 @@
+{
+  "command": "HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 HF_HUB_DISABLE_TELEMETRY=1 /workspace/.anonymization-venv/bin/python -m ocr.anonymization.holdout --cache /workspace/.anonymization-model --output docs/anonymization-evaluation/gate03c-holdout-first.json",
+  "git_head": "9236acf88a93630782308d1b99206f6e2c3c65a9",
+  "measurement_helpers_uncommitted_at_run": true,
+  "source_sha256": {
+    "ocr/anonymization/holdout.py": "9f713e92094ed3f199e215647ac9ba3f9e1f96089a6ca8db2f38f7aad018f3d3",
+    "ocr/anonymization/evaluate.py": "b7d486e20e7811a6fab63450d7ac3b02a63e938d19fad30b0087e51684a2a06f",
+    "ocr/anonymization/recognizer.py": "f695a30f0ff8540ba345d5557f0bf2bfc225635b228010da6ee6f5ccbc71ce45",
+    "ocr/anonymization/normalization.py": "3b2598200933a86cedf2dd20affb911c4ad1ac4f7fdc00182c4044b7a2873f10"
+  },
+  "result_sha256": "257daa6d43285925c4899471c3f615293293fa0fa8ed17545ebb9d8e99802e83",
+  "interpretation": "First untouched control result failed canary qualification. No holdout-driven tuning or comparison was performed."
+}

@@ -30,7 +30,7 @@ class Message(BaseModel):
 
 class ChatRequest(BaseModel):
     model_config = ConfigDict(extra="forbid")
-    model: Literal["ocr-auto", "ocr-cpu", "ocr-gpu"]
+    model: Literal["ocr-auto", "ocr-cpu", "ocr-gpu", "ocr-alias"]
     messages: list[Message] = Field(min_length=1, max_length=1)
     stream: Literal[False] = False
     # OCR extension, not an OpenAI parameter. It cannot lower server sensitivity.

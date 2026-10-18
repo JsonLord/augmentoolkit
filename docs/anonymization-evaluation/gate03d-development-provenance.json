@@ -1,0 +1,18 @@
+{
+  "base_sha": "4c5cbbc30801f5911dcf52e1997a70404026d425",
+  "execution_tree": "base plus recorded experiment patch; changes were uncommitted when inference ran",
+  "diagnostic_command": "HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 HF_HUB_DISABLE_TELEMETRY=1 PYTHONPATH=. /workspace/.anonymization-venv/bin/python /tmp/gate03d-diagnose.py",
+  "comparison_command": "HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 HF_HUB_DISABLE_TELEMETRY=1 /workspace/.anonymization-venv/bin/python -m ocr.anonymization.compare03d --cache /workspace/.anonymization-model --output /tmp/gate03d-comparison.json",
+  "execution_sources_sha256": {
+    "ocr/anonymization/compare03d.py": "7468c9fef49f6c015c73c51b09ba4fe2b139da9657c7dbadf832e439ff1cc4c1",
+    "ocr/anonymization/evaluate.py": "529e470423b9c013e2fb732f263d2adeb91441fb5ebcb670c173173aca25b37c",
+    "ocr/anonymization/terminology.py": "370b61beb1b5339549f2c8143a31b546f4a32dbbabd26c061f009341de16babd"
+  },
+  "artifacts_sha256": {
+    "gate03d-diagnosis.json": "b93047ea6ee6ab72474693ee2247c5af4bbc8759c309e13064d245f2969370d3",
+    "gate03d-development-comparison.json": "b43f2e8a6d0bd3717a449dc031e50ffa04fb6a21a562489b98372eed9cb8587c",
+    "gate03d-development-experiment.patch": "0c696b90152c57eaf616f4ef2a85bafcc998879b5526b80020bc26305be32c27",
+    "gate03d-diagnostic-runner.py.txt": "b8bca8ec85247a56442fb7507eb929eeb4347711b1311d05c31e3362d73faaa0"
+  },
+  "notes": "Diagnosis executed against unchanged base recognizer/evaluator and contact detector; experiment patch reconstructs development comparison. New holdout not evaluated at this stage. No inference scores fabricated; deterministic scores are null."
+}

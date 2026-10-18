@@ -1,0 +1,373 @@
+{
+  "schema_version": "gate03e-error-taxonomy/v1",
+  "source_head": "ad9a0003cea9e5dbe39183afbca869c2926b9fff",
+  "historical_result_sha256": "08f86d2b78871683835c51b627e251c66b83fc33f828d8a6c8e9742c8bd47d9f",
+  "synthetic_only": true,
+  "cases": [
+    {
+      "case_id": "holdout03d-025",
+      "text": "Für den Eintrag gilt keine Religion als wörtliche Antwort.",
+      "gold": [
+        {
+          "start": 21,
+          "end": 35,
+          "label": "RELIGION",
+          "text": "keine Religion"
+        }
+      ],
+      "predictions": [
+        {
+          "start": 27,
+          "end": 35,
+          "label": "RELIGION",
+          "text": "Religion",
+          "score": 0.6249727010726929,
+          "source": "multilingual_ner",
+          "model_revision": "ba967ee030b7e679dd5422cb16fcd1b379da38e1",
+          "normalization": "identity"
+        }
+      ],
+      "error_code": null,
+      "root_causes": [
+        "entity_boundaries",
+        "terminology_coverage",
+        "evaluation_taxonomy"
+      ],
+      "diagnosis": "Gold protects the complete negative-status phrase; model detects only Religion. Scoped status grammar protects the full source phrase.",
+      "original_candidate_returned": true
+    },
+    {
+      "case_id": "holdout03d-026",
+      "text": "Affiliation was entered as religiously unaffiliated.",
+      "gold": [
+        {
+          "start": 27,
+          "end": 51,
+          "label": "RELIGION",
+          "text": "religiously unaffiliated"
+        }
+      ],
+      "predictions": [
+        {
+          "start": 0,
+          "end": 11,
+          "label": "ORGANIZATION",
+          "text": "Affiliation",
+          "score": 0.6462724208831787,
+          "source": "multilingual_ner",
+          "model_revision": "ba967ee030b7e679dd5422cb16fcd1b379da38e1",
+          "normalization": "identity"
+        }
+      ],
+      "error_code": null,
+      "root_causes": [
+        "semantic_recognition",
+        "terminology_coverage"
+      ],
+      "diagnosis": "No RELIGION span is returned; Affiliation is incorrectly labeled ORGANIZATION. Status grammar protects the religious modifier plus status word; the header false positive is retained and reported.",
+      "original_candidate_returned": true
+    },
+    {
+      "case_id": "holdout03d-055",
+      "text": "Die Wandtafel erläutert Bahai als historischen Gegenstand.",
+      "gold": [
+        {
+          "start": 24,
+          "end": 29,
+          "label": "RELIGION",
+          "text": "Bahai"
+        }
+      ],
+      "predictions": [
+        {
+          "start": 24,
+          "end": 29,
+          "label": "PERSON",
+          "text": "Bahai",
+          "score": 0.9998281002044678,
+          "source": "multilingual_ner",
+          "model_revision": "ba967ee030b7e679dd5422cb16fcd1b379da38e1",
+          "normalization": "identity"
+        }
+      ],
+      "error_code": "ambiguous_entity_overlap",
+      "root_causes": [
+        "conflicting_entity_categories",
+        "evaluation_taxonomy"
+      ],
+      "diagnosis": "Exact source bounds have incompatible model and terminology labels. Religious terms may be topics or ambiguous names. No affiliation is inferred; preserving the fail-closed overlap policy blocks this document without returning a candidate.",
+      "original_candidate_returned": false
+    },
+    {
+      "case_id": "holdout03d-063",
+      "text": "Ein allgemeiner Artikel nennt konfessionslos als statistische Kategorie.",
+      "gold": [
+        {
+          "start": 30,
+          "end": 44,
+          "label": "RELIGION",
+          "text": "konfessionslos"
+        }
+      ],
+      "predictions": [
+        {
+          "start": 30,
+          "end": 44,
+          "label": "PERSON",
+          "text": "konfessionslos",
+          "score": 0.5395556092262268,
+          "source": "multilingual_ner",
+          "model_revision": "ba967ee030b7e679dd5422cb16fcd1b379da38e1",
+          "normalization": "identity"
+        }
+      ],
+      "error_code": "ambiguous_entity_overlap",
+      "root_causes": [
+        "conflicting_entity_categories",
+        "evaluation_taxonomy"
+      ],
+      "diagnosis": "Exact source bounds have incompatible model and terminology labels. Religious terms may be topics or ambiguous names. No affiliation is inferred; preserving the fail-closed overlap policy blocks this document without returning a candidate.",
+      "original_candidate_returned": false
+    },
+    {
+      "case_id": "holdout03d-078",
+      "text": "A reviewer underlined \"Baha'i\" in the supplied excerpt.",
+      "gold": [
+        {
+          "start": 23,
+          "end": 29,
+          "label": "RELIGION",
+          "text": "Baha'i"
+        }
+      ],
+      "predictions": [
+        {
+          "start": 23,
+          "end": 29,
+          "label": "PERSON",
+          "text": "Baha'i",
+          "score": 0.8763203620910645,
+          "source": "multilingual_ner",
+          "model_revision": "ba967ee030b7e679dd5422cb16fcd1b379da38e1",
+          "normalization": "identity"
+        }
+      ],
+      "error_code": "ambiguous_entity_overlap",
+      "root_causes": [
+        "conflicting_entity_categories",
+        "evaluation_taxonomy"
+      ],
+      "diagnosis": "Exact source bounds have incompatible model and terminology labels. Religious terms may be topics or ambiguous names. No affiliation is inferred; preserving the fail-closed overlap policy blocks this document without returning a candidate.",
+      "original_candidate_returned": false
+    },
+    {
+      "case_id": "holdout03d-111",
+      "text": "Der OCR-Wert konfesslonsfrei bleibt vertraulich.",
+      "gold": [
+        {
+          "start": 13,
+          "end": 28,
+          "label": "RELIGION",
+          "text": "konfesslonsfrei"
+        }
+      ],
+      "predictions": [],
+      "error_code": null,
+      "root_causes": [
+        "ocr_corruption",
+        "terminology_coverage"
+      ],
+      "diagnosis": "One i/l substitution prevents exact terminology matching. Scoped matching accepts one defined confusable substitution only in long configured status words; source text and offsets are unchanged.",
+      "original_candidate_returned": true
+    },
+    {
+      "case_id": "holdout03d-125",
+      "text": "Interner Datensatz des Hafenbogen Archivs: Kiel, evangelisch.",
+      "gold": [
+        {
+          "start": 23,
+          "end": 41,
+          "label": "ORGANIZATION",
+          "text": "Hafenbogen Archivs"
+        },
+        {
+          "start": 43,
+          "end": 47,
+          "label": "CITY",
+          "text": "Kiel"
+        },
+        {
+          "start": 49,
+          "end": 60,
+          "label": "RELIGION",
+          "text": "evangelisch"
+        }
+      ],
+      "predictions": [
+        {
+          "start": 23,
+          "end": 33,
+          "label": "ORGANIZATION",
+          "text": "Hafenbogen",
+          "score": 0.7308627963066101,
+          "source": "multilingual_ner",
+          "model_revision": "ba967ee030b7e679dd5422cb16fcd1b379da38e1",
+          "normalization": "identity"
+        },
+        {
+          "start": 43,
+          "end": 47,
+          "label": "CITY",
+          "text": "Kiel",
+          "score": 0.9980584979057312,
+          "source": "multilingual_ner",
+          "model_revision": "ba967ee030b7e679dd5422cb16fcd1b379da38e1",
+          "normalization": "identity"
+        },
+        {
+          "start": 49,
+          "end": 60,
+          "label": "RELIGION",
+          "text": "evangelisch",
+          "score": 0.7706614136695862,
+          "source": "multilingual_ner",
+          "model_revision": "ba967ee030b7e679dd5422cb16fcd1b379da38e1",
+          "normalization": "identity"
+        }
+      ],
+      "error_code": null,
+      "root_causes": [
+        "entity_boundaries",
+        "semantic_recognition"
+      ],
+      "diagnosis": "Model predicts the proper-name base but omits the German genitive organization head. No OCR corruption is present. Padding subsequent nouns indiscriminately could overmask or cross another entity; deferred without a validated contextual boundary policy.",
+      "original_candidate_returned": true
+    },
+    {
+      "case_id": "holdout03d-127",
+      "text": "Liv Hohenrain nennt Bonn und Bahai; liv.h@example.invalid bleibt intern.",
+      "gold": [
+        {
+          "start": 0,
+          "end": 13,
+          "label": "PERSON",
+          "text": "Liv Hohenrain"
+        },
+        {
+          "start": 20,
+          "end": 24,
+          "label": "CITY",
+          "text": "Bonn"
+        },
+        {
+          "start": 29,
+          "end": 34,
+          "label": "RELIGION",
+          "text": "Bahai"
+        },
+        {
+          "start": 36,
+          "end": 57,
+          "label": "EMAIL",
+          "text": "liv.h@example.invalid"
+        }
+      ],
+      "predictions": [
+        {
+          "start": 0,
+          "end": 13,
+          "label": "PERSON",
+          "text": "Liv Hohenrain",
+          "score": 0.9968641400337219,
+          "source": "multilingual_ner",
+          "model_revision": "ba967ee030b7e679dd5422cb16fcd1b379da38e1",
+          "normalization": "identity"
+        },
+        {
+          "start": 20,
+          "end": 24,
+          "label": "CITY",
+          "text": "Bonn",
+          "score": 0.9716768860816956,
+          "source": "multilingual_ner",
+          "model_revision": "ba967ee030b7e679dd5422cb16fcd1b379da38e1",
+          "normalization": "identity"
+        },
+        {
+          "start": 29,
+          "end": 34,
+          "label": "PERSON",
+          "text": "Bahai",
+          "score": 0.8550848364830017,
+          "source": "multilingual_ner",
+          "model_revision": "ba967ee030b7e679dd5422cb16fcd1b379da38e1",
+          "normalization": "identity"
+        },
+        {
+          "start": 36,
+          "end": 57,
+          "label": "EMAIL",
+          "text": "liv.h@example.invalid",
+          "score": 0.7995248436927795,
+          "source": "multilingual_ner",
+          "model_revision": "ba967ee030b7e679dd5422cb16fcd1b379da38e1",
+          "normalization": "identity"
+        }
+      ],
+      "error_code": "ambiguous_entity_overlap",
+      "root_causes": [
+        "conflicting_entity_categories",
+        "evaluation_taxonomy"
+      ],
+      "diagnosis": "Exact source bounds have incompatible model and terminology labels. Religious terms may be topics or ambiguous names. No affiliation is inferred; preserving the fail-closed overlap policy blocks this document without returning a candidate.",
+      "original_candidate_returned": false
+    },
+    {
+      "case_id": "holdout03d-137",
+      "text": "Seitenrand Katholizismus / Fußnote Katholizismus.",
+      "gold": [
+        {
+          "start": 11,
+          "end": 24,
+          "label": "RELIGION",
+          "text": "Katholizismus"
+        },
+        {
+          "start": 35,
+          "end": 48,
+          "label": "RELIGION",
+          "text": "Katholizismus"
+        }
+      ],
+      "predictions": [
+        {
+          "start": 11,
+          "end": 24,
+          "label": "ORGANIZATION",
+          "text": "Katholizismus",
+          "score": 0.6781677603721619,
+          "source": "multilingual_ner",
+          "model_revision": "ba967ee030b7e679dd5422cb16fcd1b379da38e1",
+          "normalization": "identity"
+        },
+        {
+          "start": 35,
+          "end": 48,
+          "label": "ORGANIZATION",
+          "text": "Katholizismus",
+          "score": 0.73296058177948,
+          "source": "multilingual_ner",
+          "model_revision": "ba967ee030b7e679dd5422cb16fcd1b379da38e1",
+          "normalization": "identity"
+        }
+      ],
+      "error_code": "ambiguous_entity_overlap",
+      "root_causes": [
+        "conflicting_entity_categories",
+        "evaluation_taxonomy"
+      ],
+      "diagnosis": "Exact source bounds have incompatible model and terminology labels. Religious terms may be topics or ambiguous names. No affiliation is inferred; preserving the fail-closed overlap policy blocks this document without returning a candidate.",
+      "original_candidate_returned": false
+    }
+  ]
+}

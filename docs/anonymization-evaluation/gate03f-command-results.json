@@ -1,0 +1,134 @@
+{
+  "source_sha": "332132fb2b5fc53f987abb2521b28def12ab11b9",
+  "commands": [
+    {
+      "name": "ruff",
+      "source_sha": "332132fb2b5fc53f987abb2521b28def12ab11b9",
+      "argv": [
+        "/workspace/.ocr-venv/bin/ruff",
+        "check",
+        "ocr",
+        "augmentoolkit/utils/offline_chunking.py"
+      ],
+      "environment_overrides": {},
+      "started_at": "2026-10-18T20:06:09.383473+00:00",
+      "elapsed_seconds": 0.02326851899852045,
+      "exit_code": 0,
+      "summary": [
+        "All checks passed!"
+      ]
+    },
+    {
+      "name": "format",
+      "source_sha": "332132fb2b5fc53f987abb2521b28def12ab11b9",
+      "argv": [
+        "/workspace/.ocr-venv/bin/ruff",
+        "format",
+        "--check",
+        "ocr",
+        "augmentoolkit/utils/offline_chunking.py"
+      ],
+      "environment_overrides": {},
+      "started_at": "2026-10-18T20:06:09.406850+00:00",
+      "elapsed_seconds": 0.01934639100363711,
+      "exit_code": 0,
+      "summary": [
+        "95 files already formatted"
+      ]
+    },
+    {
+      "name": "default",
+      "source_sha": "332132fb2b5fc53f987abb2521b28def12ab11b9",
+      "argv": [
+        "/workspace/.ocr-venv/bin/python",
+        "-m",
+        "pytest",
+        "-c",
+        "pytest-ocr.ini"
+      ],
+      "environment_overrides": {},
+      "started_at": "2026-10-18T20:06:09.426267+00:00",
+      "elapsed_seconds": 10.862496499001281,
+      "exit_code": 0,
+      "summary": [
+        "================== 362 passed, 13 skipped, 1 warning in 9.94s =================="
+      ]
+    },
+    {
+      "name": "security",
+      "source_sha": "332132fb2b5fc53f987abb2521b28def12ab11b9",
+      "argv": [
+        "/workspace/.ocr-venv/bin/python",
+        "-m",
+        "pytest",
+        "-c",
+        "pytest-ocr.ini",
+        "ocr/tests/test_anonymization_security.py",
+        "ocr/tests/test_anonymization_release_policy.py",
+        "ocr/tests/test_private_host_adapters.py",
+        "ocr/tests/test_gate03c_runtime_state.py",
+        "ocr/tests/test_gate03e_provenance_review.py",
+        "ocr/tests/test_reviewed_corrections.py"
+      ],
+      "environment_overrides": {},
+      "started_at": "2026-10-18T20:06:20.288927+00:00",
+      "elapsed_seconds": 2.5858066839937237,
+      "exit_code": 0,
+      "summary": [
+        "============================= 205 passed in 1.89s =============================="
+      ]
+    },
+    {
+      "name": "offline",
+      "source_sha": "332132fb2b5fc53f987abb2521b28def12ab11b9",
+      "argv": [
+        "/workspace/.ocr-venv/bin/python",
+        "-m",
+        "pytest",
+        "-c",
+        "pytest-ocr.ini",
+        "ocr/tests/test_anonymization_runtime_safety.py",
+        "ocr/tests/test_gate03c_holdout_utf8.py"
+      ],
+      "environment_overrides": {},
+      "started_at": "2026-10-18T20:06:22.874861+00:00",
+      "elapsed_seconds": 0.5476080070002354,
+      "exit_code": 0,
+      "summary": [
+        "============================== 18 passed in 0.12s =============================="
+      ]
+    },
+    {
+      "name": "pinned-model",
+      "source_sha": "332132fb2b5fc53f987abb2521b28def12ab11b9",
+      "argv": [
+        "/workspace/.anonymization-venv/bin/python",
+        "-m",
+        "pytest",
+        "-c",
+        "pytest-ocr.ini",
+        "ocr/tests/test_anonymization_integration.py"
+      ],
+      "environment_overrides": {
+        "HF_HUB_OFFLINE": "1",
+        "TRANSFORMERS_OFFLINE": "1",
+        "HF_HUB_DISABLE_TELEMETRY": "1",
+        "RUN_ANONYMIZATION_MODEL": "1",
+        "RUN_GATE03C_HOLDOUT": "1",
+        "RUN_GATE03D_MODEL": "1",
+        "RUN_GATE03D_HOLDOUT": "1",
+        "RUN_GATE03E_MODEL": "1",
+        "RUN_GATE03F_MODEL": "1",
+        "ANONYMIZATION_MODEL_CACHE": "/workspace/.anonymization-model",
+        "GATE03E_DEVELOPMENT_OUTPUT": "docs/anonymization-evaluation/gate03e-development.json",
+        "GATE03F_CORRECTION_OUTPUT": "docs/anonymization-evaluation/gate03f-corrections-live.json"
+      },
+      "started_at": "2026-10-18T20:06:23.422578+00:00",
+      "elapsed_seconds": 94.2632183780006,
+      "exit_code": 1,
+      "summary": [
+        "==================== 4 failed, 3 passed in 93.03s (0:01:33) ===================="
+      ]
+    }
+  ]
+}

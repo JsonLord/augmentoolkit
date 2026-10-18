@@ -1,0 +1,325 @@
+--- /dev/null
++++ b/ocr/anonymization/compare03d.py
+@@ -0,0 +1,111 @@
++"""Development-only fixed experiments, never a claim of independent holdout quality.
++
++All input paths are fixed repository synthetic corpora. Per-case payload evidence
++is intentionally synthetic. The three datasets are development data from Gate03d.
++"""
++
++import hashlib
++import json
++import resource
++import subprocess
++import sys
++import time
++from pathlib import Path
++
++from .atomic_output import write_candidate
++from .detectors import detect
++from .evaluate import score_cases
++from .investigate import Recorded
++from .recognizer import DEFAULT_PROMPTS, GLiNERRecognizer
++from .replacement import replace, resolve_overlaps, validate_entities
++from .terminology import DEFAULT_TERMS, ReligiousTerminology
++
++
++def run(cache, output):
++    denied = []
++
++    def offline(event, args):
++        if event in ("socket.connect", "socket.bind", "socket.getaddrinfo"):
++            denied.append(event)
++            raise PermissionError("qualification_network_disabled")
++
++    sys.addaudithook(offline)
++    start = time.perf_counter()
++    model = GLiNERRecognizer(cache)
++    load = (time.perf_counter() - start) * 1000
++    model.recognize("Synthetic warmup text.")
++    root = Path(__file__).parent / "fixtures"
++    paths = {
++        "qualification": root / "qualification.json",
++        "validation": root / "validation.json",
++        "development03c": root / "holdout03c/cases.json",
++    }
++    suites = {n: json.loads(p.read_bytes()) for n, p in paths.items()}
++    terminology = ReligiousTerminology()
++
++    def hybrid(text):
++        return detect(text) + terminology.detect(text)
++
++    report = dict(
++        schema_version="gate03d-development-comparison/v1",
++        source_sha=subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip(),
++        model_revision=model.revision,
++        corpus_sha256={n: hashlib.sha256(p.read_bytes()).hexdigest() for n, p in paths.items()},
++        terminology=list(DEFAULT_TERMS),
++        loading_ms=load,
++        experiments={},
++        automated_release_eligible=False,
++    )
++    baseline = {}
++    # Fixed before inference. No low-threshold sweep or fixture-specific patterns.
++    for name, prompts, detector in (
++        ("control", DEFAULT_PROMPTS, detect),
++        (
++            "semantic_status_prompt",
++            DEFAULT_PROMPTS | {"RELIGION": "religion or religious non-affiliation"},
++            detect,
++        ),
++        ("hybrid_terminology", DEFAULT_PROMPTS, hybrid),
++    ):
++        model.prompts = dict(prompts)
++        recorder = Recorded(model)
++        result = dict(prompts=model.prompts, threshold=model.threshold, suites={}, changes=[])
++        for suite, cases in suites.items():
++            result["suites"][suite] = score_cases(recorder, cases, detector=detector)
++            for case in cases:
++                text = case["text"]
++                raw = recorder.predictions[text]
++                combined = resolve_overlaps(validate_entities(text, raw + detector(text)))
++                output_text, _ = replace(text, combined)
++                predicted = {(p.start, p.end, p.label) for p in combined}
++                gold = {(p["start"], p["end"], p["label"]) for p in case["spans"]}
++                item = dict(
++                    suite=suite,
++                    case_id=case["id"],
++                    false_positives=sorted(predicted - gold),
++                    false_negatives=sorted(gold - predicted),
++                    exact_match=output_text == case["expected"],
++                    predictions=[p.model_dump() for p in combined],
++                )
++                key = (suite, case["id"])
++                if name == "control":
++                    baseline[key] = item
++                    if item["false_positives"] or item["false_negatives"]:
++                        result["changes"].append(item)
++                elif item["predictions"] != baseline[key]["predictions"]:
++                    result["changes"].append(dict(before=baseline[key], after=item))
++        report["experiments"][name] = result
++    report["peak_rss_mib"] = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024
++    report["denied_network_calls"] = denied
++    write_candidate(output, (json.dumps(report, ensure_ascii=False, indent=2) + "\n").encode())
++
++
++if __name__ == "__main__":
++    import argparse
++
++    parser = argparse.ArgumentParser(description="Compare fixed Gate03d development alternatives")
++    parser.add_argument("--cache", required=True)
++    parser.add_argument("--output", required=True)
++    args = parser.parse_args()
++    run(args.cache, args.output)
++    print("comparison_recorded_check_metrics_before_selection")
+--- a/ocr/anonymization/evaluate.py
++++ b/ocr/anonymization/evaluate.py
+@@ -28,7 +28,7 @@
+     return output
+ 
+ 
+-def score_cases(recognizer, cases):
++def score_cases(recognizer, cases, *, detector=detect):
+     ner_counts, combined_counts, leaks, failures = Counter(), Counter(), Counter(), Counter()
+     literal_leaks = Counter()
+     partial_canaries, uncovered_canaries, coverage = Counter(), Counter(), Counter()
+@@ -45,7 +45,7 @@
+         try:
+             raw = validate_entities(text, recognizer.recognize(text))
+             ner = {(s.start, s.end, s.label) for s in raw}
+-            combined = resolve_overlaps(validate_entities(text, raw + detect(text)))
++            combined = resolve_overlaps(validate_entities(text, raw + detector(text)))
+             predicted = {(s.start, s.end, s.label) for s in combined}
+             actual, _ = replace(text, combined)
+         except SafeError as e:
+--- /dev/null
++++ b/ocr/anonymization/terminology.py
+@@ -0,0 +1,188 @@
++"""Bounded literal protection of religious terminology, not personal attribution.
++
++A match says only that the source contains a protected religious/status term.
++Negations, quotations and general topics are intentionally protected too. No
++relationship between a term and a nearby person is inferred. This finite lexicon
++is neither a spelling corrector nor an exhaustive religion/affiliation detector.
++"""
++
++import unicodedata
++
++from ocr.schemas import SafeError
++
++from .normalization import dehyphenate
++from .schemas import Entity
++
++TERMINOLOGY_REVISION = "religious-terminology-v1"
++# Explicit EN/DE words and inflections, never fixture IDs, names or context templates.
++# Ambiguous adjectives (e.g. orthodox, evangelical) remain contextual model decisions.
++DEFAULT_TERMS = (
++    "religionslos",
++    "konfessionslos",
++    "konfessionsfrei",
++    "ohne Konfession",
++    "nicht religiös",
++    "no religious affiliation",
++    "no religion",
++    "nonreligious",
++    "non-religious",
++    "atheist",
++    "atheists",
++    "atheism",
++    "atheistisch",
++    "Atheismus",
++    "agnostic",
++    "agnostics",
++    "agnosticism",
++    "agnostisch",
++    "Agnostizismus",
++    "Christentum",
++    "Christianity",
++    "Christen",
++    "Christian",
++    "Christians",
++    "christlich",
++    "christliche",
++    "christlichen",
++    "Katholizismus",
++    "Catholicism",
++    "katholisch",
++    "katholische",
++    "katholischen",
++    "Catholic",
++    "Catholics",
++    "Protestantismus",
++    "Protestantism",
++    "Protestant",
++    "Protestants",
++    "evangelisch",
++    "evangelische",
++    "evangelischen",
++    "Judentum",
++    "Judaism",
++    "jüdisch",
++    "jüdische",
++    "jüdischen",
++    "Jewish",
++    "Jude",
++    "Jüdin",
++    "Juden",
++    "Jews",
++    "Islam",
++    "Muslim",
++    "Muslims",
++    "muslimisch",
++    "muslimische",
++    "muslimischen",
++    "islamisch",
++    "islamische",
++    "islamischen",
++    "Buddhismus",
++    "Buddhism",
++    "Buddhist",
++    "Buddhists",
++    "buddhistisch",
++    "buddhistische",
++    "buddhistischen",
++    "Hinduismus",
++    "Hinduism",
++    "Hindu",
++    "Hindus",
++    "hinduistisch",
++    "hinduistische",
++    "hinduistischen",
++    "Sikhismus",
++    "Sikhism",
++    "Sikh",
++    "Sikhs",
++    "sikhistisch",
++    "Jainismus",
++    "Jainism",
++    "Jain",
++    "Jains",
++    "jainistisch",
++    "Bahai",
++    "Baháʼí Faith",
++    "Bahá'í",
++    "Baha'i",
++    "Shinto",
++    "Shintoismus",
++    "Shintoism",
++    "Taoismus",
++    "Taoism",
++    "Daoismus",
++    "Daoism",
++    "Zoroastrismus",
++    "Zoroastrianism",
++    "Orthodox Christianity",
++    "Orthodoxie",
++)
++
++
++def _word(c):
++    # Combining marks and connector punctuation belong to a word too. This avoids
++    # matching a bare term inside a decomposed or underscore-connected identifier.
++    return c.isalnum() or c == "_" or unicodedata.category(c).startswith("M")
++
++
++class ReligiousTerminology:
++    """Operator-configurable literal terms; no user supplied regular expressions.
++
++    At most 256 terms, 80 code points each, 2M input code points and 100k matches.
++    Case folding and OCR line dehyphenation retain exact original source offsets.
++    Configuration is trusted operator policy, not per-request model output.
++    """
++
++    def __init__(self, terms=DEFAULT_TERMS):
++        if not isinstance(terms, (tuple, list)) or not 1 <= len(terms) <= 256:
++            raise SafeError("invalid_terminology_configuration")
++        if any(
++            not isinstance(t, str)
++            or not 1 <= len(t) <= 80
++            or t != t.strip()
++            or not all(c.isalpha() or c in " -'ʼáí" for c in t)
++            for t in terms
++        ):
++            raise SafeError("invalid_terminology_configuration")
++        self.terms = tuple(sorted({t.casefold() for t in terms}, key=lambda t: (-len(t), t)))
++
++    def detect(self, text):
++        if not isinstance(text, str) or len(text) > 2_000_000:
++            raise SafeError("anonymization_text_limit")
++        normalized, source_positions = dehyphenate(text)
++        folded_parts, folded_positions = [], []
++        for i, char in enumerate(normalized):
++            part = char.casefold()
++            folded_parts.append(part)
++            folded_positions.extend([i] * len(part))
++        folded = "".join(folded_parts)
++        found = {}
++        for term in self.terms:
++            offset = 0
++            while (left := folded.find(term, offset)) >= 0:
++                right = left + len(term)
++                offset = right
++                if (left and _word(folded[left - 1])) or (
++                    right < len(folded) and _word(folded[right])
++                ):
++                    continue
++                # Never accept part of an expanding case fold (e.g. one s in ß).
++                if (left and folded_positions[left - 1] == folded_positions[left]) or (
++                    right < len(folded_positions)
++                    and folded_positions[right - 1] == folded_positions[right]
++                ):
++                    continue
++                start = source_positions[folded_positions[left]]
++                end = source_positions[folded_positions[right - 1]] + 1
++                found[(start, end)] = Entity(
++                    start=start,
++                    end=end,
++                    label="RELIGION",
++                    text=text[start:end],
++                    source="deterministic",
++                    model_revision=TERMINOLOGY_REVISION,
++                    normalization="identity" if normalized == text else "dehyphenation-v1",
++                )
++                if len(found) > 100_000:
++                    raise SafeError("invalid_entity_spans")
++        return list(found.values())
