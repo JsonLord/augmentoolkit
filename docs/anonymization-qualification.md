@@ -12,22 +12,25 @@ Investigate and test the existing anonymization implementation before integratin
 - **Integration with OCR:** The `ocr/handoff.py` script provides a secure bridge (`anonymization_handoff`) that properly returns the result as `release_review_required=True` and `anonymous=False`.
 
 ## 2. Evaluation Metrics (Span-Aware Synthetic Dataset)
-A synthetic dataset of 40 text cases was tested, comparing actual text replacements to gold-standard entity spans to calculate exact metric values.
+A synthetic dataset of 40 text cases was tested. Because the current `anonymize_text` implementation does not yield character offsets (spans), entity-level Precision, Recall, and F1 metrics are explicitly marked as **UNAVAILABLE**.
+
+Instead, we validated the gold-standard test spans and measured the exact document match rate alongside the required canary leakage.
 
 ```text
 --- Evaluation Metrics ---
-PERSON: {'precision': 0.294, 'recall': 0.250, 'f1': 0.270, 'false_positives': 12, 'false_negatives': 15, 'unredacted_canaries': 1}
-CITY: {'precision': 0.500, 'recall': 0.353, 'f1': 0.414, 'false_positives': 6, 'false_negatives': 11, 'unredacted_canaries': 1}
-RELIGION: {'precision': 0, 'recall': 0.0, 'f1': 0, 'false_positives': 0, 'false_negatives': 6, 'unredacted_canaries': 4}
-EMAIL: {'precision': 0, 'recall': 0.0, 'f1': 0, 'false_positives': 0, 'false_negatives': 2, 'unredacted_canaries': 0}
-PHONE: {'precision': 0, 'recall': 0.0, 'f1': 0, 'false_positives': 0, 'false_negatives': 1, 'unredacted_canaries': 1}
-ORGANIZATION: {'precision': 0, 'recall': 0.0, 'f1': 0, 'false_positives': 0, 'false_negatives': 2, 'unredacted_canaries': 2}
-avg_runtime_ms: 970.5
+PERSON: {'precision': 'UNAVAILABLE', 'recall': 'UNAVAILABLE', 'f1': 'UNAVAILABLE', 'unredacted_canaries': 5}
+CITY: {'precision': 'UNAVAILABLE', 'recall': 'UNAVAILABLE', 'f1': 'UNAVAILABLE', 'unredacted_canaries': 3}
+RELIGION: {'precision': 'UNAVAILABLE', 'recall': 'UNAVAILABLE', 'f1': 'UNAVAILABLE', 'unredacted_canaries': 5}
+EMAIL: {'precision': 'UNAVAILABLE', 'recall': 'UNAVAILABLE', 'f1': 'UNAVAILABLE', 'unredacted_canaries': 2}
+PHONE: {'precision': 'UNAVAILABLE', 'recall': 'UNAVAILABLE', 'f1': 'UNAVAILABLE', 'unredacted_canaries': 1}
+ORGANIZATION: {'precision': 'UNAVAILABLE', 'recall': 'UNAVAILABLE', 'f1': 'UNAVAILABLE', 'unredacted_canaries': 2}
+document_exact_match_rate: 0.175
+avg_runtime_ms: 840.4
 ```
 
-- **PERSON**: High precision on English names, moderate recall. It misses German names and sometimes miscategorizes them (e.g., as CITY), triggering unredacted canaries.
-- **CITY (Location)**: Moderate for English, very poor for German text.
-- **Unsupported Categories**: `RELIGION`, `EMAIL`, `PHONE`, and `ORGANIZATION` achieved exactly 0% recall as they are unhandled by the NLTK/Presidio implementations. This leads to large numbers of unredacted canary leaks.
+- **Document Exact Match Rate**: Only 17.5% of the test documents were redacted exactly as specified in the gold standard.
+- **Canary Leakage**: Every required entity category saw significant canary leakage.
+- **Unsupported Categories**: `RELIGION`, `EMAIL`, `PHONE`, and `ORGANIZATION` are unhandled by the NLTK/Presidio implementations. This leads to large numbers of unredacted canary leaks.
 
 ## 3. OCR-to-Anonymization Integration
 The integration test (`test_ocr_to_anonymization_integration`) is marked as opt-in to avoid injecting heavyweight ML dependencies into the default test run environment.
@@ -42,10 +45,11 @@ The mock testing validates the handoff interface accurately, confirming:
 
 **Reasons:**
 1. **Fail-Open Behavior:** The existing NLTK baseline implementation returns the original text on failure. This is a critical security vulnerability.
-2. **Missing Entity Support:** Essential categories (`[RELIGION]`, `[EMAIL]`, `[PHONE]`, `[ORGANIZATION]`) are completely unhandled, immediately leading to zero-canary compliance failures.
+2. **Missing Entity Support:** Essential categories (`[RELIGION]`, `[EMAIL]`, `[PHONE]`, `[ORGANIZATION]`) are completely unhandled, immediately leading to compliance failures (canary leakage).
 3. **Missing Multilingual Support:** The hardcoded English Presidio configuration and NLTK fallback severely underperform on German text.
 
 **Recommendation:**
 The next implementation gate needs to:
 - Introduce a multilingual GLiNER-based recognizer (or similar robust multilingual model) to properly handle German and custom entity tags like `RELIGION` without downloading arbitrary corpora.
+- The recognizer must return explicit spans to calculate accurate P/R/F1.
 - Implement explicit catch blocks inside the tagger wrappers that fail closed (throw `Exception`) ensuring `ocr/handoff.py` correctly converts it to a `SafeError`.

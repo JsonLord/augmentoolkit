@@ -3,7 +3,6 @@ import time
 from unittest.mock import patch
 
 import pytest
-from augmentoolkit.utils.anonymization import anonymize_text
 from ocr.handoff import anonymization_handoff
 from ocr.schemas import Block, OCRPageResult, OCRResult, SafeError
 
@@ -239,6 +238,9 @@ SYNTHETIC_CASES = [
 
 
 def tagger_wrapper(text):
+    pytest.importorskip("nltk")
+    from augmentoolkit.utils.anonymization import anonymize_text
+
     result_text = anonymize_text(text)
     return {"text": result_text, "tags": []}
 
@@ -246,80 +248,56 @@ def tagger_wrapper(text):
 class TestAnonymizationQualification:
     def evaluate_metrics(self):
         """
-        Calculates precision, recall, F1, false positives, false negatives,
-        and unredacted canary count with exact expected string evaluation.
+        Calculates unredacted canary count and document-level exact match rates.
+        We explicitly mark entity-level Precision, Recall, and F1 as "UNAVAILABLE"
+        until the recognizer provides usable span evidence.
         """
+        pytest.importorskip("nltk")
+        from augmentoolkit.utils.anonymization import anonymize_text
+
         entity_types = ["PERSON", "CITY", "RELIGION", "EMAIL", "PHONE", "ORGANIZATION"]
-        metrics = {e: {"tp": 0, "fp": 0, "fn": 0} for e in entity_types}
 
         unredacted_canaries = {e: 0 for e in entity_types}
         total_time = 0
+        exact_match_count = 0
 
         for case in SYNTHETIC_CASES:
             original = case["text"]
             expected = case["expected"]
             spans = case["spans"]
 
+            # Validate gold-standard definitions before test
+            for span in spans:
+                assert original[span["start"] : span["end"]] == span["text"]
+
             start_time = time.time()
             actual = anonymize_text(original)
             total_time += time.time() - start_time
 
-            # Since the current engine cannot return explicit spans, we use the
-            # expected Gold Standard to assert if the actual string output matches perfectly.
-            # If the entire result string matches expected, all spans are True Positives.
-            # If it does not, we flag it.
             if actual == expected:
-                for span in spans:
-                    metrics[span["label"]]["tp"] += 1
-            else:
-                # Track false negatives and leaking canaries.
-                # If a required word from a span is still in the output, it's a clear miss (FN and Canary).
-                for span in spans:
-                    label = span["label"]
-                    text = span["text"]
-                    if text.lower() in actual.lower():
-                        metrics[label]["fn"] += 1
-                        unredacted_canaries[label] += 1
-                    else:
-                        # It was redacted, but output is still not matching 'expected'.
-                        # E.g. substituted the wrong tag, or merged words incorrectly.
-                        # This counts as a FN for the intended label since it didn't do the correct thing.
-                        metrics[label]["fn"] += 1
+                exact_match_count += 1
 
-                # False positives are extra tags that shouldn't be there
-                actual_tag_counts = {e: actual.count(f"[{e}]") for e in entity_types}
-                expected_tag_counts = {e: expected.count(f"[{e}]") for e in entity_types}
-                for label in entity_types:
-                    diff = actual_tag_counts[label] - expected_tag_counts[label]
-                    if diff > 0:
-                        metrics[label]["fp"] += diff
+            # Track false negatives and leaking canaries.
+            for span in spans:
+                label = span["label"]
+                text = span["text"]
+                # We check if the expected required word is still present in the output
+                if text.lower() in actual.lower():
+                    unredacted_canaries[label] += 1
 
         results = {}
         for entity in entity_types:
-            counts = metrics[entity]
-            tp = counts["tp"]
-            fp = counts["fp"]
-            fn = counts["fn"]
-
-            precision = tp / (tp + fp) if (tp + fp) > 0 else 0
-            recall = tp / (tp + fn) if (tp + fn) > 0 else 0
-            f1 = 2 * (precision * recall) / (precision + recall) if (precision + recall) > 0 else 0
-
             results[entity] = {
-                "precision": precision,
-                "recall": recall,
-                "f1": f1,
-                "false_positives": fp,
-                "false_negatives": fn,
+                "precision": "UNAVAILABLE",
+                "recall": "UNAVAILABLE",
+                "f1": "UNAVAILABLE",
                 "unredacted_canaries": unredacted_canaries[entity],
             }
 
+        results["document_exact_match_rate"] = exact_match_count / len(SYNTHETIC_CASES)
         results["avg_runtime_ms"] = (total_time / len(SYNTHETIC_CASES)) * 1000
         return results
 
-    @pytest.mark.skipif(
-        os.environ.get("RUN_OPTIONAL_OCR_INTEGRATION") != "1", reason="Opt-in real model evaluation"
-    )
     def test_evaluate_synthetic_dataset(self):
         """
         Evaluate the synthetic dataset and print metrics for the qualification report.
@@ -334,11 +312,13 @@ class TestAnonymizationQualification:
 
     # === Security and Fail-Closed Testing ===
     # BASELINE CHARACTERIZATION
-    @patch("augmentoolkit.utils.anonymization.PRESIDIO_AVAILABLE", False)
     def test_baseline_nltk_fail_open_security_flaw(self):
         """
         BASELINE DEFECT: If NLTK fails, it currently returns the original text (fail-open flaw).
         """
+        pytest.importorskip("nltk")
+        from augmentoolkit.utils.anonymization import anonymize_text
+
         with patch(
             "augmentoolkit.utils.anonymization.word_tokenize",
             side_effect=Exception("Simulated failure"),
@@ -381,7 +361,7 @@ class TestAnonymizationQualification:
             status="completed",
             sensitivity="D2",
             pages=[page],
-            stats={"duration": 1.0, "estimated_cost": 0.0},
+            anonymization_required=True,
         )
 
         def bad_tagger(text):
@@ -420,7 +400,7 @@ class TestAnonymizationQualification:
             status="completed",
             sensitivity="D2",
             pages=[page],
-            stats={"duration": 1.0, "estimated_cost": 0.0},
+            anonymization_required=True,
         )
 
         def invalid_tagger(text):
@@ -439,6 +419,7 @@ class TestAnonymizationQualification:
         Verify that a representative OCR result successfully passes through handoff.
         This test uses a deterministic mock result to avoid relying on external ML OCR tools.
         """
+        pytest.importorskip("nltk")
         ocr_text = "Lina Wolkenstein wohnt in Berlin. Ihre Religionszugehoerigkeit ist evangelisch."
         page = OCRPageResult(
             page_index=1,
@@ -447,7 +428,9 @@ class TestAnonymizationQualification:
             markdown=ocr_text,
             image_width=800,
             image_height=100,
-            blocks=[Block(id="b1", bbox=[0, 0, 10, 10], text=ocr_text, confidence=0.9)],
+            blocks=[
+                Block(type="text", text=ocr_text, bbox_1000=[0.0, 0.0, 10.0, 10.0], confidence=0.9)
+            ],
             sensitivity="D2",
             source="cpu_ocr",
             engine="mocked",
@@ -465,7 +448,7 @@ class TestAnonymizationQualification:
             status="completed",
             sensitivity="D2",
             pages=[page],
-            stats={"duration": 1.0, "estimated_cost": 0.0},
+            anonymization_required=True,
         )
 
         handoff_result = anonymization_handoff(result, tagger_wrapper)
