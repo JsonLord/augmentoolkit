@@ -28,7 +28,12 @@ def main():
     parser.add_argument(
         "--hybrid", action="store_true", help="Measure selected model + terminology path"
     )
+    parser.add_argument(
+        "--paired", action="store_true", help="Alternate same-text model/control timings"
+    )
     args = parser.parse_args()
+    if args.paired and not args.hybrid:
+        parser.error("paired measurement requires hybrid")
     denied = []
 
     def audit(event, values):
@@ -62,8 +67,8 @@ def main():
         from .engine import AnonymizationEngine
 
         engine = AnonymizationEngine(model) if args.hybrid else None
-        samples = []
-        for _ in range(8):
+        samples, baseline_samples = [], []
+        for iteration in range(8):
             start = time.perf_counter()
             text = "Synthetic reviewer Petra Ashcroft works at Harbor Research in Norwich."
             if engine is None:
@@ -72,7 +77,26 @@ def main():
                 _, entities, _ = engine.transform(text + " Religious status: agnostic.")
             if not entities:
                 raise RuntimeError("model_not_ready")
-            samples.append((time.perf_counter() - start) * 1000)
+            if args.paired:
+                # Both arms use the identical independent synthetic sentence.
+                # Alternate order to expose warmup/order effects, not hide them.
+                from .detectors import detect_contacts
+                from .replacement import replace
+
+                paired_text = text + " Religious status: agnostic."
+                order = ("control", "hybrid") if iteration % 2 else ("hybrid", "control")
+                for arm in order:
+                    start = time.perf_counter()
+                    if arm == "control":
+                        replace(
+                            paired_text, model.recognize(paired_text) + detect_contacts(paired_text)
+                        )
+                    else:
+                        engine.transform(paired_text)
+                    duration = (time.perf_counter() - start) * 1000
+                    (samples if arm == "hybrid" else baseline_samples).append(duration)
+            else:
+                samples.append((time.perf_counter() - start) * 1000)
         limit = int(Path("/sys/fs/cgroup/memory.max").read_text())
         current = int(Path("/sys/fs/cgroup/memory.current").read_text())
         peak = int(Path("/sys/fs/cgroup/memory.peak").read_text())
@@ -86,6 +110,7 @@ def main():
             integrity_ms=integrity_ms,
             loading_ms=loading_ms,
             warm_ms=samples,
+            same_text_control_ms=baseline_samples,
             process_peak_rss_mib=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024,
             cgroup_memory_limit_mib=limit / 2**20,
             cgroup_current_mib=current / 2**20,
