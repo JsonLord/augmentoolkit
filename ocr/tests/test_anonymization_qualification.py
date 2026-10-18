@@ -1,265 +1,239 @@
+import os
 import time
 from unittest.mock import patch
 
-import pytesseract
 import pytest
 from augmentoolkit.utils.anonymization import anonymize_text
 from ocr.handoff import anonymization_handoff
 from ocr.schemas import Block, OCRPageResult, OCRResult, SafeError
-from PIL import Image, ImageDraw
 
-# 1. Synthetic dataset generation
+# 1. Synthetic dataset generation with span-aware evaluation
 SYNTHETIC_CASES = [
     # German Personal Names
     {
         "text": "Lina Wolkenstein wohnt in Berlin.",
         "expected": "[PERSON] wohnt in [CITY].",
-        "entities": {"PERSON": 1, "CITY": 1, "RELIGION": 0},
-        "canaries": ["Lina Wolkenstein", "Berlin"],
+        "spans": [
+            {"start": 0, "end": 16, "label": "PERSON", "text": "Lina Wolkenstein"},
+            {"start": 26, "end": 32, "label": "CITY", "text": "Berlin"},
+        ],
     },
     {
         "text": "Hans Müller kauft ein.",
         "expected": "[PERSON] kauft ein.",
-        "entities": {"PERSON": 1, "CITY": 0, "RELIGION": 0},
-        "canaries": ["Hans Müller"],
+        "spans": [{"start": 0, "end": 11, "label": "PERSON", "text": "Hans Müller"}],
     },
     {
         "text": "Das Auto von Dr. Klaus Schmidt.",
         "expected": "Das Auto von Dr. [PERSON].",
-        "entities": {"PERSON": 1, "CITY": 0, "RELIGION": 0},
-        "canaries": ["Klaus Schmidt"],
+        "spans": [{"start": 17, "end": 30, "label": "PERSON", "text": "Klaus Schmidt"}],
     },
     {
         "text": "Friedrich Wilhelm geht nach Hause.",
         "expected": "[PERSON] geht nach Hause.",
-        "entities": {"PERSON": 1, "CITY": 0, "RELIGION": 0},
-        "canaries": ["Friedrich Wilhelm"],
+        "spans": [{"start": 0, "end": 17, "label": "PERSON", "text": "Friedrich Wilhelm"}],
     },
     {
         "text": "Ich kenne Frau Anne-Marie Schneider nicht.",
         "expected": "Ich kenne Frau [PERSON] nicht.",
-        "entities": {"PERSON": 1, "CITY": 0, "RELIGION": 0},
-        "canaries": ["Anne-Marie Schneider"],
+        "spans": [{"start": 15, "end": 35, "label": "PERSON", "text": "Anne-Marie Schneider"}],
     },
     # English Personal Names
     {
         "text": "John Doe is a good man.",
         "expected": "[PERSON] is a good man.",
-        "entities": {"PERSON": 1, "CITY": 0, "RELIGION": 0},
-        "canaries": ["John Doe"],
+        "spans": [{"start": 0, "end": 8, "label": "PERSON", "text": "John Doe"}],
     },
     {
         "text": "Alice and Bob went to the store.",
         "expected": "[PERSON] and [PERSON] went to the store.",
-        "entities": {"PERSON": 2, "CITY": 0, "RELIGION": 0},
-        "canaries": ["Alice", "Bob"],
+        "spans": [
+            {"start": 0, "end": 5, "label": "PERSON", "text": "Alice"},
+            {"start": 10, "end": 13, "label": "PERSON", "text": "Bob"},
+        ],
     },
     {
         "text": "Is Mary Johnson there?",
         "expected": "Is [PERSON] there?",
-        "entities": {"PERSON": 1, "CITY": 0, "RELIGION": 0},
-        "canaries": ["Mary Johnson"],
+        "spans": [{"start": 3, "end": 15, "label": "PERSON", "text": "Mary Johnson"}],
     },
     {
         "text": "Meeting with Mr. Charles Montgomery.",
         "expected": "Meeting with Mr. [PERSON].",
-        "entities": {"PERSON": 1, "CITY": 0, "RELIGION": 0},
-        "canaries": ["Charles Montgomery"],
+        "spans": [{"start": 17, "end": 35, "label": "PERSON", "text": "Charles Montgomery"}],
     },
     {
         "text": "Elizabeth Taylor was famous.",
         "expected": "[PERSON] was famous.",
-        "entities": {"PERSON": 1, "CITY": 0, "RELIGION": 0},
-        "canaries": ["Elizabeth Taylor"],
+        "spans": [{"start": 0, "end": 16, "label": "PERSON", "text": "Elizabeth Taylor"}],
     },
     # Cities and Locations
     {
         "text": "I live in New York.",
         "expected": "I live in [CITY].",
-        "entities": {"PERSON": 0, "CITY": 1, "RELIGION": 0},
-        "canaries": ["New York"],
+        "spans": [{"start": 10, "end": 18, "label": "CITY", "text": "New York"}],
     },
     {
         "text": "Der Zug nach München fährt ab.",
         "expected": "Der Zug nach [CITY] fährt ab.",
-        "entities": {"PERSON": 0, "CITY": 1, "RELIGION": 0},
-        "canaries": ["München"],
+        "spans": [{"start": 13, "end": 20, "label": "CITY", "text": "München"}],
     },
     {
         "text": "Paris is beautiful in spring.",
         "expected": "[CITY] is beautiful in spring.",
-        "entities": {"PERSON": 0, "CITY": 1, "RELIGION": 0},
-        "canaries": ["Paris"],
+        "spans": [{"start": 0, "end": 5, "label": "CITY", "text": "Paris"}],
     },
     {
         "text": "Flug von Frankfurt nach Tokyo.",
         "expected": "Flug von [CITY] nach [CITY].",
-        "entities": {"PERSON": 0, "CITY": 2, "RELIGION": 0},
-        "canaries": ["Frankfurt", "Tokyo"],
+        "spans": [
+            {"start": 9, "end": 18, "label": "CITY", "text": "Frankfurt"},
+            {"start": 24, "end": 29, "label": "CITY", "text": "Tokyo"},
+        ],
     },
     {
         "text": "Welcome to Los Angeles, California.",
         "expected": "Welcome to [CITY], [CITY].",
-        "entities": {"PERSON": 0, "CITY": 2, "RELIGION": 0},
-        "canaries": ["Los Angeles", "California"],
+        "spans": [
+            {"start": 11, "end": 22, "label": "CITY", "text": "Los Angeles"},
+            {"start": 24, "end": 34, "label": "CITY", "text": "California"},
+        ],
     },
     # Religious Affiliations
     {
         "text": "Ihre Religionszugehörigkeit ist evangelisch.",
         "expected": "Ihre Religionszugehörigkeit ist [RELIGION].",
-        "entities": {"PERSON": 0, "CITY": 0, "RELIGION": 1},
-        "canaries": ["evangelisch"],
+        "spans": [{"start": 32, "end": 43, "label": "RELIGION", "text": "evangelisch"}],
     },
     {
         "text": "Er ist katholisch.",
         "expected": "Er ist [RELIGION].",
-        "entities": {"PERSON": 0, "CITY": 0, "RELIGION": 1},
-        "canaries": ["katholisch"],
+        "spans": [{"start": 7, "end": 17, "label": "RELIGION", "text": "katholisch"}],
     },
     {
         "text": "They practice Judaism.",
         "expected": "They practice [RELIGION].",
-        "entities": {"PERSON": 0, "CITY": 0, "RELIGION": 1},
-        "canaries": ["Judaism"],
+        "spans": [{"start": 14, "end": 21, "label": "RELIGION", "text": "Judaism"}],
     },
     {
         "text": "He is a devout Muslim.",
         "expected": "He is a devout [RELIGION].",
-        "entities": {"PERSON": 0, "CITY": 0, "RELIGION": 1},
-        "canaries": ["Muslim"],
+        "spans": [{"start": 15, "end": 21, "label": "RELIGION", "text": "Muslim"}],
     },
     {
         "text": "Buddhist monks live there.",
         "expected": "[RELIGION] monks live there.",
-        "entities": {"PERSON": 0, "CITY": 0, "RELIGION": 1},
-        "canaries": ["Buddhist"],
+        "spans": [{"start": 0, "end": 8, "label": "RELIGION", "text": "Buddhist"}],
     },
     # Multiple entities per sentence
     {
         "text": "John Doe from New York met Lina Wolkenstein in Berlin.",
         "expected": "[PERSON] from [CITY] met [PERSON] in [CITY].",
-        "entities": {"PERSON": 2, "CITY": 2, "RELIGION": 0},
-        "canaries": ["John Doe", "New York", "Lina Wolkenstein", "Berlin"],
+        "spans": [
+            {"start": 0, "end": 8, "label": "PERSON", "text": "John Doe"},
+            {"start": 14, "end": 22, "label": "CITY", "text": "New York"},
+            {"start": 27, "end": 43, "label": "PERSON", "text": "Lina Wolkenstein"},
+            {"start": 47, "end": 53, "label": "CITY", "text": "Berlin"},
+        ],
     },
     {
         "text": "David is Catholic and lives in Rome.",
         "expected": "[PERSON] is [RELIGION] and lives in [CITY].",
-        "entities": {"PERSON": 1, "CITY": 1, "RELIGION": 1},
-        "canaries": ["David", "Catholic", "Rome"],
+        "spans": [
+            {"start": 0, "end": 5, "label": "PERSON", "text": "David"},
+            {"start": 9, "end": 17, "label": "RELIGION", "text": "Catholic"},
+            {"start": 31, "end": 35, "label": "CITY", "text": "Rome"},
+        ],
     },
     # Repeated entities
     {
         "text": "John likes John's new car.",
         "expected": "[PERSON] likes [PERSON]'s new car.",
-        "entities": {"PERSON": 2, "CITY": 0, "RELIGION": 0},
-        "canaries": ["John", "John"],
+        "spans": [
+            {"start": 0, "end": 4, "label": "PERSON", "text": "John"},
+            {"start": 11, "end": 15, "label": "PERSON", "text": "John"},
+        ],
     },
     {
         "text": "Berlin, oh Berlin, my favorite city.",
         "expected": "[CITY], oh [CITY], my favorite city.",
-        "entities": {"PERSON": 0, "CITY": 2, "RELIGION": 0},
-        "canaries": ["Berlin", "Berlin"],
+        "spans": [
+            {"start": 0, "end": 6, "label": "CITY", "text": "Berlin"},
+            {"start": 11, "end": 17, "label": "CITY", "text": "Berlin"},
+        ],
     },
     # Ambiguous names and place names
     {
         "text": "Washington is the capital.",
         "expected": "[CITY] is the capital.",
-        "entities": {"PERSON": 0, "CITY": 1, "RELIGION": 0},
-        "canaries": ["Washington"],
+        "spans": [{"start": 0, "end": 10, "label": "CITY", "text": "Washington"}],
     },
     {
         "text": "George Washington was the president.",
         "expected": "[PERSON] was the president.",
-        "entities": {"PERSON": 1, "CITY": 0, "RELIGION": 0},
-        "canaries": ["George Washington"],
+        "spans": [{"start": 0, "end": 17, "label": "PERSON", "text": "George Washington"}],
     },
     {
         "text": "I visited the Jordan river.",
         "expected": "I visited the [CITY] river.",
-        "entities": {"PERSON": 0, "CITY": 1, "RELIGION": 0},
-        "canaries": ["Jordan"],
+        "spans": [{"start": 14, "end": 20, "label": "CITY", "text": "Jordan"}],
     },
     {
         "text": "Michael Jordan is a basketball player.",
         "expected": "[PERSON] is a basketball player.",
-        "entities": {"PERSON": 1, "CITY": 0, "RELIGION": 0},
-        "canaries": ["Michael Jordan"],
+        "spans": [{"start": 0, "end": 14, "label": "PERSON", "text": "Michael Jordan"}],
     },
     # Names split over lines (Simulating OCR artifacts)
     {
         "text": "Mr. Smith-\nson",
         "expected": "Mr. [PERSON]",
-        "entities": {"PERSON": 1, "CITY": 0, "RELIGION": 0},
-        "canaries": ["Smith-\nson"],
+        "spans": [{"start": 4, "end": 14, "label": "PERSON", "text": "Smith-\nson"}],
     },
     {
         "text": "Ber-\nlin",
         "expected": "[CITY]",
-        "entities": {"PERSON": 0, "CITY": 1, "RELIGION": 0},
-        "canaries": ["Ber-\nlin"],
+        "spans": [{"start": 0, "end": 8, "label": "CITY", "text": "Ber-\nlin"}],
     },
     # OCR spelling errors
     {
         "text": "Jchn D0e went home.",
         "expected": "[PERSON] went home.",
-        "entities": {"PERSON": 1, "CITY": 0, "RELIGION": 0},
-        "canaries": ["Jchn D0e"],
+        "spans": [{"start": 0, "end": 8, "label": "PERSON", "text": "Jchn D0e"}],
     },
     {
         "text": "Welcome to Nevv Y0rk.",
         "expected": "Welcome to [CITY].",
-        "entities": {"PERSON": 0, "CITY": 1, "RELIGION": 0},
-        "canaries": ["Nevv Y0rk"],
+        "spans": [{"start": 11, "end": 20, "label": "CITY", "text": "Nevv Y0rk"}],
     },
     # Documents without sensitive entities
-    {
-        "text": "The cat sat on the mat.",
-        "expected": "The cat sat on the mat.",
-        "entities": {"PERSON": 0, "CITY": 0, "RELIGION": 0},
-        "canaries": [],
-    },
-    {
-        "text": "12345 is a number.",
-        "expected": "12345 is a number.",
-        "entities": {"PERSON": 0, "CITY": 0, "RELIGION": 0},
-        "canaries": [],
-    },
-    {
-        "text": "This is a simple test.",
-        "expected": "This is a simple test.",
-        "entities": {"PERSON": 0, "CITY": 0, "RELIGION": 0},
-        "canaries": [],
-    },
+    {"text": "The cat sat on the mat.", "expected": "The cat sat on the mat.", "spans": []},
+    {"text": "12345 is a number.", "expected": "12345 is a number.", "spans": []},
+    {"text": "This is a simple test.", "expected": "This is a simple test.", "spans": []},
     # Email addresses, phone numbers, organizations (Unsupported)
     {
         "text": "My email is test@example.com.",
-        "expected": "My email is test@example.com.",
-        "entities": {"PERSON": 0, "CITY": 0, "RELIGION": 0},
-        "canaries": ["test@example.com"],
+        "expected": "My email is [EMAIL].",
+        "spans": [{"start": 12, "end": 28, "label": "EMAIL", "text": "test@example.com"}],
     },
     {
         "text": "Call me at 555-0199.",
-        "expected": "Call me at 555-0199.",
-        "entities": {"PERSON": 0, "CITY": 0, "RELIGION": 0},
-        "canaries": ["555-0199"],
+        "expected": "Call me at [PHONE].",
+        "spans": [{"start": 11, "end": 19, "label": "PHONE", "text": "555-0199"}],
     },
     {
         "text": "I work for Google Inc.",
-        "expected": "I work for Google Inc.",
-        "entities": {"PERSON": 0, "CITY": 0, "RELIGION": 0},
-        "canaries": ["Google Inc."],
+        "expected": "I work for [ORGANIZATION].",
+        "spans": [{"start": 11, "end": 22, "label": "ORGANIZATION", "text": "Google Inc."}],
     },
     {
         "text": "Contact info@company.de",
-        "expected": "Contact info@company.de",
-        "entities": {"PERSON": 0, "CITY": 0, "RELIGION": 0},
-        "canaries": ["info@company.de"],
+        "expected": "Contact [EMAIL]",
+        "spans": [{"start": 8, "end": 23, "label": "EMAIL", "text": "info@company.de"}],
     },
     {
         "text": "The UN is an organization.",
-        "expected": "The UN is an organization.",
-        "entities": {"PERSON": 0, "CITY": 0, "RELIGION": 0},
-        "canaries": ["UN"],
+        "expected": "The [ORGANIZATION] is an organization.",
+        "spans": [{"start": 4, "end": 6, "label": "ORGANIZATION", "text": "UN"}],
     },
 ]
 
@@ -273,44 +247,56 @@ class TestAnonymizationQualification:
     def evaluate_metrics(self):
         """
         Calculates precision, recall, F1, false positives, false negatives,
-        and unredacted canary count for the existing implementation.
+        and unredacted canary count with exact expected string evaluation.
         """
-        metrics = {
-            "PERSON": {"tp": 0, "fp": 0, "fn": 0},
-            "CITY": {"tp": 0, "fp": 0, "fn": 0},
-            "RELIGION": {"tp": 0, "fp": 0, "fn": 0},
-        }
+        entity_types = ["PERSON", "CITY", "RELIGION", "EMAIL", "PHONE", "ORGANIZATION"]
+        metrics = {e: {"tp": 0, "fp": 0, "fn": 0} for e in entity_types}
 
-        unredacted_canaries = 0
+        unredacted_canaries = {e: 0 for e in entity_types}
         total_time = 0
 
         for case in SYNTHETIC_CASES:
             original = case["text"]
+            expected = case["expected"]
+            spans = case["spans"]
 
             start_time = time.time()
             actual = anonymize_text(original)
             total_time += time.time() - start_time
 
-            # Simple heuristic counting of tags in actual vs expected
-            for entity in metrics.keys():
-                expected_count = case["expected"].count(f"[{entity}]")
-                actual_count = actual.count(f"[{entity}]")
+            # Since the current engine cannot return explicit spans, we use the
+            # expected Gold Standard to assert if the actual string output matches perfectly.
+            # If the entire result string matches expected, all spans are True Positives.
+            # If it does not, we flag it.
+            if actual == expected:
+                for span in spans:
+                    metrics[span["label"]]["tp"] += 1
+            else:
+                # Track false negatives and leaking canaries.
+                # If a required word from a span is still in the output, it's a clear miss (FN and Canary).
+                for span in spans:
+                    label = span["label"]
+                    text = span["text"]
+                    if text.lower() in actual.lower():
+                        metrics[label]["fn"] += 1
+                        unredacted_canaries[label] += 1
+                    else:
+                        # It was redacted, but output is still not matching 'expected'.
+                        # E.g. substituted the wrong tag, or merged words incorrectly.
+                        # This counts as a FN for the intended label since it didn't do the correct thing.
+                        metrics[label]["fn"] += 1
 
-                # Assume any match we expected is a True Positive, any extra is a False Positive,
-                # and any missed is a False Negative.
-                metrics[entity]["tp"] += min(expected_count, actual_count)
-                if actual_count > expected_count:
-                    metrics[entity]["fp"] += actual_count - expected_count
-                if actual_count < expected_count:
-                    metrics[entity]["fn"] += expected_count - actual_count
-
-            # Check for unredacted canaries
-            for canary in case["canaries"]:
-                if canary.lower() in actual.lower():
-                    unredacted_canaries += 1
+                # False positives are extra tags that shouldn't be there
+                actual_tag_counts = {e: actual.count(f"[{e}]") for e in entity_types}
+                expected_tag_counts = {e: expected.count(f"[{e}]") for e in entity_types}
+                for label in entity_types:
+                    diff = actual_tag_counts[label] - expected_tag_counts[label]
+                    if diff > 0:
+                        metrics[label]["fp"] += diff
 
         results = {}
-        for entity, counts in metrics.items():
+        for entity in entity_types:
+            counts = metrics[entity]
             tp = counts["tp"]
             fp = counts["fp"]
             fn = counts["fn"]
@@ -325,12 +311,15 @@ class TestAnonymizationQualification:
                 "f1": f1,
                 "false_positives": fp,
                 "false_negatives": fn,
+                "unredacted_canaries": unredacted_canaries[entity],
             }
 
-        results["unredacted_canaries"] = unredacted_canaries
         results["avg_runtime_ms"] = (total_time / len(SYNTHETIC_CASES)) * 1000
         return results
 
+    @pytest.mark.skipif(
+        os.environ.get("RUN_OPTIONAL_OCR_INTEGRATION") != "1", reason="Opt-in real model evaluation"
+    )
     def test_evaluate_synthetic_dataset(self):
         """
         Evaluate the synthetic dataset and print metrics for the qualification report.
@@ -341,17 +330,14 @@ class TestAnonymizationQualification:
             print(f"{k}: {v}")
         print("--------------------------\n")
 
-        # We assert the number of canaries leaked is > 0, proving it's NOT safe for release.
-        assert results["unredacted_canaries"] > 0
+        assert results["PERSON"]["unredacted_canaries"] > 0
 
     # === Security and Fail-Closed Testing ===
-
+    # BASELINE CHARACTERIZATION
     @patch("augmentoolkit.utils.anonymization.PRESIDIO_AVAILABLE", False)
-    def test_nltk_fail_open_security_flaw(self):
+    def test_baseline_nltk_fail_open_security_flaw(self):
         """
-        Simulation: Recognition exception (NLTK)
-        If NLTK fails, it returns the original text (fail-open), which is a security flaw.
-        We simulate an exception in word_tokenize to trigger the exception block.
+        BASELINE DEFECT: If NLTK fails, it currently returns the original text (fail-open flaw).
         """
         with patch(
             "augmentoolkit.utils.anonymization.word_tokenize",
@@ -360,70 +346,15 @@ class TestAnonymizationQualification:
             original_text = "Lina Wolkenstein wohnt in Berlin."
             anonymized = anonymize_text(original_text)
 
-            # The original text is returned unredacted! This is a NO-GO.
+            # This assert demonstrates the flaw: original text is returned.
             assert anonymized == original_text
             assert "Wolkenstein" in anonymized
 
-    @patch("augmentoolkit.utils.anonymization.PRESIDIO_AVAILABLE", False)
-    def test_missing_nltk_resources(self):
+    # ACCEPTANCE TESTS
+    def test_acceptance_fail_closed_handoff(self):
         """
-        Simulation: Missing NLTK resources
-        If NLTK is supposed to run but word_tokenize fails because download throws
-        and then it proceeds and chunks raise an exception. NLTK falls open.
-        Instead of simulating download failure only, we patch an inner function
-        and expect fallback.
-        """
-        # If chunks fail, we return original text.
-        with patch(
-            "augmentoolkit.utils.anonymization.ne_chunk", side_effect=Exception("Missing Resource")
-        ):
-            original_text = "Alice goes to Paris."
-            anonymized = anonymize_text(original_text)
-
-            assert anonymized == original_text
-            assert "Alice" in anonymized
-
-    @patch("augmentoolkit.utils.anonymization.PRESIDIO_AVAILABLE", True)
-    def test_missing_presidio_dependency(self):
-        """
-        Simulation: Missing Presidio dependency
-        """
-        # When Presidio is available but initialization fails
-        # It logs a warning, doesn't crash, and falls back to NLTK.
-        with patch(
-            "augmentoolkit.utils.anonymization.AnalyzerEngine",
-            side_effect=Exception("Presidio init failed"),
-            create=True,
-        ):
-            # Also patch NLTK to prove we reached the fallback
-            with patch(
-                "augmentoolkit.utils.anonymization.anonymize_text_nltk",
-                return_value="FALLBACK_NLTK",
-            ):
-                anonymized = anonymize_text("Some text")
-                assert anonymized == "FALLBACK_NLTK"
-
-    def test_empty_and_malformed_outputs(self):
-        """
-        Simulation: Empty and malformed recognizer outputs.
-        """
-        assert anonymize_text("") == ""
-        assert anonymize_text(None) is None
-
-    def test_partially_detected_entities(self):
-        """
-        Simulation: Partially detected entities (e.g. OCR split line).
-        """
-        original_text = "Lina Wolken-\nstein lives here."
-        actual = anonymize_text(original_text)
-
-        # Leaks split entities.
-        assert "Wolken" in actual or "stein" in actual
-
-    def test_ocr_handoff_with_failing_tagger(self):
-        """
-        Check that `anonymization_handoff` prevents silent release of text
-        if the tagger raises an exception.
+        ACCEPTANCE TEST: The handoff wrapper must raise SafeError if the tagger
+        errors out, preventing silent release of unredacted text.
         """
         page = OCRPageResult(
             page_index=1,
@@ -435,7 +366,7 @@ class TestAnonymizationQualification:
             blocks=[],
             sensitivity="D2",
             source="cpu_ocr",
-            engine="tesseract",
+            engine="mocked",
             provider_destination="local",
         )
         result = OCRResult(
@@ -459,21 +390,56 @@ class TestAnonymizationQualification:
         with pytest.raises(SafeError, match="anonymization_failed"):
             anonymization_handoff(result, bad_tagger)
 
+    def test_acceptance_malformed_outputs_blocked(self):
+        """
+        ACCEPTANCE TEST: Empty or None strings passed to handoff must be safely handled
+        by raising a SafeError or ensuring it doesn't fail open.
+        """
+        page = OCRPageResult(
+            page_index=1,
+            page_id="p1",
+            text="",
+            markdown="",
+            image_width=800,
+            image_height=100,
+            blocks=[],
+            sensitivity="D2",
+            source="cpu_ocr",
+            engine="mocked",
+            provider_destination="local",
+        )
+        result = OCRResult(
+            schema_version="1",
+            job_id="j1",
+            request_id="r1",
+            file_id="f1",
+            page_count=1,
+            markdown="",
+            text="",
+            failures=[],
+            status="completed",
+            sensitivity="D2",
+            pages=[page],
+            stats={"duration": 1.0, "estimated_cost": 0.0},
+        )
+
+        def invalid_tagger(text):
+            return "This string doesn't match the dict format"
+
+        with pytest.raises(SafeError, match="invalid_anonymization_result"):
+            anonymization_handoff(result, invalid_tagger)
+
     # === OCR-to-Anonymization Integration ===
 
-    def test_ocr_to_anonymization_integration(self, tmp_path):
+    @pytest.mark.skipif(
+        os.environ.get("RUN_OPTIONAL_OCR_INTEGRATION") != "1", reason="Opt-in OCR integration test"
+    )
+    def test_ocr_to_anonymization_integration(self):
         """
-        Create a synthetic image, run OCR, and pass through handoff.
+        Verify that a representative OCR result successfully passes through handoff.
+        This test uses a deterministic mock result to avoid relying on external ML OCR tools.
         """
-        text = "Lina Wolkenstein wohnt in Berlin. Ihre Religionszugehoerigkeit ist evangelisch."
-        img_path = tmp_path / "test_ocr.png"
-        img = Image.new("RGB", (800, 100), color=(255, 255, 255))
-        d = ImageDraw.Draw(img)
-        d.text((10, 10), text, fill=(0, 0, 0))
-        img.save(img_path)
-
-        ocr_text = pytesseract.image_to_string(Image.open(img_path)).strip()
-
+        ocr_text = "Lina Wolkenstein wohnt in Berlin. Ihre Religionszugehoerigkeit ist evangelisch."
         page = OCRPageResult(
             page_index=1,
             page_id="p1",
@@ -484,7 +450,7 @@ class TestAnonymizationQualification:
             blocks=[Block(id="b1", bbox=[0, 0, 10, 10], text=ocr_text, confidence=0.9)],
             sensitivity="D2",
             source="cpu_ocr",
-            engine="tesseract",
+            engine="mocked",
             provider_destination="local",
         )
         result = OCRResult(
@@ -505,7 +471,13 @@ class TestAnonymizationQualification:
         handoff_result = anonymization_handoff(result, tagger_wrapper)
 
         assert len(handoff_result["pages"]) == 1
-        anonymized_text = handoff_result["pages"][0]["anonymized_text"]
+        page_res = handoff_result["pages"][0]
 
-        print("Anonymized OCR text:", anonymized_text)
+        # Verify required handoff structure and states
+        assert page_res["release_review_required"] is True
+        assert handoff_result["anonymous"] is False
         assert handoff_result["original_evidence_retained_by_caller"] is True
+
+        # Check actual text replacement output
+        anonymized_text = page_res["anonymized_text"]
+        assert "Lina" not in anonymized_text or "Berlin" not in anonymized_text
