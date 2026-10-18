@@ -13,12 +13,19 @@ import uuid
 
 from ocr.schemas import SafeError
 
-from .schemas import Approval, Destination, LegacyReleaseCandidate, ReleaseCandidate, VerifiedReview
+from .schemas import (
+    Approval,
+    CorrectedCandidate,
+    Destination,
+    LegacyReleaseCandidate,
+    ReleaseCandidate,
+    VerifiedReview,
+)
 
 
 def digest(candidate):
     try:
-        if type(candidate) not in (LegacyReleaseCandidate, ReleaseCandidate):
+        if type(candidate) not in (LegacyReleaseCandidate, ReleaseCandidate, CorrectedCandidate):
             raise ValueError()
         validated = type(candidate).model_validate(candidate)
         if not validated.pages or any(
@@ -32,12 +39,21 @@ def digest(candidate):
 
 class ReleaseAuthority:
     def __init__(
-        self, key: bytes, authorize, *, verify_review, consume_approval, destinations, ttl=900
+        self,
+        key: bytes,
+        authorize,
+        *,
+        verify_review,
+        consume_approval,
+        destinations,
+        ttl=900,
+        correction_policy=None,
     ):
         if (
             not isinstance(key, bytes)
             or len(key) < 32
             or not all(callable(c) for c in (authorize, verify_review, consume_approval))
+            or (correction_policy is not None and not callable(correction_policy))
             or type(ttl) is not int
             or not 1 <= ttl <= 900
         ):
@@ -52,6 +68,7 @@ class ReleaseAuthority:
         self._key, self._authorize = key, authorize
         self._verify_review, self._consume = verify_review, consume_approval
         self.ttl = ttl
+        self._correction_policy = correction_policy
 
     def _destination(self, identifier, sensitivity, format):
         if format not in ("json", "text"):
@@ -86,6 +103,17 @@ class ReleaseAuthority:
         except Exception:
             raise SafeError("release_not_approved") from None
 
+    def _corrected_review(self, candidate, review):
+        if type(candidate) is CorrectedCandidate:
+            try:
+                if (
+                    self._correction_policy is None
+                    or self._correction_policy(candidate, review) is not True
+                ):
+                    raise ValueError()
+            except Exception:
+                raise SafeError("release_not_approved") from None
+
     def _signature(self, fields):
         payload = json.dumps(fields, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
         return hmac.new(self._key, payload.encode(), hashlib.sha256).hexdigest()
@@ -94,6 +122,7 @@ class ReleaseAuthority:
         value = digest(candidate)
         target = self._destination(destination, candidate.sensitivity, format)
         review = self._review(actor, review_id, value, candidate.sensitivity, target)
+        self._corrected_review(candidate, review)
         now = int(time.time())
         fields = dict(
             schema_version="ocr-review-approval/v2",
@@ -132,6 +161,7 @@ class ReleaseAuthority:
         review = self._review(
             actor, approval.review.review_id, value, candidate.sensitivity, target
         )
+        self._corrected_review(candidate, review)
         if review != approval.review:
             raise SafeError("release_not_approved")
         text = "\n\n".join(p.anonymized_text for p in candidate.pages)

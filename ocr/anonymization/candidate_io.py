@@ -4,7 +4,7 @@ import json
 
 from ocr.schemas import SafeError
 
-from .schemas import LegacyReleaseCandidate, ReleaseCandidate
+from .schemas import CorrectedCandidate, LegacyReleaseCandidate, ReleaseCandidate
 
 
 def parse_candidate(data):
@@ -15,6 +15,7 @@ def parse_candidate(data):
         cls = {
             "ocr-anonymization-candidate/v1": LegacyReleaseCandidate,
             "ocr-anonymization-candidate/v2": ReleaseCandidate,
+            "ocr-anonymization-candidate/v3": CorrectedCandidate,
         }[version]
         return cls.model_validate_json(data)
     except Exception:

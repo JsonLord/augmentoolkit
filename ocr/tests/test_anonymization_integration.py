@@ -109,3 +109,35 @@ def test_gate03e_recorded_current_candidate_coverage_gate():
         and sum(s["candidate_fully_unmasked_canaries"].values()) == 0
         for s in selected.values()
     ), "Current Gate03e returned candidate still has a canary; model qualification remains NO-GO"
+
+
+@pytest.mark.skipif(
+    os.getenv("RUN_GATE03F_MODEL") != "1",
+    reason="Opt-in recorded pinned-model synthetic correction demonstration",
+)
+def test_gate03f_recorded_private_correction_utility():
+    import hashlib
+
+    report = json.loads(Path(os.environ["GATE03F_CORRECTION_OUTPUT"]).read_bytes())
+    source = Path(__file__).parents[1] / "anonymization/fixtures/holdout03d/cases.json"
+    assert report["corpus_sha256"] == hashlib.sha256(source.read_bytes()).hexdigest()
+    assert not report["independent_qualification"] and not report["model_qualification_passed"]
+    assert not report["corrected_outputs_count_as_model_true_positives"]
+    assert not report["automated_release_eligible"]
+    assert report["actual_inference_calls"] == len(report["cases"]) == 9
+    corrected = [c for c in report["cases"] if c["new_candidate_produced"]]
+    assert len(corrected) == 6
+    assert sum(c["original_outcome"] == "blocked_conflicting_spans" for c in corrected) == 5
+    assert sum(c["original_outcome"] == "candidate_partial_mask" for c in corrected) == 1
+    assert all(
+        c["malformed_correction_rejected"] and c["unauthorized_correction_rejected"]
+        for c in corrected
+    )
+    assert all(
+        c["source_canaries_covered_after"]
+        and c["document_exact_match_after"]
+        and c["release_blocked"]
+        and c["final_sensitivity"] == "D2"
+        and c["completed_release_reviews"] == 0
+        for c in report["cases"]
+    )

@@ -39,7 +39,7 @@ class Replacement(StrictModel):
     label: Label
     placeholder: str = Field(pattern=r"^\[[A-Z_]{1,40}\]$")
     score: float | None = Field(default=None, ge=0, le=1, allow_inf_nan=False)
-    source: Literal["multilingual_ner", "deterministic"]
+    source: Literal["multilingual_ner", "deterministic", "human_correction"]
     model_revision: str = Field(pattern=r"^[a-zA-Z0-9._-]{1,64}$")
     normalization: Literal[
         "identity", "dehyphenation-v1", "status-ocr-v1", "dehyphenation-status-ocr-v1"
@@ -68,6 +68,11 @@ class LegacyReleaseCandidate(StrictModel):
 
     @model_validator(mode="after")
     def legacy_normalization(self):
+        if self.schema_version in (
+            "ocr-anonymization-candidate/v1",
+            "ocr-anonymization-candidate/v2",
+        ) and any(t.source == "human_correction" for p in self.pages for t in p.tags):
+            raise ValueError("unsupported_human_correction_version")
         if self.schema_version == "ocr-anonymization-candidate/v1" and any(
             tag.normalization not in ("identity", "dehyphenation-v1")
             for page in self.pages
@@ -95,6 +100,59 @@ class ReleaseCandidate(LegacyReleaseCandidate):
     def consistent_provenance(self):
         if self.model_revision != self.provenance.model_revision:
             raise ValueError("candidate_provenance_mismatch")
+        return self
+
+
+class CorrectionProvenance(StrictModel):
+    schema_version: Literal["ocr-correction-provenance/v1"] = "ocr-correction-provenance/v1"
+    policy_version: Literal["reviewed-corrections-v1"] = "reviewed-corrections-v1"
+    correction_id: str = Field(pattern=r"^[a-f0-9]{32}$")
+    proposal_digest: str = Field(pattern=r"^[a-f0-9]{64}$")
+    original_evidence_digest: str = Field(pattern=r"^[a-f0-9]{64}$")
+    machine_snapshot_digest: str = Field(pattern=r"^[a-f0-9]{64}$")
+    source_references_digest: str = Field(pattern=r"^[a-f0-9]{64}$")
+    prior_candidate_digest: str | None = Field(pattern=r"^[a-f0-9]{64}$")
+    prior_state_digest: str = Field(pattern=r"^[a-f0-9]{64}$")
+    effective_state_digest: str = Field(pattern=r"^[a-f0-9]{64}$")
+    author_subject_digests: tuple[str, ...] = Field(min_length=1, max_length=1000)
+    edit_count: int = Field(ge=1, le=1000)
+
+    @model_validator(mode="after")
+    def valid_authors(self):
+        import re
+
+        if len(set(self.author_subject_digests)) != len(self.author_subject_digests) or any(
+            not re.fullmatch(r"[a-f0-9]{64}", s) for s in self.author_subject_digests
+        ):
+            raise ValueError("invalid_correction_authors")
+        return self
+
+
+class CorrectedCandidate(ReleaseCandidate):
+    schema_version: Literal["ocr-anonymization-candidate/v3"] = "ocr-anonymization-candidate/v3"
+    correction: CorrectionProvenance
+    review_reasons: tuple[
+        Literal[
+            "recognition_incomplete_possible",
+            "empty_prediction",
+            "human_correction_requires_review",
+        ],
+        ...,
+    ]
+
+    @model_validator(mode="after")
+    def reviewed_correction_only(self):
+        if "human_correction_requires_review" not in self.review_reasons or any(
+            t.source == "human_correction"
+            and (
+                t.score is not None
+                or t.model_revision != "reviewed-corrections-v1"
+                or t.normalization != "identity"
+            )
+            for p in self.pages
+            for t in p.tags
+        ):
+            raise ValueError("invalid_corrected_candidate")
         return self
 
 

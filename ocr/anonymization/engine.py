@@ -29,7 +29,7 @@ class AnonymizationEngine:
             raise SafeError("invalid_status_configuration")
         self.status_policy = status_policy
 
-    def transform(self, text):
+    def observe(self, text):
         try:
             if set(self.recognizer.categories) != set(LABELS):
                 raise SafeError("unsupported_required_categories")
@@ -49,12 +49,9 @@ class AnonymizationEngine:
                 for p in predictions
             ):
                 raise SafeError("invalid_entity_provenance")
-            output, tags = replace(
-                text,
-                predictions + detect(text, terminology=self.terminology, status=self.status_policy),
-                self.placeholders,
+            return predictions + detect(
+                text, terminology=self.terminology, status=self.status_policy
             )
-            return output, tags, not predictions
         except SafeError as exc:
             allowed = {
                 "unsupported_required_categories",
@@ -71,28 +68,48 @@ class AnonymizationEngine:
         except Exception:
             raise SafeError("anonymization_failed") from None
 
+    def transform(self, text):
+        predictions = self.observe(text)
+        try:
+            output, tags = replace(text, predictions, self.placeholders)
+            return output, tags, not any(p.source == "multilingual_ner" for p in predictions)
+        except SafeError as exc:
+            if exc.code not in (
+                "unsupported_required_categories",
+                "invalid_entity_spans",
+                "ambiguous_entity_overlap",
+            ):
+                raise SafeError("anonymization_failed") from None
+            raise
+        except Exception:
+            raise SafeError("anonymization_failed") from None
+
+    @staticmethod
+    def validate_document(result):
+        if not isinstance(result, OCRResult):
+            raise SafeError("invalid_ocr_evidence")
+        if (
+            result.status != "completed"
+            or result.failures
+            or not result.pages
+            or result.page_count != len(result.pages)
+            or result.page_count > 100
+            or sum(len(p.text) for p in result.pages) > 2_000_000
+        ):
+            raise SafeError("incomplete_ocr_document")
+        indexes = [p.page_index for p in result.pages]
+        if indexes not in (
+            list(range(result.page_count)),
+            list(range(1, result.page_count + 1)),
+        ):
+            raise SafeError("incomplete_ocr_document")
+        # Sensitivity mismatches are rejected, never silently downgraded.
+        if any(p.sensitivity != result.sensitivity for p in result.pages):
+            raise SafeError("classification_mismatch")
+
     def handoff(self, result: OCRResult) -> ReleaseCandidate:
         try:
-            if not isinstance(result, OCRResult):
-                raise SafeError("invalid_ocr_evidence")
-            if (
-                result.status != "completed"
-                or result.failures
-                or not result.pages
-                or result.page_count != len(result.pages)
-                or result.page_count > 100
-                or sum(len(p.text) for p in result.pages) > 2_000_000
-            ):
-                raise SafeError("incomplete_ocr_document")
-            indexes = [p.page_index for p in result.pages]
-            if indexes not in (
-                list(range(result.page_count)),
-                list(range(1, result.page_count + 1)),
-            ):
-                raise SafeError("incomplete_ocr_document")
-            # Sensitivity mismatches are rejected, never silently downgraded.
-            if any(p.sensitivity != result.sensitivity for p in result.pages):
-                raise SafeError("classification_mismatch")
+            self.validate_document(result)
             commitment = provenance(
                 self.recognizer, self.terminology, self.status_policy, self.placeholders
             )

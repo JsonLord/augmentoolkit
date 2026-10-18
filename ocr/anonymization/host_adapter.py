@@ -51,6 +51,7 @@ class HostSecurityAdapter(Protocol):
         self, identity: AuthenticatedIdentity, scope: str, sensitivity: str, destination_id: str
     ) -> bool: ...
     def destination(self, destination_id: str) -> Destination: ...
+    def corrected_release_allowed(self, candidate, review: VerifiedReview) -> bool: ...
 
 
 class HostAuthorizationBridge:
@@ -100,12 +101,21 @@ class HostAuthorizationBridge:
             == destination
         )
 
+    def corrected_release(self, candidate, review):
+        # Missing production integration denies corrected candidates. Existing
+        # v1/v2 approvals never invoke this new callback.
+        try:
+            return self.host.corrected_release_allowed(candidate, review) is True
+        except Exception:
+            return False
+
     def authority(self, key, ledger, destination_ids, **kwargs):
         return ReleaseAuthority(
             key,
             self.acl,
             verify_review=self.review,
             consume_approval=ledger.consume,
+            correction_policy=self.corrected_release,
             destinations=tuple(self.host.destination(i) for i in destination_ids),
             **kwargs,
         )

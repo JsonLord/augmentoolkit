@@ -17,7 +17,13 @@ from ocr.schemas import SafeError
 
 from .host_adapter import HostAuthorizationBridge, HostSecurityAdapter
 from .release_policy import digest
-from .schemas import LegacyReleaseCandidate, RecognitionProvenance, ReleaseCandidate, StrictModel
+from .schemas import (
+    CorrectedCandidate,
+    LegacyReleaseCandidate,
+    RecognitionProvenance,
+    ReleaseCandidate,
+    StrictModel,
+)
 
 
 class ReviewBinding(StrictModel):
@@ -40,7 +46,9 @@ class PrivateReviewMaterial(StrictModel):
     binding: ReviewBinding
     evidence_digest: str = Field(pattern=r"^[a-f0-9]{64}$")
     sources: tuple[SourcePageReference, ...] = Field(min_length=1, max_length=100, repr=False)
-    candidate: ReleaseCandidate | LegacyReleaseCandidate | None = Field(repr=False)
+    candidate: CorrectedCandidate | ReleaseCandidate | LegacyReleaseCandidate | None = Field(
+        repr=False
+    )
     candidate_digest: str | None = Field(pattern=r"^[a-f0-9]{64}$")
     provenance: RecognitionProvenance | None
     blocking_reason: (
@@ -74,7 +82,7 @@ class PrivateReviewMaterial(StrictModel):
                 or len(self.sources) != len(self.candidate.pages)
             ):
                 raise ValueError("invalid_private_review_material")
-            if type(self.candidate) is ReleaseCandidate:
+            if type(self.candidate) in (ReleaseCandidate, CorrectedCandidate):
                 if self.provenance != self.candidate.provenance:
                     raise ValueError("invalid_private_review_material")
             elif self.provenance is not None:
