@@ -1,0 +1,68 @@
+{
+  "schema_version": "gate03f-live-provenance/v1",
+  "verification_source_sha": "a5699494daba2545947cfccaea7881b60be8d347",
+  "live_commands": [
+    {
+      "report": "docs/anonymization-evaluation/gate03f-corrections-live.json",
+      "report_sha256": "d9ce7c7773f708f91472f62d7064ef32f9bba4e07d385b9bf80f27358488e412",
+      "source_sha": "332132fb2b5fc53f987abb2521b28def12ab11b9",
+      "argv": [
+        "/workspace/.anonymization-venv/bin/python",
+        "-m",
+        "ocr.anonymization.demonstrate03f",
+        "--cache",
+        "/workspace/.anonymization-model",
+        "--output",
+        "docs/anonymization-evaluation/gate03f-corrections-live.json"
+      ],
+      "environment_overrides": {
+        "HF_HUB_OFFLINE": "1",
+        "TRANSFORMERS_OFFLINE": "1",
+        "HF_HUB_DISABLE_TELEMETRY": "1"
+      },
+      "runtime_downloads": false,
+      "synthetic_only": true
+    },
+    {
+      "report": "docs/anonymization-evaluation/gate03f-correct-controls-live.json",
+      "report_sha256": "6b59791854a382df06a0a980223359daee77d87657a12a245558e6ed01eb3a6a",
+      "source_sha": "093ffbb6b3d3d023b1a5f19982e2e6775e90c09b",
+      "argv": [
+        "/workspace/.anonymization-venv/bin/python",
+        "-m",
+        "ocr.anonymization.demonstrate03f",
+        "--cache",
+        "/workspace/.anonymization-model",
+        "--output",
+        "docs/anonymization-evaluation/gate03f-correct-controls-live.json",
+        "--correct-controls-only"
+      ],
+      "environment_overrides": {
+        "HF_HUB_OFFLINE": "1",
+        "TRANSFORMERS_OFFLINE": "1",
+        "HF_HUB_DISABLE_TELEMETRY": "1"
+      },
+      "runtime_downloads": false,
+      "synthetic_only": true
+    }
+  ],
+  "live_to_verified_runtime_blobs_identical": true,
+  "runtime_git_blobs": {
+    "ocr/anonymization/corrections.py": "a396847148f7938256fa457051e5c346f634102f",
+    "ocr/anonymization/engine.py": "d9d4e0e91956fed5de3c34a86e77065246c83923",
+    "ocr/anonymization/schemas.py": "07670c8c45d68f371464615e6bd1958bb10a9ad7",
+    "ocr/anonymization/candidate_io.py": "8dbf1dec3feada2b64ba7c2d8dbcbe34a73fb738",
+    "ocr/anonymization/private_review.py": "60d639af2f0ac5cc308d0c3e4298b5b593b04fcf",
+    "ocr/anonymization/host_adapter.py": "4a6118be3fdc605841f7e51c2347c029e8388f63",
+    "ocr/anonymization/release_policy.py": "920f5f6e0f50de52dddbc5967c9324ed55103a5d",
+    "ocr/anonymization/replacement.py": "a5c4a91076afc7da3c70a5b0791dec16f585ffdf",
+    "ocr/anonymization/recognizer.py": "00ee0fde92aa297b6e85f1d1f0a047f4ff396ba3",
+    "ocr/anonymization/provenance.py": "719b5cbfb4a5300bf12a5472bfb7603c42e3b2b1",
+    "ocr/anonymization/model.py": "4afd1b679f253571e2603b14c5c86ca6c3ab647b",
+    "ocr/anonymization/approval_ledger.py": "be7e8b27d4f6bf1538ee992c67761b44bfe65689",
+    "ocr/tests/fixtures/correction_host.py": "e2008c3ac7370fb1f120bd637fa3e854d271a1c4"
+  },
+  "cache_manifest_sha256": "c73066b40641f171d8a364acd21c38f93547d7229e5982e402353f5c9621dcad",
+  "model_qualification_passed": false,
+  "automated_release_eligible": false
+}
