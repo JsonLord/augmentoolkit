@@ -1,4 +1,9 @@
-> Current result: [Gate03d religious terminology qualification](anonymization-gate03d.md)
+> Current development result: [Gate03e taxonomy and review readiness](anonymization-gate03e.md).
+> Three returned religion-status canaries improve; one organization partial mask
+> and five safe abstentions remain. No new independent holdout; model qualification,
+> private deployment, sensitive processing and automatic release remain NO-GO.
+
+> Historical first independent result: [Gate03d religious terminology qualification](anonymization-gate03d.md)
 > preserves the failed Gate03c result, compares limited fixes, and records a FAILED
 > new independent 160-case first holdout. Model recognition, real sensitive processing,
 > private deployment and automated release remain NO-GO. Earlier sections are history.

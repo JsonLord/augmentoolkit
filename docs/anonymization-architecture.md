@@ -171,3 +171,22 @@ as private policy evidence; the rule version alone is not a configuration hash.
 The selected hybrid covers both old religion canaries but adds measured false
 positives. The new 160-case independent first qualification fails. See
 [Gate03d](anonymization-gate03d.md) for exact metrics and NO-GO decisions.
+
+## Gate03e current reporting and review boundary
+
+The supported new handoff is candidate v2 with a canonical configuration digest;
+legacy v1 remains explicitly readable without fabricated provenance. The digest
+binds model revision/threshold/prompts, terminology and status/OCR policy,
+replacement version/placeholders and normalization. Strict runtime errors and
+configuration drift cannot create a candidate. Scoped status-phrase grammar and
+single-confusable long status-word protection supplement the unchanged pinned
+model. Source offsets and fail-closed overlap behavior remain unchanged.
+
+`score_outcomes` separates emitted-candidate canaries, safe abstention and other
+incomplete processing from raw recognition/all-source replacement accuracy. It
+does not overwrite historical metrics. `PrivateReviewBridge` supports authorized
+private candidate/original inspection with source integrity and classification
+checks and live revocation/ACL rechecks; no production IdP, UI or release shortcut.
+See [Gate03e](anonymization-gate03e.md), [typed review contract](anonymization-review-contract.md)
+and [acceptance specification](anonymization-gate03e-acceptance.md). Recognition,
+private deployment, real sensitive processing and automated release remain NO-GO.

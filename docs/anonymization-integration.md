@@ -195,3 +195,21 @@ private deployment, sensitive-document processing and automatic release stay NO-
 Use the recorded first-result command and opt-in test environment from that report
 for reproduction. Old 03c control tests intentionally still fail and selected-hybrid
 development tests are separate; never replace qualification with a smoke test.
+
+## Gate03e current private contract and candidate v2
+
+New handoffs emit candidate v2 with configuration provenance. Use
+`from ocr.anonymization import parse_candidate` to read supported v1/v2 serialized
+candidates explicitly. Original valid v1 approvals/digests are preserved; no
+provenance is guessed for legacy objects and an old approval cannot approve a new
+v2 object. Unknown or malformed versions fail closed. See the
+[private-review/provenance contract and migration](anonymization-review-contract.md).
+
+The new typed `PrivateReviewBridge` uses current host authentication, private
+environment ACLs and immutable source references. It authorizes original-page and
+candidate access; it never completes review, issues approval or transmits exports.
+The real host/provider/UI integration is still BLOCKED. The scoped religious-status
+grammar/OCR policy improves existing development coverage; the organization miss
+and five safe blocks remain. [Gate03e results](anonymization-gate03e.md) and
+[separate acceptance gates](anonymization-gate03e-acceptance.md) maintain NO-GO for
+model qualification, deployment, real sensitive processing and automated release.
