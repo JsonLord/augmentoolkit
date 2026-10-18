@@ -1,0 +1,35 @@
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+_______________ test_duplicate_page_manifest_should_be_rejected ________________
+
+    def test_duplicate_page_manifest_should_be_rejected():
+        texts = ("Synthetic first page", "Synthetic second page")
+        candidate = AnonymizationEngine(StubRecognizer()).handoff(evidence("D2", texts))
+        data = json.loads(candidate.model_dump_json())
+        data["pages"][1] = data["pages"][0]
+        duplicate = parse_candidate(json.dumps(data))
+        # Matching cardinality is not a bijection: page 1 has disappeared.
+        assert [p.page_index for p in duplicate.pages] == [0, 0]
+        sources = tuple(SourcePageReference(
+            evidence_ref=hashlib.sha256(f"synthetic-page-{i}".encode()).hexdigest(),
+            page_index=i, sensitivity="D2", sha256=hashlib.sha256(t.encode()).hexdigest(),
+            characters=len(t),
+        ) for i, t in enumerate(texts))
+>       with pytest.raises((ValueError, SafeError)):
+E       Failed: DID NOT RAISE any of (ValueError, SafeError)
+
+../pr3-review-evidence/test_review_pocs.py:29: Failed
+_________ test_invalid_replacement_bounds_should_be_rejected_by_parser _________
+
+    def test_invalid_replacement_bounds_should_be_rejected_by_parser():
+        candidate = AnonymizationEngine(StubRecognizer()).handoff(evidence("D2", ("Synthetic",)))
+        data = json.loads(candidate.model_dump_json())
+        data["pages"][0]["tags"][0].update(start=9, end=-1)
+>       with pytest.raises((ValueError, SafeError)):
+E       Failed: DID NOT RAISE any of (ValueError, SafeError)
+
+../pr3-review-evidence/test_review_pocs.py:43: Failed
+=========================== short test summary info ============================
+FAILED ../pr3-review-evidence/test_review_pocs.py::test_duplicate_page_manifest_should_be_rejected
+FAILED ../pr3-review-evidence/test_review_pocs.py::test_invalid_replacement_bounds_should_be_rejected_by_parser
+2 failed in 0.13s
