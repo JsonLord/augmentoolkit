@@ -10,7 +10,7 @@ import nltk  # NOTE to get this performing at all I need to make it so that chun
 nltk.download("punkt_tab")
 from tqdm import tqdm
 from transformers import AutoTokenizer
-from augmentoolkit.utils.anonymization import anonymize_text
+from ocr.schemas import SafeError
 
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 try:
@@ -329,9 +329,10 @@ def chunking_algorithm_str(
         # print(basename)
 
     # From Algorithm 2: Paragraph splitting and token-based logic
-    # Anonymize if requested
+    # Untyped text cannot carry classification or release approval. Require the
+    # explicit local OCR candidate/review workflow; never use the legacy fallback.
     if anonymize:
-        content = anonymize_text(content)
+        raise SafeError("legacy_anonymization_requires_reviewed_workflow")
 
     paragraphs = content.split("\n\n")
 

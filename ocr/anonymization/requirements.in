@@ -1,0 +1,10 @@
+# Trusted local environment only. Never add these to the HF OCR worker image.
+--extra-index-url https://download.pytorch.org/whl/cpu
+# CPU wheel; GPU operators must produce a separate reviewed lock.
+torch==2.8.0+cpu
+gliner==0.2.29
+transformers==4.57.1
+huggingface-hub==0.36.2
+numpy==2.4.6
+safetensors==0.7.0
+pydantic==2.14.1
