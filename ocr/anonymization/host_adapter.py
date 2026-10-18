@@ -24,6 +24,17 @@ class CompletedReview(StrictModel):
     expires_at: int
 
 
+class ExportAuthorizationRecord(StrictModel):
+    artifact_digest: str = Field(pattern=r"^[a-f0-9]{64}$")
+    candidate_digest: str = Field(pattern=r"^[a-f0-9]{64}$")
+    review_id: str
+    review_evidence_digest: str = Field(pattern=r"^[a-f0-9]{64}$")
+    sensitivity: str
+    destination_id: str
+    expires_at: int
+    revoked: bool
+
+
 class HostSecurityAdapter(Protocol):
     """Implement against authenticated server context and authoritative stores.
 
@@ -35,9 +46,7 @@ class HostSecurityAdapter(Protocol):
     def authenticate(self, credential: object) -> AuthenticatedIdentity: ...
     def load_review(self, review_id: str) -> CompletedReview: ...
     def candidate_exists(self, candidate_digest: str) -> bool: ...
-    def export_exists(
-        self, artifact_digest: str, sensitivity: str, destination_id: str
-    ) -> bool: ...
+    def load_export(self, artifact_digest: str) -> ExportAuthorizationRecord: ...
     def current_acl(
         self, identity: AuthenticatedIdentity, scope: str, sensitivity: str, destination_id: str
     ) -> bool: ...
@@ -111,11 +120,26 @@ class HostAuthorizationBridge:
                 or sensitivity not in destination.allowed_sensitivities
             ):
                 return False
-            # Host must validate the exported artifact reference in its authoritative
-            # store before permitting a separate transfer operation.
+            record = ExportAuthorizationRecord.model_validate(self.host.load_export(export_digest))
+            review = CompletedReview.model_validate(self.host.load_review(record.review_id))
+            if (
+                record.artifact_digest != export_digest
+                or record.sensitivity != sensitivity
+                or record.destination_id != destination_id
+                or record.revoked
+                or record.expires_at <= time.time()
+                or not review.completed
+                or review.revoked
+                or review.expires_at <= time.time()
+                or review.attestation.candidate_digest != record.candidate_digest
+                or review.attestation.evidence_digest != record.review_evidence_digest
+                or review.attestation.sensitivity != sensitivity
+                or review.attestation.destination_id != destination_id
+                or self.host.candidate_exists(record.candidate_digest) is not True
+            ):
+                return False
             return (
-                self.host.export_exists(export_digest, sensitivity, destination_id) is True
-                and self.host.current_acl(
+                self.host.current_acl(
                     identity, "anonymization:private-transfer", sensitivity, destination_id
                 )
                 is True

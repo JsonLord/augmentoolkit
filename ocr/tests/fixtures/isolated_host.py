@@ -1,10 +1,15 @@
 """ISOLATED TEST ADAPTER ONLY. Not a production identity provider or startup default."""
 
 import hashlib
+import json
 import time
 from types import MappingProxyType
 
-from ocr.anonymization.host_adapter import AuthenticatedIdentity, CompletedReview
+from ocr.anonymization.host_adapter import (
+    AuthenticatedIdentity,
+    CompletedReview,
+    ExportAuthorizationRecord,
+)
 from ocr.anonymization.release_policy import digest
 from ocr.anonymization.schemas import Destination, VerifiedReview
 
@@ -68,8 +73,24 @@ class IsolatedHostAdapter:
     def candidate_exists(self, candidate_digest):
         return candidate_digest in self.candidates
 
-    def export_exists(self, artifact_digest, sensitivity, destination_id):
-        return self.exports.get(artifact_digest) == (sensitivity, destination_id)
+    def load_export(self, artifact_digest):
+        return self.exports[artifact_digest]
+
+    def register_export(self, serialized_export):
+        """Privileged fixture store setup after actual reviewed export, never a public API."""
+        payload = json.loads(serialized_export)
+        value = hashlib.sha256(serialized_export.encode()).hexdigest()
+        review = self.records["fixture-review"]
+        self.exports[value] = ExportAuthorizationRecord(
+            artifact_digest=value,
+            candidate_digest=payload["candidate_digest"],
+            review_id="fixture-review",
+            review_evidence_digest=review.attestation.evidence_digest,
+            sensitivity=payload["sensitivity"],
+            destination_id=payload["destination_id"],
+            expires_at=review.expires_at,
+            revoked=False,
+        )
 
     def current_acl(self, identity, scope, sensitivity, destination_id):
         return (identity.subject, scope, sensitivity, destination_id) in self.allowed

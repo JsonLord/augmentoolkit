@@ -111,7 +111,7 @@ def test_local_delivery_requires_separate_current_authorization_and_retains_clas
     # Explicit privileged fixture registration and separate transfer ACL. Neither
     # happens on export in this library or automatically in a production service.
     artifact = hashlib.sha256(exported.encode()).hexdigest()
-    host.exports[artifact] = ("D2", host.policy.destination_id)
+    host.register_export(exported)
     host.allowed.add(
         (host.identity.subject, "anonymization:private-transfer", "D2", host.policy.destination_id)
     )
@@ -151,8 +151,7 @@ def test_transport_prohibits_substitution_fallback_and_unregistered_artifacts(tm
     exported = authority.export(
         value, approval, actor=host.credential, destination=host.policy.destination_id
     )
-    artifact = hashlib.sha256(exported.encode()).hexdigest()
-    host.exports[artifact] = ("D2", host.policy.destination_id)
+    host.register_export(exported)
     host.allowed.add(
         (host.identity.subject, "anonymization:private-transfer", "D2", host.policy.destination_id)
     )
@@ -178,3 +177,40 @@ def test_transport_prohibits_substitution_fallback_and_unregistered_artifacts(tm
     assert not list(
         (tmp_path / "original" if (tmp_path / "original").exists() else sink).glob("*.json")
     )
+
+
+@pytest.mark.parametrize(
+    "change",
+    ["review_revoked", "export_revoked", "export_expired", "review_expired", "acl_revoked"],
+)
+def test_revocation_after_export_still_blocks_private_delivery(tmp_path, change):
+    value, host, bridge, authority, approval = setup(tmp_path)
+    sink = tmp_path / "sink"
+    sink.mkdir(mode=0o700)
+    exported = authority.export(
+        value, approval, actor=host.credential, destination=host.policy.destination_id
+    )
+    artifact = hashlib.sha256(exported.encode()).hexdigest()
+    host.register_export(exported)
+    host.allowed.add(
+        (host.identity.subject, "anonymization:private-transfer", "D2", host.policy.destination_id)
+    )
+    if change == "review_revoked":
+        host.revoked.add("fixture-review")
+    elif change == "export_revoked":
+        host.exports[artifact] = host.exports[artifact].model_copy(update={"revoked": True})
+    elif change == "export_expired":
+        host.exports[artifact] = host.exports[artifact].model_copy(update={"expires_at": 0})
+    elif change == "review_expired":
+        previous = host.load_review
+        host.load_review = lambda value: previous(value).model_copy(update={"expires_at": 0})
+    else:
+        host.allowed.clear()
+    transport = PrivateFileTransport(
+        [LocalDestination(host.policy, sink)], authorize_transfer=bridge.transfer_authorized
+    )
+    with pytest.raises(SafeError):
+        transport.deliver(
+            exported, credential=host.credential, destination_id=host.policy.destination_id
+        )
+    assert not list(sink.iterdir())
