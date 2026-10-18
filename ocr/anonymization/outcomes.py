@@ -45,6 +45,20 @@ def score_outcomes(recognizer, cases, *, detector=detect):
 
     details = []
     accuracy = score_cases(SafeRecognizer(), cases, detector=safe_detector, case_reports=details)
+    # Historical aggregate coverage counts incomplete documents as uncovered.
+    # Name that conservative scope explicitly; it is not emitted-candidate leakage.
+    for old, new in (
+        ("unredacted_canaries", "uncovered_source_canaries_including_incomplete"),
+        ("literal_unredacted_canaries", "literal_presence_or_incomplete"),
+        ("partial_canaries", "partially_covered_source_canaries_including_incomplete"),
+        ("fully_uncovered_canaries", "fully_uncovered_source_canaries_including_incomplete"),
+        ("alphanumeric_canary_coverage", "all_document_source_coverage"),
+        ("qualification_passed", "conservative_accuracy_gate_passed"),
+    ):
+        accuracy[new] = accuracy.pop(old)
+    accuracy["scope"] = (
+        "all source spans; incomplete processing counts as missing, not leaked output"
+    )
     counts, partial, full, candidate_spans = Counter(), Counter(), Counter(), Counter()
     for case, detail in zip(cases, details, strict=True):
         error = detail["error_code"]

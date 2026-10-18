@@ -92,7 +92,7 @@ def test_span_conflicts_are_abstentions_not_returned_leaks():
     assert sum(report["candidate_fully_unmasked_canaries"].values()) == 0
     assert sum(report["candidate_partial_canaries"].values()) == 0
     assert report["no_measured_leakage_rate_among_returned"] is None
-    assert report["accuracy"]["unredacted_canaries"]["RELIGION"] == 1
+    assert report["accuracy"]["uncovered_source_canaries_including_incomplete"]["RELIGION"] == 1
     assert report["accuracy"]["document_exact_match_rate"] == 0
     assert not report["recognition_qualified"]
 
