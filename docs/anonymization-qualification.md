@@ -11,13 +11,13 @@ Investigate and test the existing anonymization implementation before integratin
 - **Fail-Open Security Flaw (Baseline Defect):** If an exception occurs in `anonymize_text_nltk` (e.g., during tokenization or chunking), it catches the exception and returns the *original, unredacted text*. This means a recognition failure leaks the original sensitive content.
 - **Integration with OCR:** The `ocr/handoff.py` script provides a secure bridge (`anonymization_handoff`) that properly returns the result as `release_review_required=True` and `anonymous=False`.
 
-## 2. Evaluation Metrics (Span-Aware Synthetic Dataset)
+## 2. Evaluation Metrics (Document-Level Exact-Match Scoring)
 A synthetic dataset of 40 text cases was tested. Because the current `anonymize_text` implementation does not yield character offsets (spans), entity-level Precision, Recall, and F1 metrics are explicitly marked as **UNAVAILABLE**.
 
-Instead, we validated the gold-standard test spans and measured the exact document match rate alongside the required canary leakage.
+*Note: The following metrics are published benchmark observations derived from local test runs using the baseline NLTK implementation. They are historical/unverified in standard CI, as the real model evaluation is marked as an opt-in test (`RUN_OPTIONAL_OCR_INTEGRATION=1`) to avoid arbitrary heavy ML dependencies in the default GitHub Actions run.*
 
 ```text
---- Evaluation Metrics ---
+--- Benchmark Observations ---
 PERSON: {'precision': 'UNAVAILABLE', 'recall': 'UNAVAILABLE', 'f1': 'UNAVAILABLE', 'unredacted_canaries': 5}
 CITY: {'precision': 'UNAVAILABLE', 'recall': 'UNAVAILABLE', 'f1': 'UNAVAILABLE', 'unredacted_canaries': 3}
 RELIGION: {'precision': 'UNAVAILABLE', 'recall': 'UNAVAILABLE', 'f1': 'UNAVAILABLE', 'unredacted_canaries': 5}
@@ -25,20 +25,20 @@ EMAIL: {'precision': 'UNAVAILABLE', 'recall': 'UNAVAILABLE', 'f1': 'UNAVAILABLE'
 PHONE: {'precision': 'UNAVAILABLE', 'recall': 'UNAVAILABLE', 'f1': 'UNAVAILABLE', 'unredacted_canaries': 1}
 ORGANIZATION: {'precision': 'UNAVAILABLE', 'recall': 'UNAVAILABLE', 'f1': 'UNAVAILABLE', 'unredacted_canaries': 2}
 document_exact_match_rate: 0.175
-avg_runtime_ms: 840.4
+avg_runtime_ms: ~840.0
 ```
 
 - **Document Exact Match Rate**: Only 17.5% of the test documents were redacted exactly as specified in the gold standard.
 - **Canary Leakage**: Every required entity category saw significant canary leakage.
 - **Unsupported Categories**: `RELIGION`, `EMAIL`, `PHONE`, and `ORGANIZATION` are unhandled by the NLTK/Presidio implementations. This leads to large numbers of unredacted canary leaks.
 
-## 3. OCR-to-Anonymization Integration
-The integration test (`test_ocr_to_anonymization_integration`) is marked as opt-in to avoid injecting heavyweight ML dependencies into the default test run environment.
-The mock testing validates the handoff interface accurately, confirming:
-- The handoff correctly assigns `release_review_required=True`
-- The handoff correctly assigns `anonymous=False`
-- The original evidence schema is correctly preserved.
-- (Acceptance test logic added): It accurately rejects malformed inputs and triggers `SafeError` on tagger exception.
+## 3. Testing Context and Integration
+The independent verification tests executing globally in CI cover:
+- Validation of all 40 synthetic gold-standard entity spans.
+- Acceptance tests proving `anonymization_handoff` handles malformed outputs securely (`SafeError`) and correctly bounds metadata (`release_review_required=True`, `anonymous=False`).
+- Baseline demonstration of the NLTK fail-open security flaw.
+
+An opt-in integration test (`test_ocr_to_anonymization_integration`) simulates the OCR-to-anonymizer integration boundary. It demonstrates that the legacy baseline **fails to fully redact** required canaries like "Lina", "Wolkenstein", "Berlin", and "evangelisch".
 
 ## 4. Final Decision
 **Decision:** `NO-GO`
