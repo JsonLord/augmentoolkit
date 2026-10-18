@@ -135,9 +135,17 @@ def test_gate03f_recorded_private_correction_utility():
     )
     assert all(
         c["source_canaries_covered_after"]
-        and c["document_exact_match_after"]
         and c["release_blocked"]
         and c["final_sensitivity"] == "D2"
         and c["completed_release_reviews"] == 0
         for c in report["cases"]
     )
+
+    assert all(c["document_exact_match_after"] for c in corrected)
+    controls = json.loads(Path(os.environ["GATE03F_CONTROLS_OUTPUT"]).read_bytes())
+    assert controls["correct_controls_only"] and controls["actual_inference_calls"] == 2
+    assert all(
+        c["document_exact_match_after"] and not c["new_candidate_produced"] and c["release_blocked"]
+        for c in controls["cases"]
+    )
+    assert {c["case_id"] for c in controls["cases"]} == {"holdout03d-004", "holdout03d-005"}

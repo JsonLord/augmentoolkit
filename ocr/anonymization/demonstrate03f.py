@@ -40,7 +40,7 @@ def coverage(candidate, case):
     )
 
 
-def run(cache, output):
+def run(cache, output, *, correct_controls_only=False):
     if Path(output).exists():
         raise FileExistsError("correction_demo_exists")
     denied = []
@@ -53,7 +53,7 @@ def run(cache, output):
     sys.addaudithook(offline)
     source = Path(__file__).parent / "fixtures/holdout03d/cases.json"
     cases = json.loads(source.read_bytes())
-    selected = {1, 2, 3, 55, 63, 78, 125, 127, 137}
+    selected = {4, 5} if correct_controls_only else {1, 2, 3, 55, 63, 78, 125, 127, 137}
     start = time.perf_counter()
     model = GLiNERRecognizer(cache)
     loading_ms = (time.perf_counter() - start) * 1000
@@ -83,7 +83,7 @@ def run(cache, output):
             else "candidate_partial_mask"
         )
         edits = []
-        if number not in (1, 2, 3):
+        if number not in (1, 2, 3, 4, 5):
             for span in case["spans"]:
                 if not (number == 125 and span["label"] == "ORGANIZATION") and not (
                     number != 125 and span["label"] == "RELIGION"
@@ -170,6 +170,7 @@ def run(cache, output):
         threshold=model.threshold,
         config_digest=context.machine.provenance.configuration_digest,
         actual_inference_calls=len(rows),
+        correct_controls_only=correct_controls_only,
         loading_ms=loading_ms,
         peak_rss_mib=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024,
         runtime_versions={
@@ -194,9 +195,10 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--cache", required=True)
     parser.add_argument("--output", required=True)
+    parser.add_argument("--correct-controls-only", action="store_true")
     args = parser.parse_args()
     try:
-        report = run(args.cache, args.output)
+        report = run(args.cache, args.output, correct_controls_only=args.correct_controls_only)
     except Exception:
         raise SystemExit("private_correction_demo_failed") from None
     # Emit only aggregate results; source text and paths are never printed.
