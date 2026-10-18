@@ -1,0 +1,75 @@
+{
+  "schema_version": "gate03f-synthetic-reviewed-correction-demo/v1",
+  "source_sha": "9d4d8c103271ef62fee3d06603180aa9ca74267e",
+  "corpus_sha256": "7180e176f6d8bd259da56ad729ede6fd2c798aca15a786ba0ff0adcd862f21a1",
+  "model_revision": "ba967ee030b7e679dd5422cb16fcd1b379da38e1",
+  "prompts": {
+    "PERSON": "person",
+    "CITY": "location",
+    "RELIGION": "religion",
+    "EMAIL": "email address",
+    "PHONE": "phone number",
+    "ORGANIZATION": "organization"
+  },
+  "threshold": 0.5,
+  "config_digest": "9ea9537bb8cbb7b3e5d21c566acf10a80bebc1ee2a4aad53f3e2618f586d50c8",
+  "actual_inference_calls": 2,
+  "correct_controls_only": true,
+  "loading_ms": 22809.522725001443,
+  "peak_rss_mib": 3025.61328125,
+  "runtime_versions": {
+    "gliner": "0.2.29",
+    "torch": "2.8.0+cpu",
+    "transformers": "4.57.1",
+    "numpy": "2.4.6",
+    "pydantic": "2.14.1"
+  },
+  "denied_network_calls": [
+    "socket.bind"
+  ],
+  "cases": [
+    {
+      "case_id": "holdout03d-004",
+      "original_outcome": "complete_no_measured_leakage",
+      "machine_candidate_digest": "4b98ade0f90ee357d2822087a762645b2d3c99a790160d68ed2deee84506744a",
+      "machine_observations_digest": "46d31f615d7444be27354e02a7478ece3dd18cab729817c69ed6ac97b87df1e5",
+      "source_canaries_covered_before": true,
+      "proposed_edits": [],
+      "new_candidate_produced": false,
+      "final_candidate_digest": "4b98ade0f90ee357d2822087a762645b2d3c99a790160d68ed2deee84506744a",
+      "source_canaries_covered_after": true,
+      "document_exact_match_after": true,
+      "final_sensitivity": "D2",
+      "release_blocked": true,
+      "completed_release_reviews": 0,
+      "malformed_correction_rejected": null,
+      "unauthorized_correction_rejected": null,
+      "capture_inference_ms": 536.1508990026778
+    },
+    {
+      "case_id": "holdout03d-005",
+      "original_outcome": "complete_no_measured_leakage",
+      "machine_candidate_digest": "a5b7a7a8cc6f2fbf22fdb7c1a2c6cc130948fa582dc129c47c76c04cd58ad0e4",
+      "machine_observations_digest": "e8c6361bee7ada194029ea9130b07599e93d6d49345665791b2ff8877f5045ff",
+      "source_canaries_covered_before": true,
+      "proposed_edits": [],
+      "new_candidate_produced": false,
+      "final_candidate_digest": "a5b7a7a8cc6f2fbf22fdb7c1a2c6cc130948fa582dc129c47c76c04cd58ad0e4",
+      "source_canaries_covered_after": true,
+      "document_exact_match_after": true,
+      "final_sensitivity": "D2",
+      "release_blocked": true,
+      "completed_release_reviews": 0,
+      "malformed_correction_rejected": null,
+      "unauthorized_correction_rejected": null,
+      "capture_inference_ms": 549.700967996614
+    }
+  ],
+  "correction_source": "simulated authorized human using existing synthetic gold spans",
+  "production_identity_qualified": false,
+  "durable_correction_store_qualified": false,
+  "independent_qualification": false,
+  "model_qualification_passed": false,
+  "corrected_outputs_count_as_model_true_positives": false,
+  "automated_release_eligible": false
+}

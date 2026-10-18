@@ -1,0 +1,647 @@
+[
+  {
+    "text": "Lina Wolkenstein wohnt in Berlin.",
+    "expected": "[PERSON] wohnt in [CITY].",
+    "spans": [
+      {
+        "start": 0,
+        "end": 16,
+        "label": "PERSON",
+        "text": "Lina Wolkenstein"
+      },
+      {
+        "start": 26,
+        "end": 32,
+        "label": "CITY",
+        "text": "Berlin"
+      }
+    ],
+    "id": "baseline-00",
+    "language": "de",
+    "ocr_noise": false
+  },
+  {
+    "text": "Hans Müller kauft ein.",
+    "expected": "[PERSON] kauft ein.",
+    "spans": [
+      {
+        "start": 0,
+        "end": 11,
+        "label": "PERSON",
+        "text": "Hans Müller"
+      }
+    ],
+    "id": "baseline-01",
+    "language": "de",
+    "ocr_noise": false
+  },
+  {
+    "text": "Das Auto von Dr. Klaus Schmidt.",
+    "expected": "Das Auto von Dr. [PERSON].",
+    "spans": [
+      {
+        "start": 17,
+        "end": 30,
+        "label": "PERSON",
+        "text": "Klaus Schmidt"
+      }
+    ],
+    "id": "baseline-02",
+    "language": "de",
+    "ocr_noise": false
+  },
+  {
+    "text": "Friedrich Wilhelm geht nach Hause.",
+    "expected": "[PERSON] geht nach Hause.",
+    "spans": [
+      {
+        "start": 0,
+        "end": 17,
+        "label": "PERSON",
+        "text": "Friedrich Wilhelm"
+      }
+    ],
+    "id": "baseline-03",
+    "language": "de",
+    "ocr_noise": false
+  },
+  {
+    "text": "Ich kenne Frau Anne-Marie Schneider nicht.",
+    "expected": "Ich kenne Frau [PERSON] nicht.",
+    "spans": [
+      {
+        "start": 15,
+        "end": 35,
+        "label": "PERSON",
+        "text": "Anne-Marie Schneider"
+      }
+    ],
+    "id": "baseline-04",
+    "language": "de",
+    "ocr_noise": false
+  },
+  {
+    "text": "John Doe is a good man.",
+    "expected": "[PERSON] is a good man.",
+    "spans": [
+      {
+        "start": 0,
+        "end": 8,
+        "label": "PERSON",
+        "text": "John Doe"
+      }
+    ],
+    "id": "baseline-05",
+    "language": "en",
+    "ocr_noise": false
+  },
+  {
+    "text": "Alice and Bob went to the store.",
+    "expected": "[PERSON] and [PERSON] went to the store.",
+    "spans": [
+      {
+        "start": 0,
+        "end": 5,
+        "label": "PERSON",
+        "text": "Alice"
+      },
+      {
+        "start": 10,
+        "end": 13,
+        "label": "PERSON",
+        "text": "Bob"
+      }
+    ],
+    "id": "baseline-06",
+    "language": "en",
+    "ocr_noise": false
+  },
+  {
+    "text": "Is Mary Johnson there?",
+    "expected": "Is [PERSON] there?",
+    "spans": [
+      {
+        "start": 3,
+        "end": 15,
+        "label": "PERSON",
+        "text": "Mary Johnson"
+      }
+    ],
+    "id": "baseline-07",
+    "language": "en",
+    "ocr_noise": false
+  },
+  {
+    "text": "Meeting with Mr. Charles Montgomery.",
+    "expected": "Meeting with Mr. [PERSON].",
+    "spans": [
+      {
+        "start": 17,
+        "end": 35,
+        "label": "PERSON",
+        "text": "Charles Montgomery"
+      }
+    ],
+    "id": "baseline-08",
+    "language": "en",
+    "ocr_noise": false
+  },
+  {
+    "text": "Elizabeth Taylor was famous.",
+    "expected": "[PERSON] was famous.",
+    "spans": [
+      {
+        "start": 0,
+        "end": 16,
+        "label": "PERSON",
+        "text": "Elizabeth Taylor"
+      }
+    ],
+    "id": "baseline-09",
+    "language": "en",
+    "ocr_noise": false
+  },
+  {
+    "text": "I live in New York.",
+    "expected": "I live in [CITY].",
+    "spans": [
+      {
+        "start": 10,
+        "end": 18,
+        "label": "CITY",
+        "text": "New York"
+      }
+    ],
+    "id": "baseline-10",
+    "language": "en",
+    "ocr_noise": false
+  },
+  {
+    "text": "Der Zug nach München fährt ab.",
+    "expected": "Der Zug nach [CITY] fährt ab.",
+    "spans": [
+      {
+        "start": 13,
+        "end": 20,
+        "label": "CITY",
+        "text": "München"
+      }
+    ],
+    "id": "baseline-11",
+    "language": "de",
+    "ocr_noise": false
+  },
+  {
+    "text": "Paris is beautiful in spring.",
+    "expected": "[CITY] is beautiful in spring.",
+    "spans": [
+      {
+        "start": 0,
+        "end": 5,
+        "label": "CITY",
+        "text": "Paris"
+      }
+    ],
+    "id": "baseline-12",
+    "language": "en",
+    "ocr_noise": false
+  },
+  {
+    "text": "Flug von Frankfurt nach Tokyo.",
+    "expected": "Flug von [CITY] nach [CITY].",
+    "spans": [
+      {
+        "start": 9,
+        "end": 18,
+        "label": "CITY",
+        "text": "Frankfurt"
+      },
+      {
+        "start": 24,
+        "end": 29,
+        "label": "CITY",
+        "text": "Tokyo"
+      }
+    ],
+    "id": "baseline-13",
+    "language": "de",
+    "ocr_noise": false
+  },
+  {
+    "text": "Welcome to Los Angeles, California.",
+    "expected": "Welcome to [CITY], [CITY].",
+    "spans": [
+      {
+        "start": 11,
+        "end": 22,
+        "label": "CITY",
+        "text": "Los Angeles"
+      },
+      {
+        "start": 24,
+        "end": 34,
+        "label": "CITY",
+        "text": "California"
+      }
+    ],
+    "id": "baseline-14",
+    "language": "en",
+    "ocr_noise": false
+  },
+  {
+    "text": "Ihre Religionszugehörigkeit ist evangelisch.",
+    "expected": "Ihre Religionszugehörigkeit ist [RELIGION].",
+    "spans": [
+      {
+        "start": 32,
+        "end": 43,
+        "label": "RELIGION",
+        "text": "evangelisch"
+      }
+    ],
+    "id": "baseline-15",
+    "language": "de",
+    "ocr_noise": false
+  },
+  {
+    "text": "Er ist katholisch.",
+    "expected": "Er ist [RELIGION].",
+    "spans": [
+      {
+        "start": 7,
+        "end": 17,
+        "label": "RELIGION",
+        "text": "katholisch"
+      }
+    ],
+    "id": "baseline-16",
+    "language": "de",
+    "ocr_noise": false
+  },
+  {
+    "text": "They practice Judaism.",
+    "expected": "They practice [RELIGION].",
+    "spans": [
+      {
+        "start": 14,
+        "end": 21,
+        "label": "RELIGION",
+        "text": "Judaism"
+      }
+    ],
+    "id": "baseline-17",
+    "language": "en",
+    "ocr_noise": false
+  },
+  {
+    "text": "He is a devout Muslim.",
+    "expected": "He is a devout [RELIGION].",
+    "spans": [
+      {
+        "start": 15,
+        "end": 21,
+        "label": "RELIGION",
+        "text": "Muslim"
+      }
+    ],
+    "id": "baseline-18",
+    "language": "en",
+    "ocr_noise": false
+  },
+  {
+    "text": "Buddhist monks live there.",
+    "expected": "[RELIGION] monks live there.",
+    "spans": [
+      {
+        "start": 0,
+        "end": 8,
+        "label": "RELIGION",
+        "text": "Buddhist"
+      }
+    ],
+    "id": "baseline-19",
+    "language": "en",
+    "ocr_noise": false
+  },
+  {
+    "text": "John Doe from New York met Lina Wolkenstein in Berlin.",
+    "expected": "[PERSON] from [CITY] met [PERSON] in [CITY].",
+    "spans": [
+      {
+        "start": 0,
+        "end": 8,
+        "label": "PERSON",
+        "text": "John Doe"
+      },
+      {
+        "start": 14,
+        "end": 22,
+        "label": "CITY",
+        "text": "New York"
+      },
+      {
+        "start": 27,
+        "end": 43,
+        "label": "PERSON",
+        "text": "Lina Wolkenstein"
+      },
+      {
+        "start": 47,
+        "end": 53,
+        "label": "CITY",
+        "text": "Berlin"
+      }
+    ],
+    "id": "baseline-20",
+    "language": "mixed",
+    "ocr_noise": false
+  },
+  {
+    "text": "David is Catholic and lives in Rome.",
+    "expected": "[PERSON] is [RELIGION] and lives in [CITY].",
+    "spans": [
+      {
+        "start": 0,
+        "end": 5,
+        "label": "PERSON",
+        "text": "David"
+      },
+      {
+        "start": 9,
+        "end": 17,
+        "label": "RELIGION",
+        "text": "Catholic"
+      },
+      {
+        "start": 31,
+        "end": 35,
+        "label": "CITY",
+        "text": "Rome"
+      }
+    ],
+    "id": "baseline-21",
+    "language": "en",
+    "ocr_noise": false
+  },
+  {
+    "text": "John likes John's new car.",
+    "expected": "[PERSON] likes [PERSON]'s new car.",
+    "spans": [
+      {
+        "start": 0,
+        "end": 4,
+        "label": "PERSON",
+        "text": "John"
+      },
+      {
+        "start": 11,
+        "end": 15,
+        "label": "PERSON",
+        "text": "John"
+      }
+    ],
+    "id": "baseline-22",
+    "language": "en",
+    "ocr_noise": false
+  },
+  {
+    "text": "Berlin, oh Berlin, my favorite city.",
+    "expected": "[CITY], oh [CITY], my favorite city.",
+    "spans": [
+      {
+        "start": 0,
+        "end": 6,
+        "label": "CITY",
+        "text": "Berlin"
+      },
+      {
+        "start": 11,
+        "end": 17,
+        "label": "CITY",
+        "text": "Berlin"
+      }
+    ],
+    "id": "baseline-23",
+    "language": "en",
+    "ocr_noise": false
+  },
+  {
+    "text": "Washington is the capital.",
+    "expected": "[CITY] is the capital.",
+    "spans": [
+      {
+        "start": 0,
+        "end": 10,
+        "label": "CITY",
+        "text": "Washington"
+      }
+    ],
+    "id": "baseline-24",
+    "language": "en",
+    "ocr_noise": false
+  },
+  {
+    "text": "George Washington was the president.",
+    "expected": "[PERSON] was the president.",
+    "spans": [
+      {
+        "start": 0,
+        "end": 17,
+        "label": "PERSON",
+        "text": "George Washington"
+      }
+    ],
+    "id": "baseline-25",
+    "language": "en",
+    "ocr_noise": false
+  },
+  {
+    "text": "I visited the Jordan river.",
+    "expected": "I visited the [CITY] river.",
+    "spans": [
+      {
+        "start": 14,
+        "end": 20,
+        "label": "CITY",
+        "text": "Jordan"
+      }
+    ],
+    "id": "baseline-26",
+    "language": "en",
+    "ocr_noise": false
+  },
+  {
+    "text": "Michael Jordan is a basketball player.",
+    "expected": "[PERSON] is a basketball player.",
+    "spans": [
+      {
+        "start": 0,
+        "end": 14,
+        "label": "PERSON",
+        "text": "Michael Jordan"
+      }
+    ],
+    "id": "baseline-27",
+    "language": "en",
+    "ocr_noise": false
+  },
+  {
+    "text": "Mr. Smith-\nson",
+    "expected": "Mr. [PERSON]",
+    "spans": [
+      {
+        "start": 4,
+        "end": 14,
+        "label": "PERSON",
+        "text": "Smith-\nson"
+      }
+    ],
+    "id": "baseline-28",
+    "language": "en",
+    "ocr_noise": true
+  },
+  {
+    "text": "Ber-\nlin",
+    "expected": "[CITY]",
+    "spans": [
+      {
+        "start": 0,
+        "end": 8,
+        "label": "CITY",
+        "text": "Ber-\nlin"
+      }
+    ],
+    "id": "baseline-29",
+    "language": "de",
+    "ocr_noise": true
+  },
+  {
+    "text": "Jchn D0e went home.",
+    "expected": "[PERSON] went home.",
+    "spans": [
+      {
+        "start": 0,
+        "end": 8,
+        "label": "PERSON",
+        "text": "Jchn D0e"
+      }
+    ],
+    "id": "baseline-30",
+    "language": "en",
+    "ocr_noise": true
+  },
+  {
+    "text": "Welcome to Nevv Y0rk.",
+    "expected": "Welcome to [CITY].",
+    "spans": [
+      {
+        "start": 11,
+        "end": 20,
+        "label": "CITY",
+        "text": "Nevv Y0rk"
+      }
+    ],
+    "id": "baseline-31",
+    "language": "en",
+    "ocr_noise": true
+  },
+  {
+    "text": "The cat sat on the mat.",
+    "expected": "The cat sat on the mat.",
+    "spans": [],
+    "id": "baseline-32",
+    "language": "en",
+    "ocr_noise": false
+  },
+  {
+    "text": "12345 is a number.",
+    "expected": "12345 is a number.",
+    "spans": [],
+    "id": "baseline-33",
+    "language": "en",
+    "ocr_noise": false
+  },
+  {
+    "text": "This is a simple test.",
+    "expected": "This is a simple test.",
+    "spans": [],
+    "id": "baseline-34",
+    "language": "en",
+    "ocr_noise": false
+  },
+  {
+    "text": "My email is test@example.com.",
+    "expected": "My email is [EMAIL].",
+    "spans": [
+      {
+        "start": 12,
+        "end": 28,
+        "label": "EMAIL",
+        "text": "test@example.com"
+      }
+    ],
+    "id": "baseline-35",
+    "language": "en",
+    "ocr_noise": false
+  },
+  {
+    "text": "Call me at 555-0199.",
+    "expected": "Call me at [PHONE].",
+    "spans": [
+      {
+        "start": 11,
+        "end": 19,
+        "label": "PHONE",
+        "text": "555-0199"
+      }
+    ],
+    "id": "baseline-36",
+    "language": "en",
+    "ocr_noise": false
+  },
+  {
+    "text": "I work for Google Inc.",
+    "expected": "I work for [ORGANIZATION].",
+    "spans": [
+      {
+        "start": 11,
+        "end": 22,
+        "label": "ORGANIZATION",
+        "text": "Google Inc."
+      }
+    ],
+    "id": "baseline-37",
+    "language": "en",
+    "ocr_noise": false
+  },
+  {
+    "text": "Contact info@company.de",
+    "expected": "Contact [EMAIL]",
+    "spans": [
+      {
+        "start": 8,
+        "end": 23,
+        "label": "EMAIL",
+        "text": "info@company.de"
+      }
+    ],
+    "id": "baseline-38",
+    "language": "en",
+    "ocr_noise": false
+  },
+  {
+    "text": "The UN is an organization.",
+    "expected": "The [ORGANIZATION] is an organization.",
+    "spans": [
+      {
+        "start": 4,
+        "end": 6,
+        "label": "ORGANIZATION",
+        "text": "UN"
+      }
+    ],
+    "id": "baseline-39",
+    "language": "en",
+    "ocr_noise": false
+  }
+]

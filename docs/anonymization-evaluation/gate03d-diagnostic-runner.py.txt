@@ -1,0 +1,24 @@
+import json,sys,time,resource,subprocess
+from pathlib import Path
+from ocr.anonymization.recognizer import GLiNERRecognizer
+from ocr.anonymization.normalization import dehyphenate
+from ocr.anonymization.detectors import detect
+from ocr.anonymization.replacement import resolve_overlaps,validate_entities
+
+def deny(event,args):
+    if event in ('socket.connect','socket.bind','socket.getaddrinfo'): raise PermissionError('offline')
+sys.addaudithook(deny)
+m=GLiNERRecognizer('/workspace/.anonymization-model')
+cases=json.loads(Path('ocr/anonymization/fixtures/holdout03c/cases.json').read_text())
+out={'source_sha':subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),'model_revision':m.revision,'prompts':m.prompts,'threshold':m.threshold,'failures':[]}
+for c in cases:
+    raw=m.recognize(c['text']); combined=resolve_overlaps(validate_entities(c['text'],raw+detect(c['text'])))
+    uncovered=[s for s in c['spans'] if s['label']=='RELIGION' and any(c['text'][i].isalnum() and not any(p.start<=i<p.end for p in combined) for i in range(s['start'],s['end']))]
+    if not uncovered:continue
+    normalized,positions=dehyphenate(c['text'])
+    t=m.model.data_processor.transformer_tokenizer
+    tok=t(normalized,return_offsets_mapping=True)
+    out['failures'].append(dict(case_id=c['id'],text=c['text'],gold=uncovered,normalized=normalized,normalized_source_positions=positions,predictions=[x.model_dump() for x in raw],tokens=t.convert_ids_to_tokens(tok['input_ids']),token_offsets=tok['offset_mapping'],low_threshold_predictions=m.model.predict_entities(normalized,list(m.prompts.values()),threshold=.01,flat_ner=True)))
+out['peak_rss_mib']=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss/1024
+Path('/tmp/gate03d-diagnosis.json').write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\n')
+print(json.dumps(out,ensure_ascii=False,indent=2))

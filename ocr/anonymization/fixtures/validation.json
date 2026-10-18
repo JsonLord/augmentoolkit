@@ -1,0 +1,210 @@
+[
+  {
+    "id": "validation-00",
+    "language": "de",
+    "text": "Mara Kühn arbeitet bei Siemens in Dresden.",
+    "spans": [
+      {
+        "start": 0,
+        "end": 9,
+        "label": "PERSON",
+        "text": "Mara Kühn"
+      },
+      {
+        "start": 23,
+        "end": 30,
+        "label": "ORGANIZATION",
+        "text": "Siemens"
+      },
+      {
+        "start": 34,
+        "end": 41,
+        "label": "CITY",
+        "text": "Dresden"
+      }
+    ],
+    "expected": "[PERSON] arbeitet bei [ORGANIZATION] in [CITY].",
+    "ocr_noise": false
+  },
+  {
+    "id": "validation-01",
+    "language": "en",
+    "text": "Emma Wilson works for Acme Corporation in London.",
+    "spans": [
+      {
+        "start": 0,
+        "end": 11,
+        "label": "PERSON",
+        "text": "Emma Wilson"
+      },
+      {
+        "start": 22,
+        "end": 38,
+        "label": "ORGANIZATION",
+        "text": "Acme Corporation"
+      },
+      {
+        "start": 42,
+        "end": 48,
+        "label": "CITY",
+        "text": "London"
+      }
+    ],
+    "expected": "[PERSON] works for [ORGANIZATION] in [CITY].",
+    "ocr_noise": false
+  },
+  {
+    "id": "validation-02",
+    "language": "de",
+    "text": "Sie ist muslimisch. Kontakt: mara.kuehn@example.org, +49 351 7654321.",
+    "spans": [
+      {
+        "start": 8,
+        "end": 18,
+        "label": "RELIGION",
+        "text": "muslimisch"
+      },
+      {
+        "start": 29,
+        "end": 51,
+        "label": "EMAIL",
+        "text": "mara.kuehn@example.org"
+      },
+      {
+        "start": 53,
+        "end": 68,
+        "label": "PHONE",
+        "text": "+49 351 7654321"
+      }
+    ],
+    "expected": "Sie ist [RELIGION]. Kontakt: [EMAIL], [PHONE].",
+    "ocr_noise": false
+  },
+  {
+    "id": "validation-03",
+    "language": "en",
+    "text": "His religion is Hinduism. Contact emma@example.net or +1 212 555 0188.",
+    "spans": [
+      {
+        "start": 16,
+        "end": 24,
+        "label": "RELIGION",
+        "text": "Hinduism"
+      },
+      {
+        "start": 34,
+        "end": 50,
+        "label": "EMAIL",
+        "text": "emma@example.net"
+      },
+      {
+        "start": 54,
+        "end": 69,
+        "label": "PHONE",
+        "text": "+1 212 555 0188"
+      }
+    ],
+    "expected": "His religion is [RELIGION]. Contact [EMAIL] or [PHONE].",
+    "ocr_noise": false
+  },
+  {
+    "id": "validation-04",
+    "language": "de",
+    "text": "Nora Winter besucht Köln. Nora Winter bleibt dort.",
+    "spans": [
+      {
+        "start": 0,
+        "end": 11,
+        "label": "PERSON",
+        "text": "Nora Winter"
+      },
+      {
+        "start": 20,
+        "end": 24,
+        "label": "CITY",
+        "text": "Köln"
+      },
+      {
+        "start": 26,
+        "end": 37,
+        "label": "PERSON",
+        "text": "Nora Winter"
+      }
+    ],
+    "expected": "[PERSON] besucht [CITY]. [PERSON] bleibt dort.",
+    "ocr_noise": false
+  },
+  {
+    "id": "validation-05",
+    "language": "en",
+    "text": "Jordan is a river, and Jordan Miller is a person.",
+    "spans": [
+      {
+        "start": 23,
+        "end": 36,
+        "label": "PERSON",
+        "text": "Jordan Miller"
+      }
+    ],
+    "expected": "Jordan is a river, and [PERSON] is a person.",
+    "ocr_noise": false
+  },
+  {
+    "id": "validation-06",
+    "language": "de",
+    "text": "Religion ist ein Gesprächsthema. Keine Zugehörigkeit ist angegeben.",
+    "spans": [],
+    "expected": "Religion ist ein Gesprächsthema. Keine Zugehörigkeit ist angegeben.",
+    "ocr_noise": false
+  },
+  {
+    "id": "validation-07",
+    "language": "en",
+    "text": "A name alone does not establish religious affiliation.",
+    "spans": [],
+    "expected": "A name alone does not establish religious affiliation.",
+    "ocr_noise": false
+  },
+  {
+    "id": "validation-08",
+    "language": "de",
+    "text": "Frau Eva-Luise Schröder wohnt in Ham-\nburg.",
+    "spans": [
+      {
+        "start": 5,
+        "end": 23,
+        "label": "PERSON",
+        "text": "Eva-Luise Schröder"
+      },
+      {
+        "start": 33,
+        "end": 42,
+        "label": "CITY",
+        "text": "Ham-\nburg"
+      }
+    ],
+    "expected": "Frau [PERSON] wohnt in [CITY].",
+    "ocr_noise": true
+  },
+  {
+    "id": "validation-09",
+    "language": "en",
+    "text": "M4ry Br0wn lives in L0ndon.",
+    "spans": [
+      {
+        "start": 0,
+        "end": 10,
+        "label": "PERSON",
+        "text": "M4ry Br0wn"
+      },
+      {
+        "start": 20,
+        "end": 26,
+        "label": "CITY",
+        "text": "L0ndon"
+      }
+    ],
+    "expected": "[PERSON] lives in [CITY].",
+    "ocr_noise": true
+  }
+]

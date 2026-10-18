@@ -1,0 +1,38 @@
+{
+  "source_sha": "094ad6052cde66e5a7204fb614eff10c5572f313",
+  "report_sha256": "22a8ff116a14ac64ad66b3ffbb46056ffe1ad8afca3fe7681a11a2744f80f35c",
+  "synthetic_only": true,
+  "all_corpora_development": true,
+  "new_holdout_created": false,
+  "default_candidate_provenance": {
+    "schema_version": "recognition-provenance/v1",
+    "model_revision": "ba967ee030b7e679dd5422cb16fcd1b379da38e1",
+    "configuration_digest": "9ea9537bb8cbb7b3e5d21c566acf10a80bebc1ee2a4aad53f3e2618f586d50c8",
+    "terminology_version": "religious-terminology-v1",
+    "status_version": "religious-status-v1",
+    "replacement_version": "enclosing-spans-failclosed-v1",
+    "normalization_version": "source-codepoint-v1"
+  },
+  "source_files_sha256": {
+    "ocr/anonymization/recognizer.py": "f695a30f0ff8540ba345d5557f0bf2bfc225635b228010da6ee6f5ccbc71ce45",
+    "ocr/anonymization/normalization.py": "3b2598200933a86cedf2dd20affb911c4ad1ac4f7fdc00182c4044b7a2873f10",
+    "ocr/anonymization/terminology.py": "370b61beb1b5339549f2c8143a31b546f4a32dbbabd26c061f009341de16babd",
+    "ocr/anonymization/status.py": "fdac7b727fd3f5e46cef7aa9d9edf971a93b40c43b9e0ce8a71e3c5346ccf84a",
+    "ocr/anonymization/detectors.py": "c8c36cc9c636b069f3542747573d1bed9ef52a494161aa8d5813b181d0afcbad",
+    "ocr/anonymization/replacement.py": "75526b9049b42db6ee144cff1daa2d1a12d54dac217f4441d68f55148c37ad99",
+    "ocr/anonymization/schemas.py": "60d423aa3e9b584dcc9a1cdda66a0190243e02675446c158ec14c5dc456760f1",
+    "ocr/anonymization/engine.py": "52c4bbf71dd9b00e590e7f108a2b388387132245f7e75d435c384ae9e90ac27f",
+    "ocr/anonymization/provenance.py": "85b4bce5348654ecc3a54c930891fb2df3fa285404171f4b6713fc343a5ca25b",
+    "ocr/anonymization/evaluate.py": "b9ed1453d6b7c704be3eef18b2a32b9cf8e857075355c42025e5d3bdc863d6b0",
+    "ocr/anonymization/outcomes.py": "5817710bb306e400cff75c44c87f9d89fd8f4f16a459f03c9f977367c61bbf20",
+    "ocr/anonymization/develop03e.py": "184aa4f421077599f93493b102b1571eb818fd4ff38e74a3fa980f3823bc77fc"
+  },
+  "baseline_model_span_predictions_match_historical_03d_first": true,
+  "historical_artifacts_verified_unchanged": true,
+  "requirement_locks_sha256": {
+    "ocr/requirements.lock": "05e3b3d64c3a3bd7d762de7e1d425f82625904f0d13edb1111cf8e3dd7c26fb5",
+    "ocr/anonymization/requirements.lock": "41276fcf2e527648f0f3358b66170aeea33382b39abfe37a8b6fe007d1c3d507"
+  },
+  "method": "One actual pinned inference per each of 330 source documents. Same predictions replayed for all three fixed deterministic policies. Model latency is separate from deterministic/replacement replay latency. Final comparison performed from a committed clean runtime snapshot; preview used the same fixed policies and selection criteria.",
+  "automated_release_eligible": false
+}

@@ -4,11 +4,19 @@ from .schemas import SafeError
 
 
 def anonymization_handoff(result, tagger):
-    """tagger receives text and returns {'text': ..., 'tags': [...]}.
+    """Pass AnonymizationEngine for the supported validated candidate workflow.
+
+    Historical callback compatibility: tagger receives text and returns {'text': ..., 'tags': [...]}.
 
     No implicit fallback to the repository's fail-open anonymizer. The caller owns
     review and release; the original OCR result is not mutated or declassified.
     """
+    from .anonymization import AnonymizationEngine
+
+    if isinstance(tagger, AnonymizationEngine):
+        return tagger.handoff(result)
+    # Historical characterization bridge only. This dictionary is classified
+    # evidence, never a ReleaseCandidate accepted by ReleaseAuthority.
     pages = []
     for p in result.pages:
         try:
@@ -40,6 +48,8 @@ def anonymization_handoff(result, tagger):
         pages=pages,
         original_evidence_retained_by_caller=True,
         anonymous=False,
+        release_approved=False,
+        release_review_required=True,
     )
 
 

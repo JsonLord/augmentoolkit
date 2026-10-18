@@ -1,0 +1,137 @@
+{
+  "source_sha": "a5699494daba2545947cfccaea7881b60be8d347",
+  "commands": [
+    {
+      "name": "ruff",
+      "source_sha": "a5699494daba2545947cfccaea7881b60be8d347",
+      "argv": [
+        "/workspace/.ocr-venv/bin/ruff",
+        "check",
+        "ocr",
+        "augmentoolkit/utils/offline_chunking.py"
+      ],
+      "environment_overrides": {},
+      "started_at": "2026-10-18T20:09:18.211496+00:00",
+      "elapsed_seconds": 0.012917038999148645,
+      "exit_code": 0,
+      "summary": [
+        "All checks passed!"
+      ]
+    },
+    {
+      "name": "format",
+      "source_sha": "a5699494daba2545947cfccaea7881b60be8d347",
+      "argv": [
+        "/workspace/.ocr-venv/bin/ruff",
+        "format",
+        "--check",
+        "ocr",
+        "augmentoolkit/utils/offline_chunking.py"
+      ],
+      "environment_overrides": {},
+      "started_at": "2026-10-18T20:09:18.224499+00:00",
+      "elapsed_seconds": 0.012005123004200868,
+      "exit_code": 0,
+      "summary": [
+        "95 files already formatted"
+      ]
+    },
+    {
+      "name": "default",
+      "source_sha": "a5699494daba2545947cfccaea7881b60be8d347",
+      "argv": [
+        "/workspace/.ocr-venv/bin/python",
+        "-m",
+        "pytest",
+        "-c",
+        "pytest-ocr.ini"
+      ],
+      "environment_overrides": {},
+      "started_at": "2026-10-18T20:09:18.236571+00:00",
+      "elapsed_seconds": 10.072151733998908,
+      "exit_code": 0,
+      "summary": [
+        "================== 366 passed, 13 skipped, 1 warning in 9.50s =================="
+      ]
+    },
+    {
+      "name": "security",
+      "source_sha": "a5699494daba2545947cfccaea7881b60be8d347",
+      "argv": [
+        "/workspace/.ocr-venv/bin/python",
+        "-m",
+        "pytest",
+        "-c",
+        "pytest-ocr.ini",
+        "ocr/tests/test_anonymization_security.py",
+        "ocr/tests/test_anonymization_release_policy.py",
+        "ocr/tests/test_private_host_adapters.py",
+        "ocr/tests/test_gate03c_runtime_state.py",
+        "ocr/tests/test_gate03e_provenance_review.py",
+        "ocr/tests/test_reviewed_corrections.py"
+      ],
+      "environment_overrides": {},
+      "started_at": "2026-10-18T20:09:28.308949+00:00",
+      "elapsed_seconds": 1.6877557420011726,
+      "exit_code": 0,
+      "summary": [
+        "============================= 209 passed in 1.27s =============================="
+      ]
+    },
+    {
+      "name": "offline",
+      "source_sha": "a5699494daba2545947cfccaea7881b60be8d347",
+      "argv": [
+        "/workspace/.ocr-venv/bin/python",
+        "-m",
+        "pytest",
+        "-c",
+        "pytest-ocr.ini",
+        "ocr/tests/test_anonymization_runtime_safety.py",
+        "ocr/tests/test_gate03c_holdout_utf8.py"
+      ],
+      "environment_overrides": {},
+      "started_at": "2026-10-18T20:09:29.996876+00:00",
+      "elapsed_seconds": 0.589300744002685,
+      "exit_code": 0,
+      "summary": [
+        "============================== 18 passed in 0.13s =============================="
+      ]
+    },
+    {
+      "name": "correction-model-evidence",
+      "source_sha": "a5699494daba2545947cfccaea7881b60be8d347",
+      "argv": [
+        "/workspace/.anonymization-venv/bin/python",
+        "-m",
+        "pytest",
+        "-c",
+        "pytest-ocr.ini",
+        "ocr/tests/test_anonymization_integration.py",
+        "-k",
+        "gate03f"
+      ],
+      "environment_overrides": {
+        "HF_HUB_OFFLINE": "1",
+        "TRANSFORMERS_OFFLINE": "1",
+        "HF_HUB_DISABLE_TELEMETRY": "1",
+        "RUN_ANONYMIZATION_MODEL": "1",
+        "RUN_GATE03C_HOLDOUT": "1",
+        "RUN_GATE03D_MODEL": "1",
+        "RUN_GATE03D_HOLDOUT": "1",
+        "RUN_GATE03E_MODEL": "1",
+        "RUN_GATE03F_MODEL": "1",
+        "ANONYMIZATION_MODEL_CACHE": "/workspace/.anonymization-model",
+        "GATE03E_DEVELOPMENT_OUTPUT": "docs/anonymization-evaluation/gate03e-development.json",
+        "GATE03F_CORRECTION_OUTPUT": "docs/anonymization-evaluation/gate03f-corrections-live.json",
+        "GATE03F_CONTROLS_OUTPUT": "docs/anonymization-evaluation/gate03f-correct-controls-live.json"
+      },
+      "started_at": "2026-10-18T20:09:30.586363+00:00",
+      "elapsed_seconds": 0.4094029469997622,
+      "exit_code": 0,
+      "summary": [
+        "======================= 1 passed, 6 deselected in 0.05s ========================"
+      ]
+    }
+  ]
+}

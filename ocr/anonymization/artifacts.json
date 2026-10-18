@@ -1,0 +1,11 @@
+{
+  "model": "VAGOsolutions/SauerkrautLM-GLiNER",
+  "revision": "ba967ee030b7e679dd5422cb16fcd1b379da38e1",
+  "files": {
+    "gliner_config.json": "f0659e7440bff3dd8630c8c553c30e0244d3949b7e6fa6e02938fb4bb4e2e9da",
+    "pytorch_model.bin": "a4f25b51796426ca39bf5b59ea2d142902693b690ffc1458a792267e45e3c269",
+    "special_tokens_map.json": "6e3204c5a4004719c185007a745d1940471a6fb02521cfa0a00306dbb6bc5903",
+    "tokenizer.json": "4f65190517e4633347d84e0225b8c5c66a1a62321107ebc73c09d5cefa2b5cd5",
+    "tokenizer_config.json": "ae8ad41b7039b6f1121db8be5790eae14ca7226ec14110406d4068797f505705"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "source_sha": "8b0aaf4ee0d22db977db600d24b96785aeca6305",
+  "argv": [
+    "/workspace/.ocr-venv/bin/python",
+    "-m",
+    "pytest",
+    "-p",
+    "no:cacheprovider",
+    "-q",
+    "/workspace/pr3-review-evidence/test_review_pocs.py"
+  ],
+  "environment_overrides": {
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "PYTHONPATH": "/workspace/augmentoolkit-anonymization"
+  },
+  "started_at": "2026-10-18T21:29:59.457933+00:00",
+  "exit_code": 1,
+  "summary": [
+    "2 failed in 0.13s"
+  ],
+  "original_poc_sha256": "de869531a2276c99da4cabbd23ab2bf19c09a1e2116a759d1f70f8fb677b3b2c",
+  "original_pocs_available": true,
+  "log_sha256": "c80e61a5bd4ba6a429e42531266b57ed33f43720d165e927ddeb40135dcbc12d"
+}

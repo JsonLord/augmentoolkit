@@ -1,0 +1,380 @@
+{
+  "source_sha": "d6dac617d0d62c8d5356cc0ce351b837a4ef0ec2",
+  "freeze_commit": "d6dac617d0d62c8d5356cc0ce351b837a4ef0ec2",
+  "corpus_sha256": "7180e176f6d8bd259da56ad729ede6fd2c798aca15a786ba0ff0adcd862f21a1",
+  "first_result_sha256": "08f86d2b78871683835c51b627e251c66b83fc33f828d8a6c8e9742c8bd47d9f",
+  "first_result_started_utc": "2026-10-18T10:37:15.680487+00:00",
+  "first_result_finished_utc": "2026-10-18T10:37:42.692569+00:00",
+  "command": [
+    "/workspace/.anonymization-venv/bin/python",
+    "-m",
+    "ocr.anonymization.qualify03d",
+    "--cache",
+    "/workspace/.anonymization-model",
+    "--output",
+    "docs/anonymization-evaluation/gate03d-holdout-first.json"
+  ],
+  "environment_overrides": {
+    "HF_HUB_OFFLINE": "1",
+    "TRANSFORMERS_OFFLINE": "1",
+    "HF_HUB_DISABLE_TELEMETRY": "1"
+  },
+  "exit_code": 1,
+  "qualification_passed": false,
+  "automated_release_eligible": false,
+  "blocked_documents": [
+    {
+      "case_id": "holdout03d-055",
+      "failure_code": "ambiguous_entity_overlap",
+      "canaries": [
+        {
+          "start": 24,
+          "end": 29,
+          "label": "RELIGION",
+          "text": "Bahai",
+          "uncovered_positions": [
+            24,
+            25,
+            26,
+            27,
+            28
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "holdout03d-063",
+      "failure_code": "ambiguous_entity_overlap",
+      "canaries": [
+        {
+          "start": 30,
+          "end": 44,
+          "label": "RELIGION",
+          "text": "konfessionslos",
+          "uncovered_positions": [
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "holdout03d-078",
+      "failure_code": "ambiguous_entity_overlap",
+      "canaries": [
+        {
+          "start": 23,
+          "end": 29,
+          "label": "RELIGION",
+          "text": "Baha'i",
+          "uncovered_positions": [
+            23,
+            24,
+            25,
+            26,
+            28
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "holdout03d-127",
+      "failure_code": "ambiguous_entity_overlap",
+      "canaries": [
+        {
+          "start": 0,
+          "end": 13,
+          "label": "PERSON",
+          "text": "Liv Hohenrain",
+          "uncovered_positions": [
+            0,
+            1,
+            2,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12
+          ]
+        },
+        {
+          "start": 20,
+          "end": 24,
+          "label": "CITY",
+          "text": "Bonn",
+          "uncovered_positions": [
+            20,
+            21,
+            22,
+            23
+          ]
+        },
+        {
+          "start": 29,
+          "end": 34,
+          "label": "RELIGION",
+          "text": "Bahai",
+          "uncovered_positions": [
+            29,
+            30,
+            31,
+            32,
+            33
+          ]
+        },
+        {
+          "start": 36,
+          "end": 57,
+          "label": "EMAIL",
+          "text": "liv.h@example.invalid",
+          "uncovered_positions": [
+            36,
+            37,
+            38,
+            40,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "holdout03d-137",
+      "failure_code": "ambiguous_entity_overlap",
+      "canaries": [
+        {
+          "start": 11,
+          "end": 24,
+          "label": "RELIGION",
+          "text": "Katholizismus",
+          "uncovered_positions": [
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23
+          ]
+        },
+        {
+          "start": 35,
+          "end": 48,
+          "label": "RELIGION",
+          "text": "Katholizismus",
+          "uncovered_positions": [
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47
+          ]
+        }
+      ]
+    }
+  ],
+  "unblocked_canary_failures": [
+    {
+      "case_id": "holdout03d-025",
+      "canaries": [
+        {
+          "start": 21,
+          "end": 35,
+          "label": "RELIGION",
+          "text": "keine Religion",
+          "uncovered_positions": [
+            21,
+            22,
+            23,
+            24,
+            25
+          ]
+        }
+      ],
+      "predictions": [
+        {
+          "start": 27,
+          "end": 35,
+          "label": "RELIGION",
+          "text": "Religion",
+          "score": 0.6249727010726929,
+          "source": "multilingual_ner",
+          "model_revision": "ba967ee030b7e679dd5422cb16fcd1b379da38e1",
+          "normalization": "identity"
+        }
+      ]
+    },
+    {
+      "case_id": "holdout03d-026",
+      "canaries": [
+        {
+          "start": 27,
+          "end": 51,
+          "label": "RELIGION",
+          "text": "religiously unaffiliated",
+          "uncovered_positions": [
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50
+          ]
+        }
+      ],
+      "predictions": [
+        {
+          "start": 0,
+          "end": 11,
+          "label": "ORGANIZATION",
+          "text": "Affiliation",
+          "score": 0.6462724208831787,
+          "source": "multilingual_ner",
+          "model_revision": "ba967ee030b7e679dd5422cb16fcd1b379da38e1",
+          "normalization": "identity"
+        }
+      ]
+    },
+    {
+      "case_id": "holdout03d-111",
+      "canaries": [
+        {
+          "start": 13,
+          "end": 28,
+          "label": "RELIGION",
+          "text": "konfesslonsfrei",
+          "uncovered_positions": [
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27
+          ]
+        }
+      ],
+      "predictions": []
+    },
+    {
+      "case_id": "holdout03d-125",
+      "canaries": [
+        {
+          "start": 23,
+          "end": 41,
+          "label": "ORGANIZATION",
+          "text": "Hafenbogen Archivs",
+          "uncovered_positions": [
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40
+          ]
+        }
+      ],
+      "predictions": [
+        {
+          "start": 23,
+          "end": 33,
+          "label": "ORGANIZATION",
+          "text": "Hafenbogen",
+          "score": 0.7308627963066101,
+          "source": "multilingual_ner",
+          "model_revision": "ba967ee030b7e679dd5422cb16fcd1b379da38e1",
+          "normalization": "identity"
+        },
+        {
+          "start": 43,
+          "end": 47,
+          "label": "CITY",
+          "text": "Kiel",
+          "score": 0.9980584979057312,
+          "source": "multilingual_ner",
+          "model_revision": "ba967ee030b7e679dd5422cb16fcd1b379da38e1",
+          "normalization": "identity"
+        },
+        {
+          "start": 49,
+          "end": 60,
+          "label": "RELIGION",
+          "text": "evangelisch",
+          "score": null,
+          "source": "deterministic",
+          "model_revision": "religious-terminology-v1",
+          "normalization": "identity"
+        }
+      ]
+    }
+  ],
+  "notes": "First selected-implementation evaluation, recorded after corpus/configuration/source freeze commit. No optimization against this result. Blocked documents have no candidate output; aggregate fail-closed coverage counts them as uncovered instead of silently excluding them."
+}

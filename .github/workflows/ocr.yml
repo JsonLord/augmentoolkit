@@ -1,9 +1,9 @@
 name: Hybrid OCR offline tests
 on:
   push:
-    paths: ['ocr/**', 'pytest-ocr.ini', '.github/workflows/ocr.yml']
+    paths: ['ocr/**', 'augmentoolkit/utils/offline_chunking.py', 'generation/core_components/chunking.py', 'pytest-ocr.ini', '.github/workflows/ocr.yml']
   pull_request:
-    paths: ['ocr/**', 'pytest-ocr.ini', '.github/workflows/ocr.yml']
+    paths: ['ocr/**', 'augmentoolkit/utils/offline_chunking.py', 'generation/core_components/chunking.py', 'pytest-ocr.ini', '.github/workflows/ocr.yml']
 permissions:
   contents: read
 jobs:
@@ -16,6 +16,6 @@ jobs:
           python-version: '3.11'
       - run: python -m pip install --require-hashes -r ocr/requirements.lock
       - run: python -m pip install -r ocr/requirements-dev.txt
-      - run: ruff check ocr
-      - run: ruff format --check ocr
+      - run: ruff check ocr augmentoolkit/utils/offline_chunking.py
+      - run: ruff format --check ocr augmentoolkit/utils/offline_chunking.py
       - run: python -m pytest -c pytest-ocr.ini

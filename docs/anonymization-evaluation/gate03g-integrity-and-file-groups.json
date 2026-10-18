@@ -1,0 +1,753 @@
+{
+  "schema_version": "gate03g-git-integrity-and-review-index/v1",
+  "reviewed_head": "6171bcfb536f57676b6912ca2c831fd2894d28e2",
+  "integration_base": "281c84172281a2294227f15287a4aded8a7ea948",
+  "audited_runtime_head": "9d4d8c103271ef62fee3d06603180aa9ca74267e",
+  "base_is_ancestor": true,
+  "reviewed_head_is_ancestor": true,
+  "rebase_performed": false,
+  "force_push_performed": false,
+  "pr_diff_sha256": "7075209e0ac561d0901aea21ce67b9937e148bbc5570669560e6facafaa5168b",
+  "pr_diff_file_count": 111,
+  "reviewed_head_diff_sha256": "66738e9ed94c28baf91abafe95ed6905be55a43c5b8c28e8c2da75550cb67590",
+  "historical_and_frozen_artifacts_unchanged": true,
+  "preserved_existing_evaluation_and_corpus_sha256": {
+    "docs/anonymization-evaluation/cpu-hardening.json": "30d6ea452d4e9a130e1155072c8e4761604ceba36b3f6099affb731ce7bd1984",
+    "docs/anonymization-evaluation/cpu-pinned.json": "7dd95d5e53d2f88a779fd7752b1da70f59a453930c949d6284300628c366b8c9",
+    "docs/anonymization-evaluation/gate03c-command-results.json": "82d35b8adf15f4e54ab9b6c302036833a40f22723bbb373e675cb564187d5e12",
+    "docs/anonymization-evaluation/gate03c-holdout-first.json": "257daa6d43285925c4899471c3f615293293fa0fa8ed17545ebb9d8e99802e83",
+    "docs/anonymization-evaluation/gate03c-holdout-first.provenance.json": "bf19f6ae26e146aa6e04aaed9a54705c0f910af308ea33a8c5eacfe4d1724fbb",
+    "docs/anonymization-evaluation/gate03c-postexport-command-results.json": "21325f22f4a37f86d91abfdece1412d18c04a30c57b3402302d96da3d735b314",
+    "docs/anonymization-evaluation/gate03c-runtime-first.json": "d97ef464d19befe620baeb5ca490eebaf1bafe12fb52e179545cf65eda7eebbc",
+    "docs/anonymization-evaluation/gate03c-runtime-native-verification.json": "8a483de8337eb9b869285e3f205f5153387987a7325578b27559de3d1a433083",
+    "docs/anonymization-evaluation/gate03c-runtime-provenance.json": "888468d474a48ce2401c6a3fa7ad0ec6ff24d901e4e30d582cf4ba247cb0c109",
+    "docs/anonymization-evaluation/gate03c-runtime-restart.json": "7e14a51ac4f7e230e9770aa6332e6a03c246d50b904aab917c0dbc79ee530f63",
+    "docs/anonymization-evaluation/gate03d-command-results.json": "eedb6692e3f98bd6ee9db2280d033f44648e82a7c74b36ab943e10adcda8c581",
+    "docs/anonymization-evaluation/gate03d-development-comparison.json": "b43f2e8a6d0bd3717a449dc031e50ffa04fb6a21a562489b98372eed9cb8587c",
+    "docs/anonymization-evaluation/gate03d-development-experiment.patch": "0c696b90152c57eaf616f4ef2a85bafcc998879b5526b80020bc26305be32c27",
+    "docs/anonymization-evaluation/gate03d-development-provenance.json": "1e2c7f194378939148f245b0a79a37c912b688ffc7c424751ba13b418e007f75",
+    "docs/anonymization-evaluation/gate03d-diagnosis.json": "b93047ea6ee6ab72474693ee2247c5af4bbc8759c309e13064d245f2969370d3",
+    "docs/anonymization-evaluation/gate03d-diagnostic-runner.py.txt": "b8bca8ec85247a56442fb7507eb929eeb4347711b1311d05c31e3362d73faaa0",
+    "docs/anonymization-evaluation/gate03d-final-command-results.json": "25f5aa8352e5faf82cb78a762d701b704f2a6715ecd57da4608e3139351f8de8",
+    "docs/anonymization-evaluation/gate03d-holdout-first.json": "08f86d2b78871683835c51b627e251c66b83fc33f828d8a6c8e9742c8bd47d9f",
+    "docs/anonymization-evaluation/gate03d-holdout-first.provenance.json": "9d5fa15c5427fcfa499262b20453ed4adfe59da86709dffc745ec205e0661bca",
+    "docs/anonymization-evaluation/gate03d-runtime-hybrid.json": "246506eb74b4dff7f8ab71a9704f526f195d76e25407b00b8598eb0d48062043",
+    "docs/anonymization-evaluation/gate03d-runtime-paired-provenance.json": "8ef49a2df6d25cad5f7a6cfe59fa6ef9ec61922f69c1cb99d9d0786a3c7c5777",
+    "docs/anonymization-evaluation/gate03d-runtime-paired.json": "75b3810b47b26cc394387b6477ad03e627bf0b59e0d9db81d244469f98c98af9",
+    "docs/anonymization-evaluation/gate03d-runtime-provenance.json": "dafb846827090d3cde5c7db8df43a2b2d7065dffb3c8eeecaedef20c48ab49ef",
+    "docs/anonymization-evaluation/gate03e-command-results.json": "f0c10fcf1d0e170f4aead8298131e0ac046d2d5bae8202f07180aa486b727bbd",
+    "docs/anonymization-evaluation/gate03e-development.json": "22a8ff116a14ac64ad66b3ffbb46056ffe1ad8afca3fe7681a11a2744f80f35c",
+    "docs/anonymization-evaluation/gate03e-development.provenance.json": "0800c214f63a66194e6c7abf6bea1260857a8cfec17974c78f90e5de38526fde",
+    "docs/anonymization-evaluation/gate03e-error-taxonomy.json": "dcd3dc4843a5cbd36d73e6046e97fd5dfd574309ff509ca26ecf367e32958365",
+    "docs/anonymization-evaluation/gate03e-final-command-results.json": "73d2cf0778693abf443cac1b214ec267f2017cc6df6034b7a4facd3514dd78ad",
+    "docs/anonymization-evaluation/gate03e-reference-guard-command-results.json": "3a9e91e4def1b9378a28bd8403e30f5340d614a25ae1cae36e4e1bd4942a0f05",
+    "docs/anonymization-evaluation/gate03f-command-results.json": "a889799e975a95b4f57afe668a12dcaf2d6e2af218c37040c52bcaae29c89052",
+    "docs/anonymization-evaluation/gate03f-correct-controls-live.json": "6b59791854a382df06a0a980223359daee77d87657a12a245558e6ed01eb3a6a",
+    "docs/anonymization-evaluation/gate03f-corrections-live.json": "d9ce7c7773f708f91472f62d7064ef32f9bba4e07d385b9bf80f27358488e412",
+    "docs/anonymization-evaluation/gate03f-final-command-results.json": "36265282502bb5168812bbc27a98475d4bb8764ba79628721b964df3854322b9",
+    "docs/anonymization-evaluation/gate03f-live-provenance.json": "35b4f206ac3f166f65a4c3264710c6db802620973a0006c3b97d4b967f8b782b",
+    "docs/anonymization-evaluation/offline-chunking-smoke.json": "431af67a3623fd2c1c80e84b68b6ea18f998364495a6c707445b35562b2014cf",
+    "docs/anonymization-evaluation/pr3-recognition-comparison.json": "cd9a783a818ffa62492a1e1f23e7c3c0ce91ecc6f00f4722878e50f49d9cc531",
+    "ocr/anonymization/fixtures/holdout03c/cases.json": "0174fb41d34d0a4db18877c68fb70149eaa67c05da86608d5da4ff8765a52c15",
+    "ocr/anonymization/fixtures/holdout03c/freeze.json": "c707239993099dab4a48b83f6c2aac58674de5423ede75cd1aced17d290708a6",
+    "ocr/anonymization/fixtures/holdout03d/README.md": "a1ad151614e40a5ad43014a9b40fa88f0227b16f12420892f6dc2019f0a2c216",
+    "ocr/anonymization/fixtures/holdout03d/cases.json": "7180e176f6d8bd259da56ad729ede6fd2c798aca15a786ba0ff0adcd862f21a1",
+    "ocr/anonymization/fixtures/holdout03d/freeze.json": "448dc5d7b0f3ef00f7d0f90084866f7f2e85311aac6af32ed0ad3d2658f8b1f5",
+    "ocr/anonymization/fixtures/qualification.json": "6ea032a54babf57a5d90daa4ede63f32f13c750513bdc00f2d8992deea9321b0",
+    "ocr/anonymization/fixtures/validation.json": "e65b71349101d25768f7e330e5d3a73e327919e2fa251c4835eb12d1af5c56e4"
+  },
+  "frozen_artifact_checks": {
+    "docs/anonymization-evaluation/gate03c-holdout-first.json": "257daa6d43285925c4899471c3f615293293fa0fa8ed17545ebb9d8e99802e83",
+    "docs/anonymization-evaluation/gate03c-holdout-first.provenance.json": "bf19f6ae26e146aa6e04aaed9a54705c0f910af308ea33a8c5eacfe4d1724fbb",
+    "docs/anonymization-evaluation/gate03d-holdout-first.json": "08f86d2b78871683835c51b627e251c66b83fc33f828d8a6c8e9742c8bd47d9f",
+    "docs/anonymization-evaluation/gate03d-holdout-first.provenance.json": "9d5fa15c5427fcfa499262b20453ed4adfe59da86709dffc745ec205e0661bca",
+    "ocr/anonymization/fixtures/holdout03c/cases.json": "0174fb41d34d0a4db18877c68fb70149eaa67c05da86608d5da4ff8765a52c15",
+    "ocr/anonymization/fixtures/holdout03c/freeze.json": "c707239993099dab4a48b83f6c2aac58674de5423ede75cd1aced17d290708a6",
+    "ocr/anonymization/fixtures/holdout03d/cases.json": "7180e176f6d8bd259da56ad729ede6fd2c798aca15a786ba0ff0adcd862f21a1",
+    "ocr/anonymization/fixtures/holdout03d/freeze.json": "448dc5d7b0f3ef00f7d0f90084866f7f2e85311aac6af32ed0ad3d2658f8b1f5"
+  },
+  "files_by_review_group": {
+    "tests-and-CI": [
+      {
+        "path": ".github/workflows/ocr.yml",
+        "bytes": 902,
+        "sha256": "99e5857825f90db91adc546591152a4fa819b00199bff16f30e3124db6e8d1c4",
+        "git_blob": "12793624d0c418ffbe2586d3c36e481f42afff29"
+      },
+      {
+        "path": "ocr/tests/fixtures/candidate_v1.json",
+        "bytes": 466,
+        "sha256": "eb3ab0d101360654f07aa4c614f12873646d44e1d21b1e6cf096033225dec435",
+        "git_blob": "44f65e578e70eb960f032e1a7a490b3e64b69d41"
+      },
+      {
+        "path": "ocr/tests/fixtures/correction_host.py",
+        "bytes": 10187,
+        "sha256": "15ae9e1e7af80d5f163a99b56fcca09d10fdc3a31f9ab3a34b086bd3098f5217",
+        "git_blob": "1e884b8954a767219122a423ea8fdabdb53477f0"
+      },
+      {
+        "path": "ocr/tests/fixtures/isolated_host.py",
+        "bytes": 3810,
+        "sha256": "7150bbc7896a60ee6d5521afcf6a0dd78a936b05c5bb032c72cca2b25abc7daf",
+        "git_blob": "b9b1ed30c4364b29c24d29d3d57ffb9b3f0b4142"
+      },
+      {
+        "path": "ocr/tests/test_anonymization_engine.py",
+        "bytes": 4972,
+        "sha256": "ced86691a6aabf03de6ec637277286fef6796637689960d49a9c69297d615994",
+        "git_blob": "8f53724f4509091dab62a5d048d3a4bfaa839219"
+      },
+      {
+        "path": "ocr/tests/test_anonymization_integration.py",
+        "bytes": 6911,
+        "sha256": "f2c6228d6cc08957e141317e064361fe75e0a786c190dceed7d03b859edcf6da",
+        "git_blob": "a3c9f428418c55ce4d48b8410ba0748c1cf11150"
+      },
+      {
+        "path": "ocr/tests/test_anonymization_release_policy.py",
+        "bytes": 12382,
+        "sha256": "441febebc1a51aff14621cb9d5aaca85adac4c7525a18edf4d92e8b70363e716",
+        "git_blob": "c7e7eab27e58ed78daad8b441d2ad0d949ebd4b9"
+      },
+      {
+        "path": "ocr/tests/test_anonymization_runtime_safety.py",
+        "bytes": 7598,
+        "sha256": "b32def0056e377b8ea611d4a5eecc6ba568f9b86d9822069aaa006938425c7b2",
+        "git_blob": "354cac70723f6f87f1b8361fea1076c7de62e566"
+      },
+      {
+        "path": "ocr/tests/test_anonymization_security.py",
+        "bytes": 11556,
+        "sha256": "fedd16e4501d315dbd13bf7009037e18f5a3abb04381bd98690d98c6ede8db4c",
+        "git_blob": "cd218eac7d97d064e480defe54825c6bb6be1ca0"
+      },
+      {
+        "path": "ocr/tests/test_gate03c_holdout_utf8.py",
+        "bytes": 3201,
+        "sha256": "b79834e3c9ee8fb682b49d61199f8127d3028ce7919695484f2ec8e56f11070c",
+        "git_blob": "d04f8d51654548d303e5357b5b12e94823f223f5"
+      },
+      {
+        "path": "ocr/tests/test_gate03c_runtime_state.py",
+        "bytes": 6908,
+        "sha256": "ef1158ff306ba5c777424f9c609182687ef1c6f7aef14a22a799d3dcc0f607cc",
+        "git_blob": "c5788f1d97cbb9e7878134dc7fef1814b609cbaa"
+      },
+      {
+        "path": "ocr/tests/test_gate03e_outcomes_status.py",
+        "bytes": 6505,
+        "sha256": "f6a2ed75c4e7348f6c0959d3dd9e28c384dc0ef544c757e6bae585dbf9fb4d9d",
+        "git_blob": "87184d6f1f6b3c5005724f6498fab19552326859"
+      },
+      {
+        "path": "ocr/tests/test_gate03e_provenance_review.py",
+        "bytes": 15131,
+        "sha256": "07dd706c06746f0dd663fd0664b33f6b8eacb8f4af99849994bd9a7708e56117",
+        "git_blob": "30f34a9be92af07def2981eb50baaa846c62a50e"
+      },
+      {
+        "path": "ocr/tests/test_gate03g_security_audit.py",
+        "bytes": 10922,
+        "sha256": "900eca7677bb5be6cc6d82ba1c13c7e1fa26db2df6255491b2de7fd21ede5e3d",
+        "git_blob": "8d04095249269f8fbd83960de1d5239d2ae7f631"
+      },
+      {
+        "path": "ocr/tests/test_private_host_adapters.py",
+        "bytes": 8387,
+        "sha256": "ecdb179c979e2bc5373c7a894392e501ff0d45b337026f89d743b9b3e8f4e8df",
+        "git_blob": "60a955bdc2d9493c01dc4c553b9820b1148781d8"
+      },
+      {
+        "path": "ocr/tests/test_religious_terminology.py",
+        "bytes": 7596,
+        "sha256": "adae8131ca6c5bb948659a5d77ec352441410fd312344000465b31f8f910be75",
+        "git_blob": "1bde9c04ed5c9e6b47767aaf95117a2b456adedc"
+      },
+      {
+        "path": "ocr/tests/test_reviewed_corrections.py",
+        "bytes": 25852,
+        "sha256": "747f3426c3b714166fa1575a6b7cd2b5796ee8e635b6412c1cb5e9b22f284b53",
+        "git_blob": "34b6d1374f2d9a26d283968edf9efa89f097bebe"
+      }
+    ],
+    "security-core-and-local-integration": [
+      {
+        "path": "augmentoolkit/utils/offline_chunking.py",
+        "bytes": 4211,
+        "sha256": "b7c07389bbab0fa4cd5fdb8d42db51556afa67cf6eab9e7091e4cea2d71fca16",
+        "git_blob": "5e6ae4d43a8059ab107dcfa2a236ce4442df373f"
+      },
+      {
+        "path": "generation/core_components/chunking.py",
+        "bytes": 38927,
+        "sha256": "52a592f47983c4ef1d4ac1342e69cc5ef84376de3139ec1d2a5405886e130ff7",
+        "git_blob": "aa0ab0b2c84e4cb95836edafddcf1de645a54136"
+      },
+      {
+        "path": "ocr/anonymization/__init__.py",
+        "bytes": 440,
+        "sha256": "9a69c7990f1e185b02e8c43ef2ac50c0e26bb76de1ebf0a93c0df660ac9e0870",
+        "git_blob": "aed9160f820185d99ab5f9814e7315e63eac31bd"
+      },
+      {
+        "path": "ocr/anonymization/__main__.py",
+        "bytes": 1428,
+        "sha256": "ae1becf36e484122f353d21dbd9bea4445d6296939f413bc101b2a1cf963a0be",
+        "git_blob": "23a8697e92d1bd677c59f2e62a92e9f9b8f86691"
+      },
+      {
+        "path": "ocr/anonymization/approval_ledger.py",
+        "bytes": 4759,
+        "sha256": "1700f1e8a792f1087671607b20a4c64c84024741990a91bcd653a48a09332b39",
+        "git_blob": "429f0eaca203bd982c716469559628f09d1a17b4"
+      },
+      {
+        "path": "ocr/anonymization/atomic_output.py",
+        "bytes": 1519,
+        "sha256": "54bfd345adfade3aa5f64512c8cd2a083e3078dce216c84ccf308962531aaf62",
+        "git_blob": "369dba1a511a9671da862d91f954d61d5d9727df"
+      },
+      {
+        "path": "ocr/anonymization/candidate_io.py",
+        "bytes": 792,
+        "sha256": "dbed0485efcfcb2978abdb6f2863d7553cde2d2eddfba43084742969a5f771f1",
+        "git_blob": "8dbf1dec3feada2b64ba7c2d8dbcbe34a73fb738"
+      },
+      {
+        "path": "ocr/anonymization/engine.py",
+        "bytes": 6156,
+        "sha256": "b38ab8f6ac2e74acf9b12f2ca2168ad3cbafa36e6de50613632c4cf054f234d7",
+        "git_blob": "d9d4e0e91956fed5de3c34a86e77065246c83923"
+      },
+      {
+        "path": "ocr/anonymization/host_adapter.py",
+        "bytes": 6751,
+        "sha256": "4bdad851d48136f32cd03724ad02a21a7d7d56ec63b81846eff8dda8450210f3",
+        "git_blob": "64126892385d36f43709144653b168c0c8907082"
+      },
+      {
+        "path": "ocr/anonymization/private_review.py",
+        "bytes": 7868,
+        "sha256": "241a343870e7d4b1c4ee30cfd69e3e4dd5e101b0ed69eb5a4c11417c60f2dbb0",
+        "git_blob": "60d639af2f0ac5cc308d0c3e4298b5b593b04fcf"
+      },
+      {
+        "path": "ocr/anonymization/private_transport.py",
+        "bytes": 6072,
+        "sha256": "d88fbd5bd9b4c6468121df910fd512a679c93574f46424f9d3947282e1556baf",
+        "git_blob": "dacfe457c53a94ce3b112d94a17a1f2ebe4a14f5"
+      },
+      {
+        "path": "ocr/anonymization/provenance.py",
+        "bytes": 2216,
+        "sha256": "85b4bce5348654ecc3a54c930891fb2df3fa285404171f4b6713fc343a5ca25b",
+        "git_blob": "719b5cbfb4a5300bf12a5472bfb7603c42e3b2b1"
+      },
+      {
+        "path": "ocr/anonymization/recovery.py",
+        "bytes": 1567,
+        "sha256": "28083097ac6a52d58efd6c1d5d1cef183712fe0b28c2328b443574f47e76bc6b",
+        "git_blob": "8de6a50dbc53cc7ac0dc688c300305d219c6a58e"
+      },
+      {
+        "path": "ocr/anonymization/release_policy.py",
+        "bytes": 9020,
+        "sha256": "bfcf19310a04e26e015b6803a89cd8de95b1e1c861abd1b640e16f6718f98c7a",
+        "git_blob": "1bb9d530f35a2e5fe94a66a1a90ee202a414cacd"
+      },
+      {
+        "path": "ocr/anonymization/schemas.py",
+        "bytes": 7532,
+        "sha256": "006162078cb714d85c1876264abfd115f40573e42d88ffdd4ae0fc9f82f18181",
+        "git_blob": "07670c8c45d68f371464615e6bd1958bb10a9ad7"
+      },
+      {
+        "path": "ocr/handoff.py",
+        "bytes": 3073,
+        "sha256": "00a5c3cae966a75a23458442c45ecdd63402532663a74f10f0387da5a9b838ac",
+        "git_blob": "a266dcac9645aa9cf8d5385d171aa93f4055d62c"
+      }
+    ],
+    "architecture-and-review-documents": [
+      {
+        "path": "docs/anonymization-architecture.md",
+        "bytes": 12601,
+        "sha256": "59c89bc356e0ec059530673eddceb36f9f1240ffb9db0bd44eb794be758db15e",
+        "git_blob": "4aeedf20a65fb4554de5f882db658e0304e7221e"
+      },
+      {
+        "path": "docs/anonymization-correction-contract.md",
+        "bytes": 8504,
+        "sha256": "5aee2978f3a802dae4abe05c00e98396b9f12371c54544345a149661382360a3",
+        "git_blob": "d2e6752359c6139f0669854ac3769a112ccce88f"
+      },
+      {
+        "path": "docs/anonymization-gate03c.md",
+        "bytes": 16685,
+        "sha256": "bbdedab1504258bf561b88a2c86d23f742a60068bb3a166100a926a8cfdbd3f3",
+        "git_blob": "12ba42398365460079cef3888710d362ce3debb5"
+      },
+      {
+        "path": "docs/anonymization-gate03d.md",
+        "bytes": 17186,
+        "sha256": "a847f75d8afb10879b3d6a550a0c771eb0d5dffe4465b3cd570b9ef51868cf84",
+        "git_blob": "b49325af5b061bef7eab8224a2834d91292bc63f"
+      },
+      {
+        "path": "docs/anonymization-gate03e-acceptance.md",
+        "bytes": 3499,
+        "sha256": "6276eb48bf36a623cc516c01ab6b551497cf3aff42a1ab83c2e3efb27675dc4c",
+        "git_blob": "e486bceba6c4ad15ff8766c8835c5fdb3380081a"
+      },
+      {
+        "path": "docs/anonymization-gate03e.md",
+        "bytes": 17964,
+        "sha256": "83a83498557ff22b8b61a968f0c89cb8b6a0f3166ae71a088ce6cf4d188cc500",
+        "git_blob": "6692ddfae8b7e0457c756a859157c49c43e6c527"
+      },
+      {
+        "path": "docs/anonymization-gate03f.md",
+        "bytes": 14019,
+        "sha256": "fdef240f65893a2a89a1f43e99432497ae1a588eb98f4aedb9b5fb674f61296c",
+        "git_blob": "e0647fbc553da5074e85a1afb8e7d05ec1868773"
+      },
+      {
+        "path": "docs/anonymization-integration.md",
+        "bytes": 12278,
+        "sha256": "1b0d8f95c572baf2d9953bae4a4101ffd101610a3b9b155f28165784f84b4288",
+        "git_blob": "756375769cc3bafe2ed68e74b1df48cb0438d4f0"
+      },
+      {
+        "path": "docs/anonymization-pr3-hardening.md",
+        "bytes": 14161,
+        "sha256": "185ff22e0c2a28592c0e89c6b529f6a802f65d96e831b55682d84623982c2865",
+        "git_blob": "a7b2000700e8f06a1ccc1ba2b21dbaad717f4fa4"
+      },
+      {
+        "path": "docs/anonymization-qualification.md",
+        "bytes": 15395,
+        "sha256": "95f0f5fd39ce7d1f87192363c6eaf44196eb4031bdd3ff07dd5d410e310b410e",
+        "git_blob": "47cdc5baa47c5170c2dd06d35ac99afbe8ce5ff3"
+      },
+      {
+        "path": "docs/anonymization-review-contract.md",
+        "bytes": 9027,
+        "sha256": "265256579acf9d5c200e577837694b48d14fe624d7c31dcb640d8f67efe8d340",
+        "git_blob": "19420d4f68a86025eb85c3cc4529802e7f6f5e6f"
+      }
+    ],
+    "evaluation-evidence-and-frozen-corpora": [
+      {
+        "path": "docs/anonymization-evaluation/cpu-hardening.json",
+        "bytes": 7241,
+        "sha256": "30d6ea452d4e9a130e1155072c8e4761604ceba36b3f6099affb731ce7bd1984",
+        "git_blob": "b5d64c6a86dffa89bfc82e5dd05dc91a469ca883"
+      },
+      {
+        "path": "docs/anonymization-evaluation/cpu-pinned.json",
+        "bytes": 7002,
+        "sha256": "7dd95d5e53d2f88a779fd7752b1da70f59a453930c949d6284300628c366b8c9",
+        "git_blob": "633743d8902670176d22959d56321c01304e1f56"
+      },
+      {
+        "path": "docs/anonymization-evaluation/gate03c-command-results.json",
+        "bytes": 3761,
+        "sha256": "82d35b8adf15f4e54ab9b6c302036833a40f22723bbb373e675cb564187d5e12",
+        "git_blob": "cc1c144b1a922357224d38d60bd148aac36c233b"
+      },
+      {
+        "path": "docs/anonymization-evaluation/gate03c-holdout-first.json",
+        "bytes": 4699,
+        "sha256": "257daa6d43285925c4899471c3f615293293fa0fa8ed17545ebb9d8e99802e83",
+        "git_blob": "157887e1e7cc0bff627c457e8106b57916a82bcc"
+      },
+      {
+        "path": "docs/anonymization-evaluation/gate03c-holdout-first.provenance.json",
+        "bytes": 1046,
+        "sha256": "bf19f6ae26e146aa6e04aaed9a54705c0f910af308ea33a8c5eacfe4d1724fbb",
+        "git_blob": "c2490bfe7ff3f6087ebc6fbf29e81ef73ecd31f7"
+      },
+      {
+        "path": "docs/anonymization-evaluation/gate03c-postexport-command-results.json",
+        "bytes": 3791,
+        "sha256": "21325f22f4a37f86d91abfdece1412d18c04a30c57b3402302d96da3d735b314",
+        "git_blob": "e899c87bd53b8ccc165636570a2dc9031199e5cd"
+      },
+      {
+        "path": "docs/anonymization-evaluation/gate03c-runtime-first.json",
+        "bytes": 777,
+        "sha256": "d97ef464d19befe620baeb5ca490eebaf1bafe12fb52e179545cf65eda7eebbc",
+        "git_blob": "ea0ae5ea0944e99f69986128f8632f1f948a9733"
+      },
+      {
+        "path": "docs/anonymization-evaluation/gate03c-runtime-native-verification.json",
+        "bytes": 960,
+        "sha256": "8a483de8337eb9b869285e3f205f5153387987a7325578b27559de3d1a433083",
+        "git_blob": "8c0ad893a7e6f6706c566d001622f25f58deb222"
+      },
+      {
+        "path": "docs/anonymization-evaluation/gate03c-runtime-provenance.json",
+        "bytes": 3914,
+        "sha256": "888468d474a48ce2401c6a3fa7ad0ec6ff24d901e4e30d582cf4ba247cb0c109",
+        "git_blob": "c9b832ef5863a44facf08da4708088f6e4369b4c"
+      },
+      {
+        "path": "docs/anonymization-evaluation/gate03c-runtime-restart.json",
+        "bytes": 780,
+        "sha256": "7e14a51ac4f7e230e9770aa6332e6a03c246d50b904aab917c0dbc79ee530f63",
+        "git_blob": "25120d83f74a38771bd518bb2b0df881d5f9f1ee"
+      },
+      {
+        "path": "docs/anonymization-evaluation/gate03d-command-results.json",
+        "bytes": 5065,
+        "sha256": "eedb6692e3f98bd6ee9db2280d033f44648e82a7c74b36ab943e10adcda8c581",
+        "git_blob": "e1c8934e4bc381f1f86806ae594d544ce3c438df"
+      },
+      {
+        "path": "docs/anonymization-evaluation/gate03d-development-comparison.json",
+        "bytes": 704419,
+        "sha256": "b43f2e8a6d0bd3717a449dc031e50ffa04fb6a21a562489b98372eed9cb8587c",
+        "git_blob": "50e45079be7ea1b722f471566cb7e48587e1d057"
+      },
+      {
+        "path": "docs/anonymization-evaluation/gate03d-development-experiment.patch",
+        "bytes": 11511,
+        "sha256": "0c696b90152c57eaf616f4ef2a85bafcc998879b5526b80020bc26305be32c27",
+        "git_blob": "ce98c09a9435eccec302daef34163d8c5e8c0dbb"
+      },
+      {
+        "path": "docs/anonymization-evaluation/gate03d-development-provenance.json",
+        "bytes": 1655,
+        "sha256": "1e2c7f194378939148f245b0a79a37c912b688ffc7c424751ba13b418e007f75",
+        "git_blob": "ba7a3f98bcfae66fa2f3012ed28d82c7c0563f16"
+      },
+      {
+        "path": "docs/anonymization-evaluation/gate03d-diagnosis.json",
+        "bytes": 13235,
+        "sha256": "b93047ea6ee6ab72474693ee2247c5af4bbc8759c309e13064d245f2969370d3",
+        "git_blob": "e9ebf71705bf91e791aa156073156baed73dd87c"
+      },
+      {
+        "path": "docs/anonymization-evaluation/gate03d-diagnostic-runner.py.txt",
+        "bytes": 1862,
+        "sha256": "b8bca8ec85247a56442fb7507eb929eeb4347711b1311d05c31e3362d73faaa0",
+        "git_blob": "a7410ad972b8724e99973542bd0516c020602ce1"
+      },
+      {
+        "path": "docs/anonymization-evaluation/gate03d-final-command-results.json",
+        "bytes": 2624,
+        "sha256": "25f5aa8352e5faf82cb78a762d701b704f2a6715ecd57da4608e3139351f8de8",
+        "git_blob": "7fa4ad69b9bcd65774d938b7bdb9c2b23b565073"
+      },
+      {
+        "path": "docs/anonymization-evaluation/gate03d-holdout-first.json",
+        "bytes": 205945,
+        "sha256": "08f86d2b78871683835c51b627e251c66b83fc33f828d8a6c8e9742c8bd47d9f",
+        "git_blob": "68dc2d59574dce2dcae093882624eff7b6932470"
+      },
+      {
+        "path": "docs/anonymization-evaluation/gate03d-holdout-first.provenance.json",
+        "bytes": 8358,
+        "sha256": "9d5fa15c5427fcfa499262b20453ed4adfe59da86709dffc745ec205e0661bca",
+        "git_blob": "a642e3e220551ca72469f24bbc5a3d613d67f1bb"
+      },
+      {
+        "path": "docs/anonymization-evaluation/gate03d-runtime-hybrid.json",
+        "bytes": 1014,
+        "sha256": "246506eb74b4dff7f8ab71a9704f526f195d76e25407b00b8598eb0d48062043",
+        "git_blob": "c1dce029063aca1e17ec30db5fba8d88a224043b"
+      },
+      {
+        "path": "docs/anonymization-evaluation/gate03d-runtime-paired-provenance.json",
+        "bytes": 1969,
+        "sha256": "8ef49a2df6d25cad5f7a6cfe59fa6ef9ec61922f69c1cb99d9d0786a3c7c5777",
+        "git_blob": "e6980990c698d04287fea9dc7cc589185a71b37d"
+      },
+      {
+        "path": "docs/anonymization-evaluation/gate03d-runtime-paired.json",
+        "bytes": 1226,
+        "sha256": "75b3810b47b26cc394387b6477ad03e627bf0b59e0d9db81d244469f98c98af9",
+        "git_blob": "70f7266dc6ae3af00c82af989f6651e7a45c7978"
+      },
+      {
+        "path": "docs/anonymization-evaluation/gate03d-runtime-provenance.json",
+        "bytes": 1953,
+        "sha256": "dafb846827090d3cde5c7db8df43a2b2d7065dffb3c8eeecaedef20c48ab49ef",
+        "git_blob": "dde4b19d2d61857ccd992c26d2e2933bd25930ef"
+      },
+      {
+        "path": "docs/anonymization-evaluation/gate03e-command-results.json",
+        "bytes": 5330,
+        "sha256": "f0c10fcf1d0e170f4aead8298131e0ac046d2d5bae8202f07180aa486b727bbd",
+        "git_blob": "8ae49ddd405b7b9d4798907407f1f1a4fc591475"
+      },
+      {
+        "path": "docs/anonymization-evaluation/gate03e-development.json",
+        "bytes": 2564118,
+        "sha256": "22a8ff116a14ac64ad66b3ffbb46056ffe1ad8afca3fe7681a11a2744f80f35c",
+        "git_blob": "794608d2d1e3e25ec3e5899e2fd67a7a42bad1e2"
+      },
+      {
+        "path": "docs/anonymization-evaluation/gate03e-development.provenance.json",
+        "bytes": 2765,
+        "sha256": "0800c214f63a66194e6c7abf6bea1260857a8cfec17974c78f90e5de38526fde",
+        "git_blob": "5cbebd0f8e1f31727f083c379323043a14e02171"
+      },
+      {
+        "path": "docs/anonymization-evaluation/gate03e-error-taxonomy.json",
+        "bytes": 12039,
+        "sha256": "dcd3dc4843a5cbd36d73e6046e97fd5dfd574309ff509ca26ecf367e32958365",
+        "git_blob": "36c87078ce760f9e406114f9290ecd9e959d2a85"
+      },
+      {
+        "path": "docs/anonymization-evaluation/gate03e-final-command-results.json",
+        "bytes": 2795,
+        "sha256": "73d2cf0778693abf443cac1b214ec267f2017cc6df6034b7a4facd3514dd78ad",
+        "git_blob": "ba3a5546bc98ef021745b6c9ada0d79184d317ff"
+      },
+      {
+        "path": "docs/anonymization-evaluation/gate03e-reference-guard-command-results.json",
+        "bytes": 2729,
+        "sha256": "3a9e91e4def1b9378a28bd8403e30f5340d614a25ae1cae36e4e1bd4942a0f05",
+        "git_blob": "68dac9ab46bdba730639623a333cb6b1b33a0fbd"
+      },
+      {
+        "path": "docs/anonymization-evaluation/gate03f-command-results.json",
+        "bytes": 4196,
+        "sha256": "a889799e975a95b4f57afe668a12dcaf2d6e2af218c37040c52bcaae29c89052",
+        "git_blob": "2586423544cd45f1b1ee7c37ff5eb877a958c14a"
+      },
+      {
+        "path": "docs/anonymization-evaluation/gate03f-correct-controls-live.json",
+        "bytes": 3004,
+        "sha256": "6b59791854a382df06a0a980223359daee77d87657a12a245558e6ed01eb3a6a",
+        "git_blob": "81566173f964031027b2ae025bca2439e459c069"
+      },
+      {
+        "path": "docs/anonymization-evaluation/gate03f-corrections-live.json",
+        "bytes": 12395,
+        "sha256": "d9ce7c7773f708f91472f62d7064ef32f9bba4e07d385b9bf80f27358488e412",
+        "git_blob": "516266dac99fb0943ce5b733a12643d8b3e1713a"
+      },
+      {
+        "path": "docs/anonymization-evaluation/gate03f-final-command-results.json",
+        "bytes": 4348,
+        "sha256": "36265282502bb5168812bbc27a98475d4bb8764ba79628721b964df3854322b9",
+        "git_blob": "6462dfc5ebcd947228ee6be48a807fea2b4144b0"
+      },
+      {
+        "path": "docs/anonymization-evaluation/gate03f-live-provenance.json",
+        "bytes": 3038,
+        "sha256": "35b4f206ac3f166f65a4c3264710c6db802620973a0006c3b97d4b967f8b782b",
+        "git_blob": "f363bfab6d867226cf88d95fec78bb955aa98d03"
+      },
+      {
+        "path": "docs/anonymization-evaluation/offline-chunking-smoke.json",
+        "bytes": 127,
+        "sha256": "431af67a3623fd2c1c80e84b68b6ea18f998364495a6c707445b35562b2014cf",
+        "git_blob": "568bb748808fe3d4a1ad8112b6b27cdaf4181070"
+      },
+      {
+        "path": "docs/anonymization-evaluation/pr3-recognition-comparison.json",
+        "bytes": 42407,
+        "sha256": "cd9a783a818ffa62492a1e1f23e7c3c0ce91ecc6f00f4722878e50f49d9cc531",
+        "git_blob": "0727bf3050ac76387b9f3becb44b0266789c9e8c"
+      },
+      {
+        "path": "ocr/anonymization/fixtures/holdout03c/cases.json",
+        "bytes": 93438,
+        "sha256": "0174fb41d34d0a4db18877c68fb70149eaa67c05da86608d5da4ff8765a52c15",
+        "git_blob": "c86609d9dbf19642be3fefc55db582df33fa5982"
+      },
+      {
+        "path": "ocr/anonymization/fixtures/holdout03c/freeze.json",
+        "bytes": 736,
+        "sha256": "c707239993099dab4a48b83f6c2aac58674de5423ede75cd1aced17d290708a6",
+        "git_blob": "bf80ce1464025abcdc2091deacb94122c28e92c4"
+      },
+      {
+        "path": "ocr/anonymization/fixtures/holdout03d/README.md",
+        "bytes": 2054,
+        "sha256": "a1ad151614e40a5ad43014a9b40fa88f0227b16f12420892f6dc2019f0a2c216",
+        "git_blob": "e997ba27c92b8f533c90731395a57c625e7f1480"
+      },
+      {
+        "path": "ocr/anonymization/fixtures/holdout03d/cases.json",
+        "bytes": 67025,
+        "sha256": "7180e176f6d8bd259da56ad729ede6fd2c798aca15a786ba0ff0adcd862f21a1",
+        "git_blob": "64187abbc5108fafe81959a5ba56b212531e3305"
+      },
+      {
+        "path": "ocr/anonymization/fixtures/holdout03d/freeze.json",
+        "bytes": 3450,
+        "sha256": "448dc5d7b0f3ef00f7d0f90084866f7f2e85311aac6af32ed0ad3d2658f8b1f5",
+        "git_blob": "33f5864c4d4fe5bd204e2845224bfc8c5c991282"
+      },
+      {
+        "path": "ocr/anonymization/fixtures/qualification.json",
+        "bytes": 12914,
+        "sha256": "6ea032a54babf57a5d90daa4ede63f32f13c750513bdc00f2d8992deea9321b0",
+        "git_blob": "c7bd1497dffebb3e917f805b8282cff87e67b6a8"
+      },
+      {
+        "path": "ocr/anonymization/fixtures/validation.json",
+        "bytes": 4642,
+        "sha256": "e65b71349101d25768f7e330e5d3a73e327919e2fa251c4835eb12d1af5c56e4",
+        "git_blob": "aea39e151a69cdee15a8a4e5ae4f51d65112aad2"
+      }
+    ],
+    "model-recognition-and-locks": [
+      {
+        "path": "ocr/anonymization/artifacts.json",
+        "bytes": 599,
+        "sha256": "c73066b40641f171d8a364acd21c38f93547d7229e5982e402353f5c9621dcad",
+        "git_blob": "a5b05b2d98df0930d5e95e94c1063887e1c9bbe3"
+      },
+      {
+        "path": "ocr/anonymization/detectors.py",
+        "bytes": 1301,
+        "sha256": "c8c36cc9c636b069f3542747573d1bed9ef52a494161aa8d5813b181d0afcbad",
+        "git_blob": "8d8afa152ecc73c81e2f8bebd96bc693cb3beefb"
+      },
+      {
+        "path": "ocr/anonymization/model.py",
+        "bytes": 2576,
+        "sha256": "c40a5f506f46613479192e244ff048541bcdb000646e137027fea7acdb96ca62",
+        "git_blob": "4afd1b679f253571e2603b14c5c86ca6c3ab647b"
+      },
+      {
+        "path": "ocr/anonymization/normalization.py",
+        "bytes": 411,
+        "sha256": "3b2598200933a86cedf2dd20affb911c4ad1ac4f7fdc00182c4044b7a2873f10",
+        "git_blob": "2636f5042d8f2305a078ef7a4ee8f973fb490f00"
+      },
+      {
+        "path": "ocr/anonymization/recognizer.py",
+        "bytes": 6024,
+        "sha256": "f695a30f0ff8540ba345d5557f0bf2bfc225635b228010da6ee6f5ccbc71ce45",
+        "git_blob": "00ee0fde92aa297b6e85f1d1f0a047f4ff396ba3"
+      },
+      {
+        "path": "ocr/anonymization/replacement.py",
+        "bytes": 2787,
+        "sha256": "75526b9049b42db6ee144cff1daa2d1a12d54dac217f4441d68f55148c37ad99",
+        "git_blob": "a5c4a91076afc7da3c70a5b0791dec16f585ffdf"
+      },
+      {
+        "path": "ocr/anonymization/requirements.in",
+        "bytes": 325,
+        "sha256": "f4bd506b5646bda0ca994b6a7f54b0caa9b53c15a98c08760978e4896dbb625c",
+        "git_blob": "b9b8b8dd35df58a8b240edda90b3f0d21bed5b7c"
+      },
+      {
+        "path": "ocr/anonymization/requirements.lock",
+        "bytes": 80326,
+        "sha256": "41276fcf2e527648f0f3358b66170aeea33382b39abfe37a8b6fe007d1c3d507",
+        "git_blob": "d7c900707fa523d65b307e0fcf2aee80a44376a1"
+      },
+      {
+        "path": "ocr/anonymization/status.py",
+        "bytes": 3721,
+        "sha256": "fdac7b727fd3f5e46cef7aa9d9edf971a93b40c43b9e0ce8a71e3c5346ccf84a",
+        "git_blob": "d04e84522f1d1e555090f357037e9ef4dd279664"
+      },
+      {
+        "path": "ocr/anonymization/terminology.py",
+        "bytes": 5593,
+        "sha256": "370b61beb1b5339549f2c8143a31b546f4a32dbbabd26c061f009341de16babd",
+        "git_blob": "fb8ef73ecb5f7d9c07b1a61e571c7fb47ae5d1d3"
+      }
+    ],
+    "synthetic-evaluation-tools-not-production-entrypoints": [
+      {
+        "path": "ocr/anonymization/compare03d.py",
+        "bytes": 4589,
+        "sha256": "f5b85cc5693798a0c049f9b9b230541994350dda2c20d8df93add5018facb6f5",
+        "git_blob": "ac6db144e8da962ca20a2538cce7ab70fedaaa24"
+      },
+      {
+        "path": "ocr/anonymization/demonstrate03f.py",
+        "bytes": 9155,
+        "sha256": "7f79ef1fb92991d0cb2aab3e5d37970542ec74fc5ef23b99521e00f034df78fa",
+        "git_blob": "c803d83c9a8cd1ba6ab621487de01f1c82f87cba"
+      },
+      {
+        "path": "ocr/anonymization/develop03e.py",
+        "bytes": 5650,
+        "sha256": "184aa4f421077599f93493b102b1571eb818fd4ff38e74a3fa980f3823bc77fc",
+        "git_blob": "a62431e93c0e098ff2666b2ad4aaad5821c0bb96"
+      },
+      {
+        "path": "ocr/anonymization/evaluate.py",
+        "bytes": 8081,
+        "sha256": "b9ed1453d6b7c704be3eef18b2a32b9cf8e857075355c42025e5d3bdc863d6b0",
+        "git_blob": "7707cfb5347a1236962a4a8b12bf44220b699c82"
+      },
+      {
+        "path": "ocr/anonymization/historical.py",
+        "bytes": 2098,
+        "sha256": "55849021fdc33ae6eaeb210f12c6ce169b5a3be96e993ac976ff4b64d832f893",
+        "git_blob": "a99ecca67a6c601a8fcbcd7fab24ebfb386f02ae"
+      },
+      {
+        "path": "ocr/anonymization/holdout.py",
+        "bytes": 2893,
+        "sha256": "440dd7787f0fa87a390c97ed5c787e4b589d0df116381731161f67489976c881",
+        "git_blob": "bab1d71e1d6a5685ed5640cc850e55f8a1803d44"
+      },
+      {
+        "path": "ocr/anonymization/investigate.py",
+        "bytes": 5481,
+        "sha256": "541f4a1904fff5564e8a2e3f5deeb6c965e15876616e5ee388520c29e57edea2",
+        "git_blob": "ddbce1e5547581e6fe7fd419075cb13009893608"
+      },
+      {
+        "path": "ocr/anonymization/outcomes.py",
+        "bytes": 5223,
+        "sha256": "5817710bb306e400cff75c44c87f9d89fd8f4f16a459f03c9f977367c61bbf20",
+        "git_blob": "1e939b59a5aab07a1da665a90a177210d2c7376b"
+      },
+      {
+        "path": "ocr/anonymization/qualify03d.py",
+        "bytes": 4556,
+        "sha256": "ead5767304b8e10e46b855ab0235c2b6f97ad4fe82271d366bfd730de0e1ebb0",
+        "git_blob": "04cae543171ec628cf4202e76bffa67080961564"
+      },
+      {
+        "path": "ocr/anonymization/staging_probe.py",
+        "bytes": 5537,
+        "sha256": "3920d5bd9f7f404d9531b8085050bcdfbc92ac9aaa3ad7ca39413465dff59e8b",
+        "git_blob": "440bb87a96654bd84d86097c71e61274bf4a1669"
+      }
+    ],
+    "correction-workflow": [
+      {
+        "path": "ocr/anonymization/corrections.py",
+        "bytes": 30996,
+        "sha256": "a148b34d5a8ffa10db808d779ab161471d6ac582148af84382202bd3fae53709",
+        "git_blob": "021e1e5d065456eacd616a0f38ca3663f1b24d0b"
+      }
+    ],
+    "deployment-specifications-disabled": [
+      {
+        "path": "ocr/deploy/private-anonymization/README.md",
+        "bytes": 7383,
+        "sha256": "ea955db928f815a545def31c778dae870f3ea2ddc581427a4ef226d69d1d5f8b",
+        "git_blob": "8847b698a8147f5668500bac022b95d6a3e9852a"
+      },
+      {
+        "path": "ocr/deploy/private-anonymization/anonymization-staging.service.disabled",
+        "bytes": 1233,
+        "sha256": "a9383d9e3d359fc86eca94ac0ef39fb287b2a51981bbb5770282ef70c76ee8f9",
+        "git_blob": "64034686a6f80c7858aa87556dd984366960f2d1"
+      },
+      {
+        "path": "ocr/deploy/private-anonymization/staging.json",
+        "bytes": 2097,
+        "sha256": "4e933f03ac312abe48d203512fbc0f54c030988226330284d6cb000c82c7e4e5",
+        "git_blob": "a0e73402a746b0b0d80c404ce0e96daff8473325"
+      }
+    ]
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "schema_version": "gate03g-live-provenance/v1",
+  "source_sha": "9d4d8c103271ef62fee3d06603180aa9ca74267e",
+  "live_reports": [
+    {
+      "path": "docs/anonymization-evaluation/gate03g-corrections-live.json",
+      "sha256": "f7da447247c9cd0a374adc4aef45459cb2686f5378f4e8fb555c2c688ac8a2ed",
+      "source_sha": "9d4d8c103271ef62fee3d06603180aa9ca74267e",
+      "actual_inference_calls": 9,
+      "peak_rss_mib": 3025.51953125,
+      "denied_network_calls": [
+        "socket.bind"
+      ]
+    },
+    {
+      "path": "docs/anonymization-evaluation/gate03g-correct-controls-live.json",
+      "sha256": "a98ef7d01e8b29a5199b929317015fb233e782f1d01330dcd55067d91ff91054",
+      "source_sha": "9d4d8c103271ef62fee3d06603180aa9ca74267e",
+      "actual_inference_calls": 2,
+      "peak_rss_mib": 3025.61328125,
+      "denied_network_calls": [
+        "socket.bind"
+      ]
+    }
+  ],
+  "model_or_prompt_changed": false,
+  "new_holdout_created": false,
+  "production_identity_qualified": false,
+  "durable_correction_store_qualified": false,
+  "automated_release_eligible": false,
+  "runtime_git_blobs": {
+    "ocr/anonymization/release_policy.py": "1bb9d530f35a2e5fe94a66a1a90ee202a414cacd",
+    "ocr/anonymization/approval_ledger.py": "429f0eaca203bd982c716469559628f09d1a17b4",
+    "ocr/anonymization/corrections.py": "021e1e5d065456eacd616a0f38ca3663f1b24d0b",
+    "ocr/anonymization/host_adapter.py": "64126892385d36f43709144653b168c0c8907082",
+    "ocr/anonymization/private_transport.py": "dacfe457c53a94ce3b112d94a17a1f2ebe4a14f5",
+    "ocr/tests/fixtures/correction_host.py": "1e884b8954a767219122a423ea8fdabdb53477f0"
+  }
+}

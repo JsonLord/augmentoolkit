@@ -1,0 +1,3854 @@
+[
+  {
+    "id": "holdout03c-000",
+    "language": "de",
+    "ocr_noise": false,
+    "features": [
+      "organization",
+      "geography"
+    ],
+    "text": "Auskunft: Saskia Dornfeld arbeitet für Aster Research Institute in Osnabrück.",
+    "spans": [
+      {
+        "start": 10,
+        "end": 25,
+        "label": "PERSON",
+        "text": "Saskia Dornfeld"
+      },
+      {
+        "start": 39,
+        "end": 63,
+        "label": "ORGANIZATION",
+        "text": "Aster Research Institute"
+      },
+      {
+        "start": 67,
+        "end": 76,
+        "label": "CITY",
+        "text": "Osnabrück"
+      }
+    ],
+    "expected": "Auskunft: [PERSON] arbeitet für [ORGANIZATION] in [CITY]."
+  },
+  {
+    "id": "holdout03c-001",
+    "language": "en",
+    "ocr_noise": false,
+    "features": [
+      "organization",
+      "geography"
+    ],
+    "text": "The contact Saskia Dornfeld represents Aster Research Institute near Osnabrück.",
+    "spans": [
+      {
+        "start": 12,
+        "end": 27,
+        "label": "PERSON",
+        "text": "Saskia Dornfeld"
+      },
+      {
+        "start": 39,
+        "end": 63,
+        "label": "ORGANIZATION",
+        "text": "Aster Research Institute"
+      },
+      {
+        "start": 69,
+        "end": 78,
+        "label": "CITY",
+        "text": "Osnabrück"
+      }
+    ],
+    "expected": "The contact [PERSON] represents [ORGANIZATION] near [CITY]."
+  },
+  {
+    "id": "holdout03c-002",
+    "language": "de",
+    "ocr_noise": false,
+    "features": [
+      "affiliation",
+      "contacts"
+    ],
+    "text": "Saskia Dornfeld nennt sikhistisch als Zugehörigkeit. E-Mail: case101.review@example.invalid; Telefon: +49 541 730101.",
+    "spans": [
+      {
+        "start": 0,
+        "end": 15,
+        "label": "PERSON",
+        "text": "Saskia Dornfeld"
+      },
+      {
+        "start": 22,
+        "end": 33,
+        "label": "RELIGION",
+        "text": "sikhistisch"
+      },
+      {
+        "start": 61,
+        "end": 91,
+        "label": "EMAIL",
+        "text": "case101.review@example.invalid"
+      },
+      {
+        "start": 102,
+        "end": 116,
+        "label": "PHONE",
+        "text": "+49 541 730101"
+      }
+    ],
+    "expected": "[PERSON] nennt [RELIGION] als Zugehörigkeit. E-Mail: [EMAIL]; Telefon: [PHONE]."
+  },
+  {
+    "id": "holdout03c-003",
+    "language": "en",
+    "ocr_noise": false,
+    "features": [
+      "affiliation",
+      "contacts"
+    ],
+    "text": "Saskia Dornfeld explicitly names Sikhism as their faith. Write to case101.review@example.invalid or call +49 541 730101.",
+    "spans": [
+      {
+        "start": 0,
+        "end": 15,
+        "label": "PERSON",
+        "text": "Saskia Dornfeld"
+      },
+      {
+        "start": 33,
+        "end": 40,
+        "label": "RELIGION",
+        "text": "Sikhism"
+      },
+      {
+        "start": 66,
+        "end": 96,
+        "label": "EMAIL",
+        "text": "case101.review@example.invalid"
+      },
+      {
+        "start": 105,
+        "end": 119,
+        "label": "PHONE",
+        "text": "+49 541 730101"
+      }
+    ],
+    "expected": "[PERSON] explicitly names [RELIGION] as their faith. Write to [EMAIL] or call [PHONE]."
+  },
+  {
+    "id": "holdout03c-004",
+    "language": "de",
+    "ocr_noise": false,
+    "features": [
+      "repeats",
+      "paragraphs"
+    ],
+    "text": "Saskia Dornfeld besucht Osnabrück.\n\nSaskia Dornfeld bestätigt den Termin bei Aster Research Institute.",
+    "spans": [
+      {
+        "start": 0,
+        "end": 15,
+        "label": "PERSON",
+        "text": "Saskia Dornfeld"
+      },
+      {
+        "start": 24,
+        "end": 33,
+        "label": "CITY",
+        "text": "Osnabrück"
+      },
+      {
+        "start": 36,
+        "end": 51,
+        "label": "PERSON",
+        "text": "Saskia Dornfeld"
+      },
+      {
+        "start": 77,
+        "end": 101,
+        "label": "ORGANIZATION",
+        "text": "Aster Research Institute"
+      }
+    ],
+    "expected": "[PERSON] besucht [CITY].\n\n[PERSON] bestätigt den Termin bei [ORGANIZATION]."
+  },
+  {
+    "id": "holdout03c-005",
+    "language": "en",
+    "ocr_noise": false,
+    "features": [
+      "repeats",
+      "ambiguous_geography"
+    ],
+    "text": "In Osnabrück, Saskia Dornfeld signed for Aster Research Institute. The representative Saskia Dornfeld returned to Osnabrück.",
+    "spans": [
+      {
+        "start": 3,
+        "end": 12,
+        "label": "CITY",
+        "text": "Osnabrück"
+      },
+      {
+        "start": 14,
+        "end": 29,
+        "label": "PERSON",
+        "text": "Saskia Dornfeld"
+      },
+      {
+        "start": 41,
+        "end": 65,
+        "label": "ORGANIZATION",
+        "text": "Aster Research Institute"
+      },
+      {
+        "start": 86,
+        "end": 101,
+        "label": "PERSON",
+        "text": "Saskia Dornfeld"
+      },
+      {
+        "start": 114,
+        "end": 123,
+        "label": "CITY",
+        "text": "Osnabrück"
+      }
+    ],
+    "expected": "In [CITY], [PERSON] signed for [ORGANIZATION]. The representative [PERSON] returned to [CITY]."
+  },
+  {
+    "id": "holdout03c-006",
+    "language": "de",
+    "ocr_noise": true,
+    "features": [
+      "line_wrap",
+      "organization"
+    ],
+    "text": "Name: Saskia-\nDornfeld\nOrt: Osna-\nbrück\nArbeitgeber: Aster Research Institute.",
+    "spans": [
+      {
+        "start": 6,
+        "end": 22,
+        "label": "PERSON",
+        "text": "Saskia-\nDornfeld"
+      },
+      {
+        "start": 28,
+        "end": 39,
+        "label": "CITY",
+        "text": "Osna-\nbrück"
+      },
+      {
+        "start": 53,
+        "end": 77,
+        "label": "ORGANIZATION",
+        "text": "Aster Research Institute"
+      }
+    ],
+    "expected": "Name: [PERSON]\nOrt: [CITY]\nArbeitgeber: [ORGANIZATION]."
+  },
+  {
+    "id": "holdout03c-007",
+    "language": "en",
+    "ocr_noise": true,
+    "features": [
+      "ocr_spelling",
+      "organization"
+    ],
+    "text": "Scanned record: Sask1a D0rnfeld resides in Osn4brück and works at Aster Research Institute.",
+    "spans": [
+      {
+        "start": 16,
+        "end": 31,
+        "label": "PERSON",
+        "text": "Sask1a D0rnfeld"
+      },
+      {
+        "start": 43,
+        "end": 52,
+        "label": "CITY",
+        "text": "Osn4brück"
+      },
+      {
+        "start": 66,
+        "end": 90,
+        "label": "ORGANIZATION",
+        "text": "Aster Research Institute"
+      }
+    ],
+    "expected": "Scanned record: [PERSON] resides in [CITY] and works at [ORGANIZATION]."
+  },
+  {
+    "id": "holdout03c-008",
+    "language": "de",
+    "ocr_noise": false,
+    "features": [
+      "religious_reference",
+      "no_inferred_affiliation"
+    ],
+    "text": "Das Thema sikhistisch wird in einem Bericht von Aster Research Institute erwähnt. Für Saskia Dornfeld wird keine Religionszugehörigkeit behauptet.",
+    "spans": [
+      {
+        "start": 10,
+        "end": 21,
+        "label": "RELIGION",
+        "text": "sikhistisch"
+      },
+      {
+        "start": 48,
+        "end": 72,
+        "label": "ORGANIZATION",
+        "text": "Aster Research Institute"
+      },
+      {
+        "start": 86,
+        "end": 101,
+        "label": "PERSON",
+        "text": "Saskia Dornfeld"
+      }
+    ],
+    "expected": "Das Thema [RELIGION] wird in einem Bericht von [ORGANIZATION] erwähnt. Für [PERSON] wird keine Religionszugehörigkeit behauptet."
+  },
+  {
+    "id": "holdout03c-009",
+    "language": "en",
+    "ocr_noise": false,
+    "features": [
+      "negative",
+      "religious_reference"
+    ],
+    "text": "Worksheet 101: a name alone establishes no religious affiliation. The plain record contains no named person, place, organization or contact details.",
+    "spans": [],
+    "expected": "Worksheet 101: a name alone establishes no religious affiliation. The plain record contains no named person, place, organization or contact details."
+  },
+  {
+    "id": "holdout03c-010",
+    "language": "de",
+    "ocr_noise": false,
+    "features": [
+      "organization",
+      "geography"
+    ],
+    "text": "Auskunft: Emil Farber arbeitet für Northbridge Analytics in Potsdam.",
+    "spans": [
+      {
+        "start": 10,
+        "end": 21,
+        "label": "PERSON",
+        "text": "Emil Farber"
+      },
+      {
+        "start": 35,
+        "end": 56,
+        "label": "ORGANIZATION",
+        "text": "Northbridge Analytics"
+      },
+      {
+        "start": 60,
+        "end": 67,
+        "label": "CITY",
+        "text": "Potsdam"
+      }
+    ],
+    "expected": "Auskunft: [PERSON] arbeitet für [ORGANIZATION] in [CITY]."
+  },
+  {
+    "id": "holdout03c-011",
+    "language": "en",
+    "ocr_noise": false,
+    "features": [
+      "organization",
+      "geography"
+    ],
+    "text": "The contact Emil Farber represents Northbridge Analytics near Potsdam.",
+    "spans": [
+      {
+        "start": 12,
+        "end": 23,
+        "label": "PERSON",
+        "text": "Emil Farber"
+      },
+      {
+        "start": 35,
+        "end": 56,
+        "label": "ORGANIZATION",
+        "text": "Northbridge Analytics"
+      },
+      {
+        "start": 62,
+        "end": 69,
+        "label": "CITY",
+        "text": "Potsdam"
+      }
+    ],
+    "expected": "The contact [PERSON] represents [ORGANIZATION] near [CITY]."
+  },
+  {
+    "id": "holdout03c-012",
+    "language": "de",
+    "ocr_noise": false,
+    "features": [
+      "affiliation",
+      "contacts"
+    ],
+    "text": "Emil Farber nennt orthodox als Zugehörigkeit. E-Mail: case102.review@example.invalid; Telefon: +49 541 730102.",
+    "spans": [
+      {
+        "start": 0,
+        "end": 11,
+        "label": "PERSON",
+        "text": "Emil Farber"
+      },
+      {
+        "start": 18,
+        "end": 26,
+        "label": "RELIGION",
+        "text": "orthodox"
+      },
+      {
+        "start": 54,
+        "end": 84,
+        "label": "EMAIL",
+        "text": "case102.review@example.invalid"
+      },
+      {
+        "start": 95,
+        "end": 109,
+        "label": "PHONE",
+        "text": "+49 541 730102"
+      }
+    ],
+    "expected": "[PERSON] nennt [RELIGION] als Zugehörigkeit. E-Mail: [EMAIL]; Telefon: [PHONE]."
+  },
+  {
+    "id": "holdout03c-013",
+    "language": "en",
+    "ocr_noise": false,
+    "features": [
+      "affiliation",
+      "contacts"
+    ],
+    "text": "Emil Farber explicitly names Orthodox Christianity as their faith. Write to case102.review@example.invalid or call +49 541 730102.",
+    "spans": [
+      {
+        "start": 0,
+        "end": 11,
+        "label": "PERSON",
+        "text": "Emil Farber"
+      },
+      {
+        "start": 29,
+        "end": 50,
+        "label": "RELIGION",
+        "text": "Orthodox Christianity"
+      },
+      {
+        "start": 76,
+        "end": 106,
+        "label": "EMAIL",
+        "text": "case102.review@example.invalid"
+      },
+      {
+        "start": 115,
+        "end": 129,
+        "label": "PHONE",
+        "text": "+49 541 730102"
+      }
+    ],
+    "expected": "[PERSON] explicitly names [RELIGION] as their faith. Write to [EMAIL] or call [PHONE]."
+  },
+  {
+    "id": "holdout03c-014",
+    "language": "de",
+    "ocr_noise": false,
+    "features": [
+      "repeats",
+      "paragraphs"
+    ],
+    "text": "Emil Farber besucht Potsdam.\n\nEmil Farber bestätigt den Termin bei Northbridge Analytics.",
+    "spans": [
+      {
+        "start": 0,
+        "end": 11,
+        "label": "PERSON",
+        "text": "Emil Farber"
+      },
+      {
+        "start": 20,
+        "end": 27,
+        "label": "CITY",
+        "text": "Potsdam"
+      },
+      {
+        "start": 30,
+        "end": 41,
+        "label": "PERSON",
+        "text": "Emil Farber"
+      },
+      {
+        "start": 67,
+        "end": 88,
+        "label": "ORGANIZATION",
+        "text": "Northbridge Analytics"
+      }
+    ],
+    "expected": "[PERSON] besucht [CITY].\n\n[PERSON] bestätigt den Termin bei [ORGANIZATION]."
+  },
+  {
+    "id": "holdout03c-015",
+    "language": "en",
+    "ocr_noise": false,
+    "features": [
+      "repeats",
+      "ambiguous_geography"
+    ],
+    "text": "In Potsdam, Emil Farber signed for Northbridge Analytics. The representative Emil Farber returned to Potsdam.",
+    "spans": [
+      {
+        "start": 3,
+        "end": 10,
+        "label": "CITY",
+        "text": "Potsdam"
+      },
+      {
+        "start": 12,
+        "end": 23,
+        "label": "PERSON",
+        "text": "Emil Farber"
+      },
+      {
+        "start": 35,
+        "end": 56,
+        "label": "ORGANIZATION",
+        "text": "Northbridge Analytics"
+      },
+      {
+        "start": 77,
+        "end": 88,
+        "label": "PERSON",
+        "text": "Emil Farber"
+      },
+      {
+        "start": 101,
+        "end": 108,
+        "label": "CITY",
+        "text": "Potsdam"
+      }
+    ],
+    "expected": "In [CITY], [PERSON] signed for [ORGANIZATION]. The representative [PERSON] returned to [CITY]."
+  },
+  {
+    "id": "holdout03c-016",
+    "language": "de",
+    "ocr_noise": true,
+    "features": [
+      "line_wrap",
+      "organization"
+    ],
+    "text": "Name: Emil-\nFarber\nOrt: Pot-\nsdam\nArbeitgeber: Northbridge Analytics.",
+    "spans": [
+      {
+        "start": 6,
+        "end": 18,
+        "label": "PERSON",
+        "text": "Emil-\nFarber"
+      },
+      {
+        "start": 24,
+        "end": 33,
+        "label": "CITY",
+        "text": "Pot-\nsdam"
+      },
+      {
+        "start": 47,
+        "end": 68,
+        "label": "ORGANIZATION",
+        "text": "Northbridge Analytics"
+      }
+    ],
+    "expected": "Name: [PERSON]\nOrt: [CITY]\nArbeitgeber: [ORGANIZATION]."
+  },
+  {
+    "id": "holdout03c-017",
+    "language": "en",
+    "ocr_noise": true,
+    "features": [
+      "ocr_spelling",
+      "organization"
+    ],
+    "text": "Scanned record: Em1l Farber resides in P0tsd4m and works at Northbridge Analytics.",
+    "spans": [
+      {
+        "start": 16,
+        "end": 27,
+        "label": "PERSON",
+        "text": "Em1l Farber"
+      },
+      {
+        "start": 39,
+        "end": 46,
+        "label": "CITY",
+        "text": "P0tsd4m"
+      },
+      {
+        "start": 60,
+        "end": 81,
+        "label": "ORGANIZATION",
+        "text": "Northbridge Analytics"
+      }
+    ],
+    "expected": "Scanned record: [PERSON] resides in [CITY] and works at [ORGANIZATION]."
+  },
+  {
+    "id": "holdout03c-018",
+    "language": "de",
+    "ocr_noise": false,
+    "features": [
+      "religious_reference",
+      "no_inferred_affiliation"
+    ],
+    "text": "Das Thema orthodox wird in einem Bericht von Northbridge Analytics erwähnt. Für Emil Farber wird keine Religionszugehörigkeit behauptet.",
+    "spans": [
+      {
+        "start": 10,
+        "end": 18,
+        "label": "RELIGION",
+        "text": "orthodox"
+      },
+      {
+        "start": 45,
+        "end": 66,
+        "label": "ORGANIZATION",
+        "text": "Northbridge Analytics"
+      },
+      {
+        "start": 80,
+        "end": 91,
+        "label": "PERSON",
+        "text": "Emil Farber"
+      }
+    ],
+    "expected": "Das Thema [RELIGION] wird in einem Bericht von [ORGANIZATION] erwähnt. Für [PERSON] wird keine Religionszugehörigkeit behauptet."
+  },
+  {
+    "id": "holdout03c-019",
+    "language": "en",
+    "ocr_noise": false,
+    "features": [
+      "negative",
+      "religious_reference"
+    ],
+    "text": "Worksheet 102: a name alone establishes no religious affiliation. The plain record contains no named person, place, organization or contact details.",
+    "spans": [],
+    "expected": "Worksheet 102: a name alone establishes no religious affiliation. The plain record contains no named person, place, organization or contact details."
+  },
+  {
+    "id": "holdout03c-020",
+    "language": "de",
+    "ocr_noise": false,
+    "features": [
+      "organization",
+      "geography"
+    ],
+    "text": "Auskunft: Cora Lindenfels arbeitet für Amber Health Foundation in Dundee.",
+    "spans": [
+      {
+        "start": 10,
+        "end": 25,
+        "label": "PERSON",
+        "text": "Cora Lindenfels"
+      },
+      {
+        "start": 39,
+        "end": 62,
+        "label": "ORGANIZATION",
+        "text": "Amber Health Foundation"
+      },
+      {
+        "start": 66,
+        "end": 72,
+        "label": "CITY",
+        "text": "Dundee"
+      }
+    ],
+    "expected": "Auskunft: [PERSON] arbeitet für [ORGANIZATION] in [CITY]."
+  },
+  {
+    "id": "holdout03c-021",
+    "language": "en",
+    "ocr_noise": false,
+    "features": [
+      "organization",
+      "geography"
+    ],
+    "text": "The contact Cora Lindenfels represents Amber Health Foundation near Dundee.",
+    "spans": [
+      {
+        "start": 12,
+        "end": 27,
+        "label": "PERSON",
+        "text": "Cora Lindenfels"
+      },
+      {
+        "start": 39,
+        "end": 62,
+        "label": "ORGANIZATION",
+        "text": "Amber Health Foundation"
+      },
+      {
+        "start": 68,
+        "end": 74,
+        "label": "CITY",
+        "text": "Dundee"
+      }
+    ],
+    "expected": "The contact [PERSON] represents [ORGANIZATION] near [CITY]."
+  },
+  {
+    "id": "holdout03c-022",
+    "language": "de",
+    "ocr_noise": false,
+    "features": [
+      "affiliation",
+      "contacts"
+    ],
+    "text": "Cora Lindenfels nennt jainistisch als Zugehörigkeit. E-Mail: case103.review@example.invalid; Telefon: +49 541 730103.",
+    "spans": [
+      {
+        "start": 0,
+        "end": 15,
+        "label": "PERSON",
+        "text": "Cora Lindenfels"
+      },
+      {
+        "start": 22,
+        "end": 33,
+        "label": "RELIGION",
+        "text": "jainistisch"
+      },
+      {
+        "start": 61,
+        "end": 91,
+        "label": "EMAIL",
+        "text": "case103.review@example.invalid"
+      },
+      {
+        "start": 102,
+        "end": 116,
+        "label": "PHONE",
+        "text": "+49 541 730103"
+      }
+    ],
+    "expected": "[PERSON] nennt [RELIGION] als Zugehörigkeit. E-Mail: [EMAIL]; Telefon: [PHONE]."
+  },
+  {
+    "id": "holdout03c-023",
+    "language": "en",
+    "ocr_noise": false,
+    "features": [
+      "affiliation",
+      "contacts"
+    ],
+    "text": "Cora Lindenfels explicitly names Jainism as their faith. Write to case103.review@example.invalid or call +49 541 730103.",
+    "spans": [
+      {
+        "start": 0,
+        "end": 15,
+        "label": "PERSON",
+        "text": "Cora Lindenfels"
+      },
+      {
+        "start": 33,
+        "end": 40,
+        "label": "RELIGION",
+        "text": "Jainism"
+      },
+      {
+        "start": 66,
+        "end": 96,
+        "label": "EMAIL",
+        "text": "case103.review@example.invalid"
+      },
+      {
+        "start": 105,
+        "end": 119,
+        "label": "PHONE",
+        "text": "+49 541 730103"
+      }
+    ],
+    "expected": "[PERSON] explicitly names [RELIGION] as their faith. Write to [EMAIL] or call [PHONE]."
+  },
+  {
+    "id": "holdout03c-024",
+    "language": "de",
+    "ocr_noise": false,
+    "features": [
+      "repeats",
+      "paragraphs"
+    ],
+    "text": "Cora Lindenfels besucht Dundee.\n\nCora Lindenfels bestätigt den Termin bei Amber Health Foundation.",
+    "spans": [
+      {
+        "start": 0,
+        "end": 15,
+        "label": "PERSON",
+        "text": "Cora Lindenfels"
+      },
+      {
+        "start": 24,
+        "end": 30,
+        "label": "CITY",
+        "text": "Dundee"
+      },
+      {
+        "start": 33,
+        "end": 48,
+        "label": "PERSON",
+        "text": "Cora Lindenfels"
+      },
+      {
+        "start": 74,
+        "end": 97,
+        "label": "ORGANIZATION",
+        "text": "Amber Health Foundation"
+      }
+    ],
+    "expected": "[PERSON] besucht [CITY].\n\n[PERSON] bestätigt den Termin bei [ORGANIZATION]."
+  },
+  {
+    "id": "holdout03c-025",
+    "language": "en",
+    "ocr_noise": false,
+    "features": [
+      "repeats",
+      "ambiguous_geography"
+    ],
+    "text": "In Dundee, Cora Lindenfels signed for Amber Health Foundation. The representative Cora Lindenfels returned to Dundee.",
+    "spans": [
+      {
+        "start": 3,
+        "end": 9,
+        "label": "CITY",
+        "text": "Dundee"
+      },
+      {
+        "start": 11,
+        "end": 26,
+        "label": "PERSON",
+        "text": "Cora Lindenfels"
+      },
+      {
+        "start": 38,
+        "end": 61,
+        "label": "ORGANIZATION",
+        "text": "Amber Health Foundation"
+      },
+      {
+        "start": 82,
+        "end": 97,
+        "label": "PERSON",
+        "text": "Cora Lindenfels"
+      },
+      {
+        "start": 110,
+        "end": 116,
+        "label": "CITY",
+        "text": "Dundee"
+      }
+    ],
+    "expected": "In [CITY], [PERSON] signed for [ORGANIZATION]. The representative [PERSON] returned to [CITY]."
+  },
+  {
+    "id": "holdout03c-026",
+    "language": "de",
+    "ocr_noise": true,
+    "features": [
+      "line_wrap",
+      "organization"
+    ],
+    "text": "Name: Cora-\nLindenfels\nOrt: Dun-\ndee\nArbeitgeber: Amber Health Foundation.",
+    "spans": [
+      {
+        "start": 6,
+        "end": 22,
+        "label": "PERSON",
+        "text": "Cora-\nLindenfels"
+      },
+      {
+        "start": 28,
+        "end": 36,
+        "label": "CITY",
+        "text": "Dun-\ndee"
+      },
+      {
+        "start": 50,
+        "end": 73,
+        "label": "ORGANIZATION",
+        "text": "Amber Health Foundation"
+      }
+    ],
+    "expected": "Name: [PERSON]\nOrt: [CITY]\nArbeitgeber: [ORGANIZATION]."
+  },
+  {
+    "id": "holdout03c-027",
+    "language": "en",
+    "ocr_noise": true,
+    "features": [
+      "ocr_spelling",
+      "organization"
+    ],
+    "text": "Scanned record: C0ra L1ndenfels resides in Dundee and works at Amber Health Foundation.",
+    "spans": [
+      {
+        "start": 16,
+        "end": 31,
+        "label": "PERSON",
+        "text": "C0ra L1ndenfels"
+      },
+      {
+        "start": 43,
+        "end": 49,
+        "label": "CITY",
+        "text": "Dundee"
+      },
+      {
+        "start": 63,
+        "end": 86,
+        "label": "ORGANIZATION",
+        "text": "Amber Health Foundation"
+      }
+    ],
+    "expected": "Scanned record: [PERSON] resides in [CITY] and works at [ORGANIZATION]."
+  },
+  {
+    "id": "holdout03c-028",
+    "language": "de",
+    "ocr_noise": false,
+    "features": [
+      "religious_reference",
+      "no_inferred_affiliation"
+    ],
+    "text": "Das Thema jainistisch wird in einem Bericht von Amber Health Foundation erwähnt. Für Cora Lindenfels wird keine Religionszugehörigkeit behauptet.",
+    "spans": [
+      {
+        "start": 10,
+        "end": 21,
+        "label": "RELIGION",
+        "text": "jainistisch"
+      },
+      {
+        "start": 48,
+        "end": 71,
+        "label": "ORGANIZATION",
+        "text": "Amber Health Foundation"
+      },
+      {
+        "start": 85,
+        "end": 100,
+        "label": "PERSON",
+        "text": "Cora Lindenfels"
+      }
+    ],
+    "expected": "Das Thema [RELIGION] wird in einem Bericht von [ORGANIZATION] erwähnt. Für [PERSON] wird keine Religionszugehörigkeit behauptet."
+  },
+  {
+    "id": "holdout03c-029",
+    "language": "en",
+    "ocr_noise": false,
+    "features": [
+      "negative",
+      "religious_reference"
+    ],
+    "text": "Worksheet 103: a name alone establishes no religious affiliation. The plain record contains no named person, place, organization or contact details.",
+    "spans": [],
+    "expected": "Worksheet 103: a name alone establishes no religious affiliation. The plain record contains no named person, place, organization or contact details."
+  },
+  {
+    "id": "holdout03c-030",
+    "language": "de",
+    "ocr_noise": false,
+    "features": [
+      "organization",
+      "geography"
+    ],
+    "text": "Auskunft: Jasper Keene arbeitet für Silver Finch Robotics in Aberdeen.",
+    "spans": [
+      {
+        "start": 10,
+        "end": 22,
+        "label": "PERSON",
+        "text": "Jasper Keene"
+      },
+      {
+        "start": 36,
+        "end": 57,
+        "label": "ORGANIZATION",
+        "text": "Silver Finch Robotics"
+      },
+      {
+        "start": 61,
+        "end": 69,
+        "label": "CITY",
+        "text": "Aberdeen"
+      }
+    ],
+    "expected": "Auskunft: [PERSON] arbeitet für [ORGANIZATION] in [CITY]."
+  },
+  {
+    "id": "holdout03c-031",
+    "language": "en",
+    "ocr_noise": false,
+    "features": [
+      "organization",
+      "geography"
+    ],
+    "text": "The contact Jasper Keene represents Silver Finch Robotics near Aberdeen.",
+    "spans": [
+      {
+        "start": 12,
+        "end": 24,
+        "label": "PERSON",
+        "text": "Jasper Keene"
+      },
+      {
+        "start": 36,
+        "end": 57,
+        "label": "ORGANIZATION",
+        "text": "Silver Finch Robotics"
+      },
+      {
+        "start": 63,
+        "end": 71,
+        "label": "CITY",
+        "text": "Aberdeen"
+      }
+    ],
+    "expected": "The contact [PERSON] represents [ORGANIZATION] near [CITY]."
+  },
+  {
+    "id": "holdout03c-032",
+    "language": "de",
+    "ocr_noise": false,
+    "features": [
+      "affiliation",
+      "contacts"
+    ],
+    "text": "Jasper Keene nennt hinduistisch als Zugehörigkeit. E-Mail: case104.review@example.invalid; Telefon: +49 541 730104.",
+    "spans": [
+      {
+        "start": 0,
+        "end": 12,
+        "label": "PERSON",
+        "text": "Jasper Keene"
+      },
+      {
+        "start": 19,
+        "end": 31,
+        "label": "RELIGION",
+        "text": "hinduistisch"
+      },
+      {
+        "start": 59,
+        "end": 89,
+        "label": "EMAIL",
+        "text": "case104.review@example.invalid"
+      },
+      {
+        "start": 100,
+        "end": 114,
+        "label": "PHONE",
+        "text": "+49 541 730104"
+      }
+    ],
+    "expected": "[PERSON] nennt [RELIGION] als Zugehörigkeit. E-Mail: [EMAIL]; Telefon: [PHONE]."
+  },
+  {
+    "id": "holdout03c-033",
+    "language": "en",
+    "ocr_noise": false,
+    "features": [
+      "affiliation",
+      "contacts"
+    ],
+    "text": "Jasper Keene explicitly names Hinduism as their faith. Write to case104.review@example.invalid or call +49 541 730104.",
+    "spans": [
+      {
+        "start": 0,
+        "end": 12,
+        "label": "PERSON",
+        "text": "Jasper Keene"
+      },
+      {
+        "start": 30,
+        "end": 38,
+        "label": "RELIGION",
+        "text": "Hinduism"
+      },
+      {
+        "start": 64,
+        "end": 94,
+        "label": "EMAIL",
+        "text": "case104.review@example.invalid"
+      },
+      {
+        "start": 103,
+        "end": 117,
+        "label": "PHONE",
+        "text": "+49 541 730104"
+      }
+    ],
+    "expected": "[PERSON] explicitly names [RELIGION] as their faith. Write to [EMAIL] or call [PHONE]."
+  },
+  {
+    "id": "holdout03c-034",
+    "language": "de",
+    "ocr_noise": false,
+    "features": [
+      "repeats",
+      "paragraphs"
+    ],
+    "text": "Jasper Keene besucht Aberdeen.\n\nJasper Keene bestätigt den Termin bei Silver Finch Robotics.",
+    "spans": [
+      {
+        "start": 0,
+        "end": 12,
+        "label": "PERSON",
+        "text": "Jasper Keene"
+      },
+      {
+        "start": 21,
+        "end": 29,
+        "label": "CITY",
+        "text": "Aberdeen"
+      },
+      {
+        "start": 32,
+        "end": 44,
+        "label": "PERSON",
+        "text": "Jasper Keene"
+      },
+      {
+        "start": 70,
+        "end": 91,
+        "label": "ORGANIZATION",
+        "text": "Silver Finch Robotics"
+      }
+    ],
+    "expected": "[PERSON] besucht [CITY].\n\n[PERSON] bestätigt den Termin bei [ORGANIZATION]."
+  },
+  {
+    "id": "holdout03c-035",
+    "language": "en",
+    "ocr_noise": false,
+    "features": [
+      "repeats",
+      "ambiguous_geography"
+    ],
+    "text": "In Aberdeen, Jasper Keene signed for Silver Finch Robotics. The representative Jasper Keene returned to Aberdeen.",
+    "spans": [
+      {
+        "start": 3,
+        "end": 11,
+        "label": "CITY",
+        "text": "Aberdeen"
+      },
+      {
+        "start": 13,
+        "end": 25,
+        "label": "PERSON",
+        "text": "Jasper Keene"
+      },
+      {
+        "start": 37,
+        "end": 58,
+        "label": "ORGANIZATION",
+        "text": "Silver Finch Robotics"
+      },
+      {
+        "start": 79,
+        "end": 91,
+        "label": "PERSON",
+        "text": "Jasper Keene"
+      },
+      {
+        "start": 104,
+        "end": 112,
+        "label": "CITY",
+        "text": "Aberdeen"
+      }
+    ],
+    "expected": "In [CITY], [PERSON] signed for [ORGANIZATION]. The representative [PERSON] returned to [CITY]."
+  },
+  {
+    "id": "holdout03c-036",
+    "language": "de",
+    "ocr_noise": true,
+    "features": [
+      "line_wrap",
+      "organization"
+    ],
+    "text": "Name: Jasper-\nKeene\nOrt: Aber-\ndeen\nArbeitgeber: Silver Finch Robotics.",
+    "spans": [
+      {
+        "start": 6,
+        "end": 19,
+        "label": "PERSON",
+        "text": "Jasper-\nKeene"
+      },
+      {
+        "start": 25,
+        "end": 35,
+        "label": "CITY",
+        "text": "Aber-\ndeen"
+      },
+      {
+        "start": 49,
+        "end": 70,
+        "label": "ORGANIZATION",
+        "text": "Silver Finch Robotics"
+      }
+    ],
+    "expected": "Name: [PERSON]\nOrt: [CITY]\nArbeitgeber: [ORGANIZATION]."
+  },
+  {
+    "id": "holdout03c-037",
+    "language": "en",
+    "ocr_noise": true,
+    "features": [
+      "ocr_spelling",
+      "organization"
+    ],
+    "text": "Scanned record: Jasper Keene resides in Aberdeen and works at Silver Finch Robotics.",
+    "spans": [
+      {
+        "start": 16,
+        "end": 28,
+        "label": "PERSON",
+        "text": "Jasper Keene"
+      },
+      {
+        "start": 40,
+        "end": 48,
+        "label": "CITY",
+        "text": "Aberdeen"
+      },
+      {
+        "start": 62,
+        "end": 83,
+        "label": "ORGANIZATION",
+        "text": "Silver Finch Robotics"
+      }
+    ],
+    "expected": "Scanned record: [PERSON] resides in [CITY] and works at [ORGANIZATION]."
+  },
+  {
+    "id": "holdout03c-038",
+    "language": "de",
+    "ocr_noise": false,
+    "features": [
+      "religious_reference",
+      "no_inferred_affiliation"
+    ],
+    "text": "Das Thema hinduistisch wird in einem Bericht von Silver Finch Robotics erwähnt. Für Jasper Keene wird keine Religionszugehörigkeit behauptet.",
+    "spans": [
+      {
+        "start": 10,
+        "end": 22,
+        "label": "RELIGION",
+        "text": "hinduistisch"
+      },
+      {
+        "start": 49,
+        "end": 70,
+        "label": "ORGANIZATION",
+        "text": "Silver Finch Robotics"
+      },
+      {
+        "start": 84,
+        "end": 96,
+        "label": "PERSON",
+        "text": "Jasper Keene"
+      }
+    ],
+    "expected": "Das Thema [RELIGION] wird in einem Bericht von [ORGANIZATION] erwähnt. Für [PERSON] wird keine Religionszugehörigkeit behauptet."
+  },
+  {
+    "id": "holdout03c-039",
+    "language": "en",
+    "ocr_noise": false,
+    "features": [
+      "negative",
+      "religious_reference"
+    ],
+    "text": "Worksheet 104: a name alone establishes no religious affiliation. The plain record contains no named person, place, organization or contact details.",
+    "spans": [],
+    "expected": "Worksheet 104: a name alone establishes no religious affiliation. The plain record contains no named person, place, organization or contact details."
+  },
+  {
+    "id": "holdout03c-040",
+    "language": "de",
+    "ocr_noise": false,
+    "features": [
+      "organization",
+      "geography"
+    ],
+    "text": "Auskunft: Frida Östberg arbeitet für Blue Cedar Cooperative in Uppsala.",
+    "spans": [
+      {
+        "start": 10,
+        "end": 23,
+        "label": "PERSON",
+        "text": "Frida Östberg"
+      },
+      {
+        "start": 37,
+        "end": 59,
+        "label": "ORGANIZATION",
+        "text": "Blue Cedar Cooperative"
+      },
+      {
+        "start": 63,
+        "end": 70,
+        "label": "CITY",
+        "text": "Uppsala"
+      }
+    ],
+    "expected": "Auskunft: [PERSON] arbeitet für [ORGANIZATION] in [CITY]."
+  },
+  {
+    "id": "holdout03c-041",
+    "language": "en",
+    "ocr_noise": false,
+    "features": [
+      "organization",
+      "geography"
+    ],
+    "text": "The contact Frida Östberg represents Blue Cedar Cooperative near Uppsala.",
+    "spans": [
+      {
+        "start": 12,
+        "end": 25,
+        "label": "PERSON",
+        "text": "Frida Östberg"
+      },
+      {
+        "start": 37,
+        "end": 59,
+        "label": "ORGANIZATION",
+        "text": "Blue Cedar Cooperative"
+      },
+      {
+        "start": 65,
+        "end": 72,
+        "label": "CITY",
+        "text": "Uppsala"
+      }
+    ],
+    "expected": "The contact [PERSON] represents [ORGANIZATION] near [CITY]."
+  },
+  {
+    "id": "holdout03c-042",
+    "language": "de",
+    "ocr_noise": false,
+    "features": [
+      "affiliation",
+      "contacts"
+    ],
+    "text": "Frida Östberg nennt bahai als Zugehörigkeit. E-Mail: case105.review@example.invalid; Telefon: +49 541 730105.",
+    "spans": [
+      {
+        "start": 0,
+        "end": 13,
+        "label": "PERSON",
+        "text": "Frida Östberg"
+      },
+      {
+        "start": 20,
+        "end": 25,
+        "label": "RELIGION",
+        "text": "bahai"
+      },
+      {
+        "start": 53,
+        "end": 83,
+        "label": "EMAIL",
+        "text": "case105.review@example.invalid"
+      },
+      {
+        "start": 94,
+        "end": 108,
+        "label": "PHONE",
+        "text": "+49 541 730105"
+      }
+    ],
+    "expected": "[PERSON] nennt [RELIGION] als Zugehörigkeit. E-Mail: [EMAIL]; Telefon: [PHONE]."
+  },
+  {
+    "id": "holdout03c-043",
+    "language": "en",
+    "ocr_noise": false,
+    "features": [
+      "affiliation",
+      "contacts"
+    ],
+    "text": "Frida Östberg explicitly names Baháʼí Faith as their faith. Write to case105.review@example.invalid or call +49 541 730105.",
+    "spans": [
+      {
+        "start": 0,
+        "end": 13,
+        "label": "PERSON",
+        "text": "Frida Östberg"
+      },
+      {
+        "start": 31,
+        "end": 43,
+        "label": "RELIGION",
+        "text": "Baháʼí Faith"
+      },
+      {
+        "start": 69,
+        "end": 99,
+        "label": "EMAIL",
+        "text": "case105.review@example.invalid"
+      },
+      {
+        "start": 108,
+        "end": 122,
+        "label": "PHONE",
+        "text": "+49 541 730105"
+      }
+    ],
+    "expected": "[PERSON] explicitly names [RELIGION] as their faith. Write to [EMAIL] or call [PHONE]."
+  },
+  {
+    "id": "holdout03c-044",
+    "language": "de",
+    "ocr_noise": false,
+    "features": [
+      "repeats",
+      "paragraphs"
+    ],
+    "text": "Frida Östberg besucht Uppsala.\n\nFrida Östberg bestätigt den Termin bei Blue Cedar Cooperative.",
+    "spans": [
+      {
+        "start": 0,
+        "end": 13,
+        "label": "PERSON",
+        "text": "Frida Östberg"
+      },
+      {
+        "start": 22,
+        "end": 29,
+        "label": "CITY",
+        "text": "Uppsala"
+      },
+      {
+        "start": 32,
+        "end": 45,
+        "label": "PERSON",
+        "text": "Frida Östberg"
+      },
+      {
+        "start": 71,
+        "end": 93,
+        "label": "ORGANIZATION",
+        "text": "Blue Cedar Cooperative"
+      }
+    ],
+    "expected": "[PERSON] besucht [CITY].\n\n[PERSON] bestätigt den Termin bei [ORGANIZATION]."
+  },
+  {
+    "id": "holdout03c-045",
+    "language": "en",
+    "ocr_noise": false,
+    "features": [
+      "repeats",
+      "ambiguous_geography"
+    ],
+    "text": "In Uppsala, Frida Östberg signed for Blue Cedar Cooperative. The representative Frida Östberg returned to Uppsala.",
+    "spans": [
+      {
+        "start": 3,
+        "end": 10,
+        "label": "CITY",
+        "text": "Uppsala"
+      },
+      {
+        "start": 12,
+        "end": 25,
+        "label": "PERSON",
+        "text": "Frida Östberg"
+      },
+      {
+        "start": 37,
+        "end": 59,
+        "label": "ORGANIZATION",
+        "text": "Blue Cedar Cooperative"
+      },
+      {
+        "start": 80,
+        "end": 93,
+        "label": "PERSON",
+        "text": "Frida Östberg"
+      },
+      {
+        "start": 106,
+        "end": 113,
+        "label": "CITY",
+        "text": "Uppsala"
+      }
+    ],
+    "expected": "In [CITY], [PERSON] signed for [ORGANIZATION]. The representative [PERSON] returned to [CITY]."
+  },
+  {
+    "id": "holdout03c-046",
+    "language": "de",
+    "ocr_noise": true,
+    "features": [
+      "line_wrap",
+      "organization"
+    ],
+    "text": "Name: Frida-\nÖstberg\nOrt: Upp-\nsala\nArbeitgeber: Blue Cedar Cooperative.",
+    "spans": [
+      {
+        "start": 6,
+        "end": 20,
+        "label": "PERSON",
+        "text": "Frida-\nÖstberg"
+      },
+      {
+        "start": 26,
+        "end": 35,
+        "label": "CITY",
+        "text": "Upp-\nsala"
+      },
+      {
+        "start": 49,
+        "end": 71,
+        "label": "ORGANIZATION",
+        "text": "Blue Cedar Cooperative"
+      }
+    ],
+    "expected": "Name: [PERSON]\nOrt: [CITY]\nArbeitgeber: [ORGANIZATION]."
+  },
+  {
+    "id": "holdout03c-047",
+    "language": "en",
+    "ocr_noise": true,
+    "features": [
+      "ocr_spelling",
+      "organization"
+    ],
+    "text": "Scanned record: Fr1da Östberg resides in Upps4l4 and works at Blue Cedar Cooperative.",
+    "spans": [
+      {
+        "start": 16,
+        "end": 29,
+        "label": "PERSON",
+        "text": "Fr1da Östberg"
+      },
+      {
+        "start": 41,
+        "end": 48,
+        "label": "CITY",
+        "text": "Upps4l4"
+      },
+      {
+        "start": 62,
+        "end": 84,
+        "label": "ORGANIZATION",
+        "text": "Blue Cedar Cooperative"
+      }
+    ],
+    "expected": "Scanned record: [PERSON] resides in [CITY] and works at [ORGANIZATION]."
+  },
+  {
+    "id": "holdout03c-048",
+    "language": "de",
+    "ocr_noise": false,
+    "features": [
+      "religious_reference",
+      "no_inferred_affiliation"
+    ],
+    "text": "Das Thema bahai wird in einem Bericht von Blue Cedar Cooperative erwähnt. Für Frida Östberg wird keine Religionszugehörigkeit behauptet.",
+    "spans": [
+      {
+        "start": 10,
+        "end": 15,
+        "label": "RELIGION",
+        "text": "bahai"
+      },
+      {
+        "start": 42,
+        "end": 64,
+        "label": "ORGANIZATION",
+        "text": "Blue Cedar Cooperative"
+      },
+      {
+        "start": 78,
+        "end": 91,
+        "label": "PERSON",
+        "text": "Frida Östberg"
+      }
+    ],
+    "expected": "Das Thema [RELIGION] wird in einem Bericht von [ORGANIZATION] erwähnt. Für [PERSON] wird keine Religionszugehörigkeit behauptet."
+  },
+  {
+    "id": "holdout03c-049",
+    "language": "en",
+    "ocr_noise": false,
+    "features": [
+      "negative",
+      "religious_reference"
+    ],
+    "text": "Worksheet 105: a name alone establishes no religious affiliation. The plain record contains no named person, place, organization or contact details.",
+    "spans": [],
+    "expected": "Worksheet 105: a name alone establishes no religious affiliation. The plain record contains no named person, place, organization or contact details."
+  },
+  {
+    "id": "holdout03c-050",
+    "language": "de",
+    "ocr_noise": false,
+    "features": [
+      "organization",
+      "geography"
+    ],
+    "text": "Auskunft: Owen Fairchild arbeitet für Oakwell Public Library in Leicester.",
+    "spans": [
+      {
+        "start": 10,
+        "end": 24,
+        "label": "PERSON",
+        "text": "Owen Fairchild"
+      },
+      {
+        "start": 38,
+        "end": 60,
+        "label": "ORGANIZATION",
+        "text": "Oakwell Public Library"
+      },
+      {
+        "start": 64,
+        "end": 73,
+        "label": "CITY",
+        "text": "Leicester"
+      }
+    ],
+    "expected": "Auskunft: [PERSON] arbeitet für [ORGANIZATION] in [CITY]."
+  },
+  {
+    "id": "holdout03c-051",
+    "language": "en",
+    "ocr_noise": false,
+    "features": [
+      "organization",
+      "geography"
+    ],
+    "text": "The contact Owen Fairchild represents Oakwell Public Library near Leicester.",
+    "spans": [
+      {
+        "start": 12,
+        "end": 26,
+        "label": "PERSON",
+        "text": "Owen Fairchild"
+      },
+      {
+        "start": 38,
+        "end": 60,
+        "label": "ORGANIZATION",
+        "text": "Oakwell Public Library"
+      },
+      {
+        "start": 66,
+        "end": 75,
+        "label": "CITY",
+        "text": "Leicester"
+      }
+    ],
+    "expected": "The contact [PERSON] represents [ORGANIZATION] near [CITY]."
+  },
+  {
+    "id": "holdout03c-052",
+    "language": "de",
+    "ocr_noise": false,
+    "features": [
+      "affiliation",
+      "contacts"
+    ],
+    "text": "Owen Fairchild nennt buddhistisch als Zugehörigkeit. E-Mail: case106.review@example.invalid; Telefon: +49 541 730106.",
+    "spans": [
+      {
+        "start": 0,
+        "end": 14,
+        "label": "PERSON",
+        "text": "Owen Fairchild"
+      },
+      {
+        "start": 21,
+        "end": 33,
+        "label": "RELIGION",
+        "text": "buddhistisch"
+      },
+      {
+        "start": 61,
+        "end": 91,
+        "label": "EMAIL",
+        "text": "case106.review@example.invalid"
+      },
+      {
+        "start": 102,
+        "end": 116,
+        "label": "PHONE",
+        "text": "+49 541 730106"
+      }
+    ],
+    "expected": "[PERSON] nennt [RELIGION] als Zugehörigkeit. E-Mail: [EMAIL]; Telefon: [PHONE]."
+  },
+  {
+    "id": "holdout03c-053",
+    "language": "en",
+    "ocr_noise": false,
+    "features": [
+      "affiliation",
+      "contacts"
+    ],
+    "text": "Owen Fairchild explicitly names Buddhism as their faith. Write to case106.review@example.invalid or call +49 541 730106.",
+    "spans": [
+      {
+        "start": 0,
+        "end": 14,
+        "label": "PERSON",
+        "text": "Owen Fairchild"
+      },
+      {
+        "start": 32,
+        "end": 40,
+        "label": "RELIGION",
+        "text": "Buddhism"
+      },
+      {
+        "start": 66,
+        "end": 96,
+        "label": "EMAIL",
+        "text": "case106.review@example.invalid"
+      },
+      {
+        "start": 105,
+        "end": 119,
+        "label": "PHONE",
+        "text": "+49 541 730106"
+      }
+    ],
+    "expected": "[PERSON] explicitly names [RELIGION] as their faith. Write to [EMAIL] or call [PHONE]."
+  },
+  {
+    "id": "holdout03c-054",
+    "language": "de",
+    "ocr_noise": false,
+    "features": [
+      "repeats",
+      "paragraphs"
+    ],
+    "text": "Owen Fairchild besucht Leicester.\n\nOwen Fairchild bestätigt den Termin bei Oakwell Public Library.",
+    "spans": [
+      {
+        "start": 0,
+        "end": 14,
+        "label": "PERSON",
+        "text": "Owen Fairchild"
+      },
+      {
+        "start": 23,
+        "end": 32,
+        "label": "CITY",
+        "text": "Leicester"
+      },
+      {
+        "start": 35,
+        "end": 49,
+        "label": "PERSON",
+        "text": "Owen Fairchild"
+      },
+      {
+        "start": 75,
+        "end": 97,
+        "label": "ORGANIZATION",
+        "text": "Oakwell Public Library"
+      }
+    ],
+    "expected": "[PERSON] besucht [CITY].\n\n[PERSON] bestätigt den Termin bei [ORGANIZATION]."
+  },
+  {
+    "id": "holdout03c-055",
+    "language": "en",
+    "ocr_noise": false,
+    "features": [
+      "repeats",
+      "ambiguous_geography"
+    ],
+    "text": "In Leicester, Owen Fairchild signed for Oakwell Public Library. The representative Owen Fairchild returned to Leicester.",
+    "spans": [
+      {
+        "start": 3,
+        "end": 12,
+        "label": "CITY",
+        "text": "Leicester"
+      },
+      {
+        "start": 14,
+        "end": 28,
+        "label": "PERSON",
+        "text": "Owen Fairchild"
+      },
+      {
+        "start": 40,
+        "end": 62,
+        "label": "ORGANIZATION",
+        "text": "Oakwell Public Library"
+      },
+      {
+        "start": 83,
+        "end": 97,
+        "label": "PERSON",
+        "text": "Owen Fairchild"
+      },
+      {
+        "start": 110,
+        "end": 119,
+        "label": "CITY",
+        "text": "Leicester"
+      }
+    ],
+    "expected": "In [CITY], [PERSON] signed for [ORGANIZATION]. The representative [PERSON] returned to [CITY]."
+  },
+  {
+    "id": "holdout03c-056",
+    "language": "de",
+    "ocr_noise": true,
+    "features": [
+      "line_wrap",
+      "organization"
+    ],
+    "text": "Name: Owen-\nFairchild\nOrt: Leic-\nester\nArbeitgeber: Oakwell Public Library.",
+    "spans": [
+      {
+        "start": 6,
+        "end": 21,
+        "label": "PERSON",
+        "text": "Owen-\nFairchild"
+      },
+      {
+        "start": 27,
+        "end": 38,
+        "label": "CITY",
+        "text": "Leic-\nester"
+      },
+      {
+        "start": 52,
+        "end": 74,
+        "label": "ORGANIZATION",
+        "text": "Oakwell Public Library"
+      }
+    ],
+    "expected": "Name: [PERSON]\nOrt: [CITY]\nArbeitgeber: [ORGANIZATION]."
+  },
+  {
+    "id": "holdout03c-057",
+    "language": "en",
+    "ocr_noise": true,
+    "features": [
+      "ocr_spelling",
+      "organization"
+    ],
+    "text": "Scanned record: Owen Fa1rch1ld resides in Leicester and works at Oakwell Public Library.",
+    "spans": [
+      {
+        "start": 16,
+        "end": 30,
+        "label": "PERSON",
+        "text": "Owen Fa1rch1ld"
+      },
+      {
+        "start": 42,
+        "end": 51,
+        "label": "CITY",
+        "text": "Leicester"
+      },
+      {
+        "start": 65,
+        "end": 87,
+        "label": "ORGANIZATION",
+        "text": "Oakwell Public Library"
+      }
+    ],
+    "expected": "Scanned record: [PERSON] resides in [CITY] and works at [ORGANIZATION]."
+  },
+  {
+    "id": "holdout03c-058",
+    "language": "de",
+    "ocr_noise": false,
+    "features": [
+      "religious_reference",
+      "no_inferred_affiliation"
+    ],
+    "text": "Das Thema buddhistisch wird in einem Bericht von Oakwell Public Library erwähnt. Für Owen Fairchild wird keine Religionszugehörigkeit behauptet.",
+    "spans": [
+      {
+        "start": 10,
+        "end": 22,
+        "label": "RELIGION",
+        "text": "buddhistisch"
+      },
+      {
+        "start": 49,
+        "end": 71,
+        "label": "ORGANIZATION",
+        "text": "Oakwell Public Library"
+      },
+      {
+        "start": 85,
+        "end": 99,
+        "label": "PERSON",
+        "text": "Owen Fairchild"
+      }
+    ],
+    "expected": "Das Thema [RELIGION] wird in einem Bericht von [ORGANIZATION] erwähnt. Für [PERSON] wird keine Religionszugehörigkeit behauptet."
+  },
+  {
+    "id": "holdout03c-059",
+    "language": "en",
+    "ocr_noise": false,
+    "features": [
+      "negative",
+      "religious_reference"
+    ],
+    "text": "Worksheet 106: a name alone establishes no religious affiliation. The plain record contains no named person, place, organization or contact details.",
+    "spans": [],
+    "expected": "Worksheet 106: a name alone establishes no religious affiliation. The plain record contains no named person, place, organization or contact details."
+  },
+  {
+    "id": "holdout03c-060",
+    "language": "de",
+    "ocr_noise": false,
+    "features": [
+      "organization",
+      "geography"
+    ],
+    "text": "Auskunft: Nele Brückner arbeitet für Westhaven Water Authority in Würzburg.",
+    "spans": [
+      {
+        "start": 10,
+        "end": 23,
+        "label": "PERSON",
+        "text": "Nele Brückner"
+      },
+      {
+        "start": 37,
+        "end": 62,
+        "label": "ORGANIZATION",
+        "text": "Westhaven Water Authority"
+      },
+      {
+        "start": 66,
+        "end": 74,
+        "label": "CITY",
+        "text": "Würzburg"
+      }
+    ],
+    "expected": "Auskunft: [PERSON] arbeitet für [ORGANIZATION] in [CITY]."
+  },
+  {
+    "id": "holdout03c-061",
+    "language": "en",
+    "ocr_noise": false,
+    "features": [
+      "organization",
+      "geography"
+    ],
+    "text": "The contact Nele Brückner represents Westhaven Water Authority near Würzburg.",
+    "spans": [
+      {
+        "start": 12,
+        "end": 25,
+        "label": "PERSON",
+        "text": "Nele Brückner"
+      },
+      {
+        "start": 37,
+        "end": 62,
+        "label": "ORGANIZATION",
+        "text": "Westhaven Water Authority"
+      },
+      {
+        "start": 68,
+        "end": 76,
+        "label": "CITY",
+        "text": "Würzburg"
+      }
+    ],
+    "expected": "The contact [PERSON] represents [ORGANIZATION] near [CITY]."
+  },
+  {
+    "id": "holdout03c-062",
+    "language": "de",
+    "ocr_noise": false,
+    "features": [
+      "affiliation",
+      "contacts"
+    ],
+    "text": "Nele Brückner nennt katholisch als Zugehörigkeit. E-Mail: case107.review@example.invalid; Telefon: +49 541 730107.",
+    "spans": [
+      {
+        "start": 0,
+        "end": 13,
+        "label": "PERSON",
+        "text": "Nele Brückner"
+      },
+      {
+        "start": 20,
+        "end": 30,
+        "label": "RELIGION",
+        "text": "katholisch"
+      },
+      {
+        "start": 58,
+        "end": 88,
+        "label": "EMAIL",
+        "text": "case107.review@example.invalid"
+      },
+      {
+        "start": 99,
+        "end": 113,
+        "label": "PHONE",
+        "text": "+49 541 730107"
+      }
+    ],
+    "expected": "[PERSON] nennt [RELIGION] als Zugehörigkeit. E-Mail: [EMAIL]; Telefon: [PHONE]."
+  },
+  {
+    "id": "holdout03c-063",
+    "language": "en",
+    "ocr_noise": false,
+    "features": [
+      "affiliation",
+      "contacts"
+    ],
+    "text": "Nele Brückner explicitly names Catholicism as their faith. Write to case107.review@example.invalid or call +49 541 730107.",
+    "spans": [
+      {
+        "start": 0,
+        "end": 13,
+        "label": "PERSON",
+        "text": "Nele Brückner"
+      },
+      {
+        "start": 31,
+        "end": 42,
+        "label": "RELIGION",
+        "text": "Catholicism"
+      },
+      {
+        "start": 68,
+        "end": 98,
+        "label": "EMAIL",
+        "text": "case107.review@example.invalid"
+      },
+      {
+        "start": 107,
+        "end": 121,
+        "label": "PHONE",
+        "text": "+49 541 730107"
+      }
+    ],
+    "expected": "[PERSON] explicitly names [RELIGION] as their faith. Write to [EMAIL] or call [PHONE]."
+  },
+  {
+    "id": "holdout03c-064",
+    "language": "de",
+    "ocr_noise": false,
+    "features": [
+      "repeats",
+      "paragraphs"
+    ],
+    "text": "Nele Brückner besucht Würzburg.\n\nNele Brückner bestätigt den Termin bei Westhaven Water Authority.",
+    "spans": [
+      {
+        "start": 0,
+        "end": 13,
+        "label": "PERSON",
+        "text": "Nele Brückner"
+      },
+      {
+        "start": 22,
+        "end": 30,
+        "label": "CITY",
+        "text": "Würzburg"
+      },
+      {
+        "start": 33,
+        "end": 46,
+        "label": "PERSON",
+        "text": "Nele Brückner"
+      },
+      {
+        "start": 72,
+        "end": 97,
+        "label": "ORGANIZATION",
+        "text": "Westhaven Water Authority"
+      }
+    ],
+    "expected": "[PERSON] besucht [CITY].\n\n[PERSON] bestätigt den Termin bei [ORGANIZATION]."
+  },
+  {
+    "id": "holdout03c-065",
+    "language": "en",
+    "ocr_noise": false,
+    "features": [
+      "repeats",
+      "ambiguous_geography"
+    ],
+    "text": "In Würzburg, Nele Brückner signed for Westhaven Water Authority. The representative Nele Brückner returned to Würzburg.",
+    "spans": [
+      {
+        "start": 3,
+        "end": 11,
+        "label": "CITY",
+        "text": "Würzburg"
+      },
+      {
+        "start": 13,
+        "end": 26,
+        "label": "PERSON",
+        "text": "Nele Brückner"
+      },
+      {
+        "start": 38,
+        "end": 63,
+        "label": "ORGANIZATION",
+        "text": "Westhaven Water Authority"
+      },
+      {
+        "start": 84,
+        "end": 97,
+        "label": "PERSON",
+        "text": "Nele Brückner"
+      },
+      {
+        "start": 110,
+        "end": 118,
+        "label": "CITY",
+        "text": "Würzburg"
+      }
+    ],
+    "expected": "In [CITY], [PERSON] signed for [ORGANIZATION]. The representative [PERSON] returned to [CITY]."
+  },
+  {
+    "id": "holdout03c-066",
+    "language": "de",
+    "ocr_noise": true,
+    "features": [
+      "line_wrap",
+      "organization"
+    ],
+    "text": "Name: Nele-\nBrückner\nOrt: Würz-\nburg\nArbeitgeber: Westhaven Water Authority.",
+    "spans": [
+      {
+        "start": 6,
+        "end": 20,
+        "label": "PERSON",
+        "text": "Nele-\nBrückner"
+      },
+      {
+        "start": 26,
+        "end": 36,
+        "label": "CITY",
+        "text": "Würz-\nburg"
+      },
+      {
+        "start": 50,
+        "end": 75,
+        "label": "ORGANIZATION",
+        "text": "Westhaven Water Authority"
+      }
+    ],
+    "expected": "Name: [PERSON]\nOrt: [CITY]\nArbeitgeber: [ORGANIZATION]."
+  },
+  {
+    "id": "holdout03c-067",
+    "language": "en",
+    "ocr_noise": true,
+    "features": [
+      "ocr_spelling",
+      "organization"
+    ],
+    "text": "Scanned record: Nele Brückner resides in Würzburg and works at Westhaven Water Authority.",
+    "spans": [
+      {
+        "start": 16,
+        "end": 29,
+        "label": "PERSON",
+        "text": "Nele Brückner"
+      },
+      {
+        "start": 41,
+        "end": 49,
+        "label": "CITY",
+        "text": "Würzburg"
+      },
+      {
+        "start": 63,
+        "end": 88,
+        "label": "ORGANIZATION",
+        "text": "Westhaven Water Authority"
+      }
+    ],
+    "expected": "Scanned record: [PERSON] resides in [CITY] and works at [ORGANIZATION]."
+  },
+  {
+    "id": "holdout03c-068",
+    "language": "de",
+    "ocr_noise": false,
+    "features": [
+      "religious_reference",
+      "no_inferred_affiliation"
+    ],
+    "text": "Das Thema katholisch wird in einem Bericht von Westhaven Water Authority erwähnt. Für Nele Brückner wird keine Religionszugehörigkeit behauptet.",
+    "spans": [
+      {
+        "start": 10,
+        "end": 20,
+        "label": "RELIGION",
+        "text": "katholisch"
+      },
+      {
+        "start": 47,
+        "end": 72,
+        "label": "ORGANIZATION",
+        "text": "Westhaven Water Authority"
+      },
+      {
+        "start": 86,
+        "end": 99,
+        "label": "PERSON",
+        "text": "Nele Brückner"
+      }
+    ],
+    "expected": "Das Thema [RELIGION] wird in einem Bericht von [ORGANIZATION] erwähnt. Für [PERSON] wird keine Religionszugehörigkeit behauptet."
+  },
+  {
+    "id": "holdout03c-069",
+    "language": "en",
+    "ocr_noise": false,
+    "features": [
+      "negative",
+      "religious_reference"
+    ],
+    "text": "Worksheet 107: a name alone establishes no religious affiliation. The plain record contains no named person, place, organization or contact details.",
+    "spans": [],
+    "expected": "Worksheet 107: a name alone establishes no religious affiliation. The plain record contains no named person, place, organization or contact details."
+  },
+  {
+    "id": "holdout03c-070",
+    "language": "de",
+    "ocr_noise": false,
+    "features": [
+      "organization",
+      "geography"
+    ],
+    "text": "Auskunft: Silas Hawthorne arbeitet für Juniper Legal Services in Portland.",
+    "spans": [
+      {
+        "start": 10,
+        "end": 25,
+        "label": "PERSON",
+        "text": "Silas Hawthorne"
+      },
+      {
+        "start": 39,
+        "end": 61,
+        "label": "ORGANIZATION",
+        "text": "Juniper Legal Services"
+      },
+      {
+        "start": 65,
+        "end": 73,
+        "label": "CITY",
+        "text": "Portland"
+      }
+    ],
+    "expected": "Auskunft: [PERSON] arbeitet für [ORGANIZATION] in [CITY]."
+  },
+  {
+    "id": "holdout03c-071",
+    "language": "en",
+    "ocr_noise": false,
+    "features": [
+      "organization",
+      "geography"
+    ],
+    "text": "The contact Silas Hawthorne represents Juniper Legal Services near Portland.",
+    "spans": [
+      {
+        "start": 12,
+        "end": 27,
+        "label": "PERSON",
+        "text": "Silas Hawthorne"
+      },
+      {
+        "start": 39,
+        "end": 61,
+        "label": "ORGANIZATION",
+        "text": "Juniper Legal Services"
+      },
+      {
+        "start": 67,
+        "end": 75,
+        "label": "CITY",
+        "text": "Portland"
+      }
+    ],
+    "expected": "The contact [PERSON] represents [ORGANIZATION] near [CITY]."
+  },
+  {
+    "id": "holdout03c-072",
+    "language": "de",
+    "ocr_noise": false,
+    "features": [
+      "affiliation",
+      "contacts"
+    ],
+    "text": "Silas Hawthorne nennt evangelisch als Zugehörigkeit. E-Mail: case108.review@example.invalid; Telefon: +49 541 730108.",
+    "spans": [
+      {
+        "start": 0,
+        "end": 15,
+        "label": "PERSON",
+        "text": "Silas Hawthorne"
+      },
+      {
+        "start": 22,
+        "end": 33,
+        "label": "RELIGION",
+        "text": "evangelisch"
+      },
+      {
+        "start": 61,
+        "end": 91,
+        "label": "EMAIL",
+        "text": "case108.review@example.invalid"
+      },
+      {
+        "start": 102,
+        "end": 116,
+        "label": "PHONE",
+        "text": "+49 541 730108"
+      }
+    ],
+    "expected": "[PERSON] nennt [RELIGION] als Zugehörigkeit. E-Mail: [EMAIL]; Telefon: [PHONE]."
+  },
+  {
+    "id": "holdout03c-073",
+    "language": "en",
+    "ocr_noise": false,
+    "features": [
+      "affiliation",
+      "contacts"
+    ],
+    "text": "Silas Hawthorne explicitly names Protestantism as their faith. Write to case108.review@example.invalid or call +49 541 730108.",
+    "spans": [
+      {
+        "start": 0,
+        "end": 15,
+        "label": "PERSON",
+        "text": "Silas Hawthorne"
+      },
+      {
+        "start": 33,
+        "end": 46,
+        "label": "RELIGION",
+        "text": "Protestantism"
+      },
+      {
+        "start": 72,
+        "end": 102,
+        "label": "EMAIL",
+        "text": "case108.review@example.invalid"
+      },
+      {
+        "start": 111,
+        "end": 125,
+        "label": "PHONE",
+        "text": "+49 541 730108"
+      }
+    ],
+    "expected": "[PERSON] explicitly names [RELIGION] as their faith. Write to [EMAIL] or call [PHONE]."
+  },
+  {
+    "id": "holdout03c-074",
+    "language": "de",
+    "ocr_noise": false,
+    "features": [
+      "repeats",
+      "paragraphs"
+    ],
+    "text": "Silas Hawthorne besucht Portland.\n\nSilas Hawthorne bestätigt den Termin bei Juniper Legal Services.",
+    "spans": [
+      {
+        "start": 0,
+        "end": 15,
+        "label": "PERSON",
+        "text": "Silas Hawthorne"
+      },
+      {
+        "start": 24,
+        "end": 32,
+        "label": "CITY",
+        "text": "Portland"
+      },
+      {
+        "start": 35,
+        "end": 50,
+        "label": "PERSON",
+        "text": "Silas Hawthorne"
+      },
+      {
+        "start": 76,
+        "end": 98,
+        "label": "ORGANIZATION",
+        "text": "Juniper Legal Services"
+      }
+    ],
+    "expected": "[PERSON] besucht [CITY].\n\n[PERSON] bestätigt den Termin bei [ORGANIZATION]."
+  },
+  {
+    "id": "holdout03c-075",
+    "language": "en",
+    "ocr_noise": false,
+    "features": [
+      "repeats",
+      "ambiguous_geography"
+    ],
+    "text": "In Portland, Silas Hawthorne signed for Juniper Legal Services. The representative Silas Hawthorne returned to Portland.",
+    "spans": [
+      {
+        "start": 3,
+        "end": 11,
+        "label": "CITY",
+        "text": "Portland"
+      },
+      {
+        "start": 13,
+        "end": 28,
+        "label": "PERSON",
+        "text": "Silas Hawthorne"
+      },
+      {
+        "start": 40,
+        "end": 62,
+        "label": "ORGANIZATION",
+        "text": "Juniper Legal Services"
+      },
+      {
+        "start": 83,
+        "end": 98,
+        "label": "PERSON",
+        "text": "Silas Hawthorne"
+      },
+      {
+        "start": 111,
+        "end": 119,
+        "label": "CITY",
+        "text": "Portland"
+      }
+    ],
+    "expected": "In [CITY], [PERSON] signed for [ORGANIZATION]. The representative [PERSON] returned to [CITY]."
+  },
+  {
+    "id": "holdout03c-076",
+    "language": "de",
+    "ocr_noise": true,
+    "features": [
+      "line_wrap",
+      "organization"
+    ],
+    "text": "Name: Silas-\nHawthorne\nOrt: Port-\nland\nArbeitgeber: Juniper Legal Services.",
+    "spans": [
+      {
+        "start": 6,
+        "end": 22,
+        "label": "PERSON",
+        "text": "Silas-\nHawthorne"
+      },
+      {
+        "start": 28,
+        "end": 38,
+        "label": "CITY",
+        "text": "Port-\nland"
+      },
+      {
+        "start": 52,
+        "end": 74,
+        "label": "ORGANIZATION",
+        "text": "Juniper Legal Services"
+      }
+    ],
+    "expected": "Name: [PERSON]\nOrt: [CITY]\nArbeitgeber: [ORGANIZATION]."
+  },
+  {
+    "id": "holdout03c-077",
+    "language": "en",
+    "ocr_noise": true,
+    "features": [
+      "ocr_spelling",
+      "organization"
+    ],
+    "text": "Scanned record: S1las Hawth0rne resides in P0rtl4nd and works at Juniper Legal Services.",
+    "spans": [
+      {
+        "start": 16,
+        "end": 31,
+        "label": "PERSON",
+        "text": "S1las Hawth0rne"
+      },
+      {
+        "start": 43,
+        "end": 51,
+        "label": "CITY",
+        "text": "P0rtl4nd"
+      },
+      {
+        "start": 65,
+        "end": 87,
+        "label": "ORGANIZATION",
+        "text": "Juniper Legal Services"
+      }
+    ],
+    "expected": "Scanned record: [PERSON] resides in [CITY] and works at [ORGANIZATION]."
+  },
+  {
+    "id": "holdout03c-078",
+    "language": "de",
+    "ocr_noise": false,
+    "features": [
+      "religious_reference",
+      "no_inferred_affiliation"
+    ],
+    "text": "Das Thema evangelisch wird in einem Bericht von Juniper Legal Services erwähnt. Für Silas Hawthorne wird keine Religionszugehörigkeit behauptet.",
+    "spans": [
+      {
+        "start": 10,
+        "end": 21,
+        "label": "RELIGION",
+        "text": "evangelisch"
+      },
+      {
+        "start": 48,
+        "end": 70,
+        "label": "ORGANIZATION",
+        "text": "Juniper Legal Services"
+      },
+      {
+        "start": 84,
+        "end": 99,
+        "label": "PERSON",
+        "text": "Silas Hawthorne"
+      }
+    ],
+    "expected": "Das Thema [RELIGION] wird in einem Bericht von [ORGANIZATION] erwähnt. Für [PERSON] wird keine Religionszugehörigkeit behauptet."
+  },
+  {
+    "id": "holdout03c-079",
+    "language": "en",
+    "ocr_noise": false,
+    "features": [
+      "negative",
+      "religious_reference"
+    ],
+    "text": "Worksheet 108: a name alone establishes no religious affiliation. The plain record contains no named person, place, organization or contact details.",
+    "spans": [],
+    "expected": "Worksheet 108: a name alone establishes no religious affiliation. The plain record contains no named person, place, organization or contact details."
+  },
+  {
+    "id": "holdout03c-080",
+    "language": "de",
+    "ocr_noise": false,
+    "features": [
+      "organization",
+      "geography"
+    ],
+    "text": "Auskunft: Alva Rosenqvist arbeitet für Maple Ridge University in Bergen.",
+    "spans": [
+      {
+        "start": 10,
+        "end": 25,
+        "label": "PERSON",
+        "text": "Alva Rosenqvist"
+      },
+      {
+        "start": 39,
+        "end": 61,
+        "label": "ORGANIZATION",
+        "text": "Maple Ridge University"
+      },
+      {
+        "start": 65,
+        "end": 71,
+        "label": "CITY",
+        "text": "Bergen"
+      }
+    ],
+    "expected": "Auskunft: [PERSON] arbeitet für [ORGANIZATION] in [CITY]."
+  },
+  {
+    "id": "holdout03c-081",
+    "language": "en",
+    "ocr_noise": false,
+    "features": [
+      "organization",
+      "geography"
+    ],
+    "text": "The contact Alva Rosenqvist represents Maple Ridge University near Bergen.",
+    "spans": [
+      {
+        "start": 12,
+        "end": 27,
+        "label": "PERSON",
+        "text": "Alva Rosenqvist"
+      },
+      {
+        "start": 39,
+        "end": 61,
+        "label": "ORGANIZATION",
+        "text": "Maple Ridge University"
+      },
+      {
+        "start": 67,
+        "end": 73,
+        "label": "CITY",
+        "text": "Bergen"
+      }
+    ],
+    "expected": "The contact [PERSON] represents [ORGANIZATION] near [CITY]."
+  },
+  {
+    "id": "holdout03c-082",
+    "language": "de",
+    "ocr_noise": false,
+    "features": [
+      "affiliation",
+      "contacts"
+    ],
+    "text": "Alva Rosenqvist nennt jüdisch als Zugehörigkeit. E-Mail: case109.review@example.invalid; Telefon: +49 541 730109.",
+    "spans": [
+      {
+        "start": 0,
+        "end": 15,
+        "label": "PERSON",
+        "text": "Alva Rosenqvist"
+      },
+      {
+        "start": 22,
+        "end": 29,
+        "label": "RELIGION",
+        "text": "jüdisch"
+      },
+      {
+        "start": 57,
+        "end": 87,
+        "label": "EMAIL",
+        "text": "case109.review@example.invalid"
+      },
+      {
+        "start": 98,
+        "end": 112,
+        "label": "PHONE",
+        "text": "+49 541 730109"
+      }
+    ],
+    "expected": "[PERSON] nennt [RELIGION] als Zugehörigkeit. E-Mail: [EMAIL]; Telefon: [PHONE]."
+  },
+  {
+    "id": "holdout03c-083",
+    "language": "en",
+    "ocr_noise": false,
+    "features": [
+      "affiliation",
+      "contacts"
+    ],
+    "text": "Alva Rosenqvist explicitly names Judaism as their faith. Write to case109.review@example.invalid or call +49 541 730109.",
+    "spans": [
+      {
+        "start": 0,
+        "end": 15,
+        "label": "PERSON",
+        "text": "Alva Rosenqvist"
+      },
+      {
+        "start": 33,
+        "end": 40,
+        "label": "RELIGION",
+        "text": "Judaism"
+      },
+      {
+        "start": 66,
+        "end": 96,
+        "label": "EMAIL",
+        "text": "case109.review@example.invalid"
+      },
+      {
+        "start": 105,
+        "end": 119,
+        "label": "PHONE",
+        "text": "+49 541 730109"
+      }
+    ],
+    "expected": "[PERSON] explicitly names [RELIGION] as their faith. Write to [EMAIL] or call [PHONE]."
+  },
+  {
+    "id": "holdout03c-084",
+    "language": "de",
+    "ocr_noise": false,
+    "features": [
+      "repeats",
+      "paragraphs"
+    ],
+    "text": "Alva Rosenqvist besucht Bergen.\n\nAlva Rosenqvist bestätigt den Termin bei Maple Ridge University.",
+    "spans": [
+      {
+        "start": 0,
+        "end": 15,
+        "label": "PERSON",
+        "text": "Alva Rosenqvist"
+      },
+      {
+        "start": 24,
+        "end": 30,
+        "label": "CITY",
+        "text": "Bergen"
+      },
+      {
+        "start": 33,
+        "end": 48,
+        "label": "PERSON",
+        "text": "Alva Rosenqvist"
+      },
+      {
+        "start": 74,
+        "end": 96,
+        "label": "ORGANIZATION",
+        "text": "Maple Ridge University"
+      }
+    ],
+    "expected": "[PERSON] besucht [CITY].\n\n[PERSON] bestätigt den Termin bei [ORGANIZATION]."
+  },
+  {
+    "id": "holdout03c-085",
+    "language": "en",
+    "ocr_noise": false,
+    "features": [
+      "repeats",
+      "ambiguous_geography"
+    ],
+    "text": "In Bergen, Alva Rosenqvist signed for Maple Ridge University. The representative Alva Rosenqvist returned to Bergen.",
+    "spans": [
+      {
+        "start": 3,
+        "end": 9,
+        "label": "CITY",
+        "text": "Bergen"
+      },
+      {
+        "start": 11,
+        "end": 26,
+        "label": "PERSON",
+        "text": "Alva Rosenqvist"
+      },
+      {
+        "start": 38,
+        "end": 60,
+        "label": "ORGANIZATION",
+        "text": "Maple Ridge University"
+      },
+      {
+        "start": 81,
+        "end": 96,
+        "label": "PERSON",
+        "text": "Alva Rosenqvist"
+      },
+      {
+        "start": 109,
+        "end": 115,
+        "label": "CITY",
+        "text": "Bergen"
+      }
+    ],
+    "expected": "In [CITY], [PERSON] signed for [ORGANIZATION]. The representative [PERSON] returned to [CITY]."
+  },
+  {
+    "id": "holdout03c-086",
+    "language": "de",
+    "ocr_noise": true,
+    "features": [
+      "line_wrap",
+      "organization"
+    ],
+    "text": "Name: Alva-\nRosenqvist\nOrt: Ber-\ngen\nArbeitgeber: Maple Ridge University.",
+    "spans": [
+      {
+        "start": 6,
+        "end": 22,
+        "label": "PERSON",
+        "text": "Alva-\nRosenqvist"
+      },
+      {
+        "start": 28,
+        "end": 36,
+        "label": "CITY",
+        "text": "Ber-\ngen"
+      },
+      {
+        "start": 50,
+        "end": 72,
+        "label": "ORGANIZATION",
+        "text": "Maple Ridge University"
+      }
+    ],
+    "expected": "Name: [PERSON]\nOrt: [CITY]\nArbeitgeber: [ORGANIZATION]."
+  },
+  {
+    "id": "holdout03c-087",
+    "language": "en",
+    "ocr_noise": true,
+    "features": [
+      "ocr_spelling",
+      "organization"
+    ],
+    "text": "Scanned record: Alva R0senqv1st resides in Bergen and works at Maple Ridge University.",
+    "spans": [
+      {
+        "start": 16,
+        "end": 31,
+        "label": "PERSON",
+        "text": "Alva R0senqv1st"
+      },
+      {
+        "start": 43,
+        "end": 49,
+        "label": "CITY",
+        "text": "Bergen"
+      },
+      {
+        "start": 63,
+        "end": 85,
+        "label": "ORGANIZATION",
+        "text": "Maple Ridge University"
+      }
+    ],
+    "expected": "Scanned record: [PERSON] resides in [CITY] and works at [ORGANIZATION]."
+  },
+  {
+    "id": "holdout03c-088",
+    "language": "de",
+    "ocr_noise": false,
+    "features": [
+      "religious_reference",
+      "no_inferred_affiliation"
+    ],
+    "text": "Das Thema jüdisch wird in einem Bericht von Maple Ridge University erwähnt. Für Alva Rosenqvist wird keine Religionszugehörigkeit behauptet.",
+    "spans": [
+      {
+        "start": 10,
+        "end": 17,
+        "label": "RELIGION",
+        "text": "jüdisch"
+      },
+      {
+        "start": 44,
+        "end": 66,
+        "label": "ORGANIZATION",
+        "text": "Maple Ridge University"
+      },
+      {
+        "start": 80,
+        "end": 95,
+        "label": "PERSON",
+        "text": "Alva Rosenqvist"
+      }
+    ],
+    "expected": "Das Thema [RELIGION] wird in einem Bericht von [ORGANIZATION] erwähnt. Für [PERSON] wird keine Religionszugehörigkeit behauptet."
+  },
+  {
+    "id": "holdout03c-089",
+    "language": "en",
+    "ocr_noise": false,
+    "features": [
+      "negative",
+      "religious_reference"
+    ],
+    "text": "Worksheet 109: a name alone establishes no religious affiliation. The plain record contains no named person, place, organization or contact details.",
+    "spans": [],
+    "expected": "Worksheet 109: a name alone establishes no religious affiliation. The plain record contains no named person, place, organization or contact details."
+  },
+  {
+    "id": "holdout03c-090",
+    "language": "de",
+    "ocr_noise": false,
+    "features": [
+      "organization",
+      "geography"
+    ],
+    "text": "Auskunft: Theo Merriweather arbeitet für Polar Systems Ltd. in York.",
+    "spans": [
+      {
+        "start": 10,
+        "end": 27,
+        "label": "PERSON",
+        "text": "Theo Merriweather"
+      },
+      {
+        "start": 41,
+        "end": 59,
+        "label": "ORGANIZATION",
+        "text": "Polar Systems Ltd."
+      },
+      {
+        "start": 63,
+        "end": 67,
+        "label": "CITY",
+        "text": "York"
+      }
+    ],
+    "expected": "Auskunft: [PERSON] arbeitet für [ORGANIZATION] in [CITY]."
+  },
+  {
+    "id": "holdout03c-091",
+    "language": "en",
+    "ocr_noise": false,
+    "features": [
+      "organization",
+      "geography"
+    ],
+    "text": "The contact Theo Merriweather represents Polar Systems Ltd. near York.",
+    "spans": [
+      {
+        "start": 12,
+        "end": 29,
+        "label": "PERSON",
+        "text": "Theo Merriweather"
+      },
+      {
+        "start": 41,
+        "end": 59,
+        "label": "ORGANIZATION",
+        "text": "Polar Systems Ltd."
+      },
+      {
+        "start": 65,
+        "end": 69,
+        "label": "CITY",
+        "text": "York"
+      }
+    ],
+    "expected": "The contact [PERSON] represents [ORGANIZATION] near [CITY]."
+  },
+  {
+    "id": "holdout03c-092",
+    "language": "de",
+    "ocr_noise": false,
+    "features": [
+      "affiliation",
+      "contacts"
+    ],
+    "text": "Theo Merriweather nennt muslimisch als Zugehörigkeit. E-Mail: case110.review@example.invalid; Telefon: +49 541 730110.",
+    "spans": [
+      {
+        "start": 0,
+        "end": 17,
+        "label": "PERSON",
+        "text": "Theo Merriweather"
+      },
+      {
+        "start": 24,
+        "end": 34,
+        "label": "RELIGION",
+        "text": "muslimisch"
+      },
+      {
+        "start": 62,
+        "end": 92,
+        "label": "EMAIL",
+        "text": "case110.review@example.invalid"
+      },
+      {
+        "start": 103,
+        "end": 117,
+        "label": "PHONE",
+        "text": "+49 541 730110"
+      }
+    ],
+    "expected": "[PERSON] nennt [RELIGION] als Zugehörigkeit. E-Mail: [EMAIL]; Telefon: [PHONE]."
+  },
+  {
+    "id": "holdout03c-093",
+    "language": "en",
+    "ocr_noise": false,
+    "features": [
+      "affiliation",
+      "contacts"
+    ],
+    "text": "Theo Merriweather explicitly names Islam as their faith. Write to case110.review@example.invalid or call +49 541 730110.",
+    "spans": [
+      {
+        "start": 0,
+        "end": 17,
+        "label": "PERSON",
+        "text": "Theo Merriweather"
+      },
+      {
+        "start": 35,
+        "end": 40,
+        "label": "RELIGION",
+        "text": "Islam"
+      },
+      {
+        "start": 66,
+        "end": 96,
+        "label": "EMAIL",
+        "text": "case110.review@example.invalid"
+      },
+      {
+        "start": 105,
+        "end": 119,
+        "label": "PHONE",
+        "text": "+49 541 730110"
+      }
+    ],
+    "expected": "[PERSON] explicitly names [RELIGION] as their faith. Write to [EMAIL] or call [PHONE]."
+  },
+  {
+    "id": "holdout03c-094",
+    "language": "de",
+    "ocr_noise": false,
+    "features": [
+      "repeats",
+      "paragraphs"
+    ],
+    "text": "Theo Merriweather besucht York.\n\nTheo Merriweather bestätigt den Termin bei Polar Systems Ltd..",
+    "spans": [
+      {
+        "start": 0,
+        "end": 17,
+        "label": "PERSON",
+        "text": "Theo Merriweather"
+      },
+      {
+        "start": 26,
+        "end": 30,
+        "label": "CITY",
+        "text": "York"
+      },
+      {
+        "start": 33,
+        "end": 50,
+        "label": "PERSON",
+        "text": "Theo Merriweather"
+      },
+      {
+        "start": 76,
+        "end": 94,
+        "label": "ORGANIZATION",
+        "text": "Polar Systems Ltd."
+      }
+    ],
+    "expected": "[PERSON] besucht [CITY].\n\n[PERSON] bestätigt den Termin bei [ORGANIZATION]."
+  },
+  {
+    "id": "holdout03c-095",
+    "language": "en",
+    "ocr_noise": false,
+    "features": [
+      "repeats",
+      "ambiguous_geography"
+    ],
+    "text": "In York, Theo Merriweather signed for Polar Systems Ltd.. The representative Theo Merriweather returned to York.",
+    "spans": [
+      {
+        "start": 3,
+        "end": 7,
+        "label": "CITY",
+        "text": "York"
+      },
+      {
+        "start": 9,
+        "end": 26,
+        "label": "PERSON",
+        "text": "Theo Merriweather"
+      },
+      {
+        "start": 38,
+        "end": 56,
+        "label": "ORGANIZATION",
+        "text": "Polar Systems Ltd."
+      },
+      {
+        "start": 77,
+        "end": 94,
+        "label": "PERSON",
+        "text": "Theo Merriweather"
+      },
+      {
+        "start": 107,
+        "end": 111,
+        "label": "CITY",
+        "text": "York"
+      }
+    ],
+    "expected": "In [CITY], [PERSON] signed for [ORGANIZATION]. The representative [PERSON] returned to [CITY]."
+  },
+  {
+    "id": "holdout03c-096",
+    "language": "de",
+    "ocr_noise": true,
+    "features": [
+      "line_wrap",
+      "organization"
+    ],
+    "text": "Name: Theo-\nMerriweather\nOrt: Yo-\nrk\nArbeitgeber: Polar Systems Ltd..",
+    "spans": [
+      {
+        "start": 6,
+        "end": 24,
+        "label": "PERSON",
+        "text": "Theo-\nMerriweather"
+      },
+      {
+        "start": 30,
+        "end": 36,
+        "label": "CITY",
+        "text": "Yo-\nrk"
+      },
+      {
+        "start": 50,
+        "end": 68,
+        "label": "ORGANIZATION",
+        "text": "Polar Systems Ltd."
+      }
+    ],
+    "expected": "Name: [PERSON]\nOrt: [CITY]\nArbeitgeber: [ORGANIZATION]."
+  },
+  {
+    "id": "holdout03c-097",
+    "language": "en",
+    "ocr_noise": true,
+    "features": [
+      "ocr_spelling",
+      "organization"
+    ],
+    "text": "Scanned record: The0 Merr1weather resides in Y0rk and works at Polar Systems Ltd..",
+    "spans": [
+      {
+        "start": 16,
+        "end": 33,
+        "label": "PERSON",
+        "text": "The0 Merr1weather"
+      },
+      {
+        "start": 45,
+        "end": 49,
+        "label": "CITY",
+        "text": "Y0rk"
+      },
+      {
+        "start": 63,
+        "end": 81,
+        "label": "ORGANIZATION",
+        "text": "Polar Systems Ltd."
+      }
+    ],
+    "expected": "Scanned record: [PERSON] resides in [CITY] and works at [ORGANIZATION]."
+  },
+  {
+    "id": "holdout03c-098",
+    "language": "de",
+    "ocr_noise": false,
+    "features": [
+      "religious_reference",
+      "no_inferred_affiliation"
+    ],
+    "text": "Das Thema muslimisch wird in einem Bericht von Polar Systems Ltd. erwähnt. Für Theo Merriweather wird keine Religionszugehörigkeit behauptet.",
+    "spans": [
+      {
+        "start": 10,
+        "end": 20,
+        "label": "RELIGION",
+        "text": "muslimisch"
+      },
+      {
+        "start": 47,
+        "end": 65,
+        "label": "ORGANIZATION",
+        "text": "Polar Systems Ltd."
+      },
+      {
+        "start": 79,
+        "end": 96,
+        "label": "PERSON",
+        "text": "Theo Merriweather"
+      }
+    ],
+    "expected": "Das Thema [RELIGION] wird in einem Bericht von [ORGANIZATION] erwähnt. Für [PERSON] wird keine Religionszugehörigkeit behauptet."
+  },
+  {
+    "id": "holdout03c-099",
+    "language": "en",
+    "ocr_noise": false,
+    "features": [
+      "negative",
+      "religious_reference"
+    ],
+    "text": "Worksheet 110: a name alone establishes no religious affiliation. The plain record contains no named person, place, organization or contact details.",
+    "spans": [],
+    "expected": "Worksheet 110: a name alone establishes no religious affiliation. The plain record contains no named person, place, organization or contact details."
+  },
+  {
+    "id": "holdout03c-100",
+    "language": "de",
+    "ocr_noise": false,
+    "features": [
+      "organization",
+      "geography"
+    ],
+    "text": "Auskunft: Maja Kirschbaum arbeitet für Sonnenbogen Verein in Lüneburg.",
+    "spans": [
+      {
+        "start": 10,
+        "end": 25,
+        "label": "PERSON",
+        "text": "Maja Kirschbaum"
+      },
+      {
+        "start": 39,
+        "end": 57,
+        "label": "ORGANIZATION",
+        "text": "Sonnenbogen Verein"
+      },
+      {
+        "start": 61,
+        "end": 69,
+        "label": "CITY",
+        "text": "Lüneburg"
+      }
+    ],
+    "expected": "Auskunft: [PERSON] arbeitet für [ORGANIZATION] in [CITY]."
+  },
+  {
+    "id": "holdout03c-101",
+    "language": "en",
+    "ocr_noise": false,
+    "features": [
+      "organization",
+      "geography"
+    ],
+    "text": "The contact Maja Kirschbaum represents Sonnenbogen Verein near Lüneburg.",
+    "spans": [
+      {
+        "start": 12,
+        "end": 27,
+        "label": "PERSON",
+        "text": "Maja Kirschbaum"
+      },
+      {
+        "start": 39,
+        "end": 57,
+        "label": "ORGANIZATION",
+        "text": "Sonnenbogen Verein"
+      },
+      {
+        "start": 63,
+        "end": 71,
+        "label": "CITY",
+        "text": "Lüneburg"
+      }
+    ],
+    "expected": "The contact [PERSON] represents [ORGANIZATION] near [CITY]."
+  },
+  {
+    "id": "holdout03c-102",
+    "language": "de",
+    "ocr_noise": false,
+    "features": [
+      "affiliation",
+      "contacts"
+    ],
+    "text": "Maja Kirschbaum nennt konfessionslos als Zugehörigkeit. E-Mail: case111.review@example.invalid; Telefon: +49 541 730111.",
+    "spans": [
+      {
+        "start": 0,
+        "end": 15,
+        "label": "PERSON",
+        "text": "Maja Kirschbaum"
+      },
+      {
+        "start": 22,
+        "end": 36,
+        "label": "RELIGION",
+        "text": "konfessionslos"
+      },
+      {
+        "start": 64,
+        "end": 94,
+        "label": "EMAIL",
+        "text": "case111.review@example.invalid"
+      },
+      {
+        "start": 105,
+        "end": 119,
+        "label": "PHONE",
+        "text": "+49 541 730111"
+      }
+    ],
+    "expected": "[PERSON] nennt [RELIGION] als Zugehörigkeit. E-Mail: [EMAIL]; Telefon: [PHONE]."
+  },
+  {
+    "id": "holdout03c-103",
+    "language": "en",
+    "ocr_noise": false,
+    "features": [
+      "affiliation",
+      "contacts"
+    ],
+    "text": "Maja Kirschbaum explicitly names atheism as their faith. Write to case111.review@example.invalid or call +49 541 730111.",
+    "spans": [
+      {
+        "start": 0,
+        "end": 15,
+        "label": "PERSON",
+        "text": "Maja Kirschbaum"
+      },
+      {
+        "start": 33,
+        "end": 40,
+        "label": "RELIGION",
+        "text": "atheism"
+      },
+      {
+        "start": 66,
+        "end": 96,
+        "label": "EMAIL",
+        "text": "case111.review@example.invalid"
+      },
+      {
+        "start": 105,
+        "end": 119,
+        "label": "PHONE",
+        "text": "+49 541 730111"
+      }
+    ],
+    "expected": "[PERSON] explicitly names [RELIGION] as their faith. Write to [EMAIL] or call [PHONE]."
+  },
+  {
+    "id": "holdout03c-104",
+    "language": "de",
+    "ocr_noise": false,
+    "features": [
+      "repeats",
+      "paragraphs"
+    ],
+    "text": "Maja Kirschbaum besucht Lüneburg.\n\nMaja Kirschbaum bestätigt den Termin bei Sonnenbogen Verein.",
+    "spans": [
+      {
+        "start": 0,
+        "end": 15,
+        "label": "PERSON",
+        "text": "Maja Kirschbaum"
+      },
+      {
+        "start": 24,
+        "end": 32,
+        "label": "CITY",
+        "text": "Lüneburg"
+      },
+      {
+        "start": 35,
+        "end": 50,
+        "label": "PERSON",
+        "text": "Maja Kirschbaum"
+      },
+      {
+        "start": 76,
+        "end": 94,
+        "label": "ORGANIZATION",
+        "text": "Sonnenbogen Verein"
+      }
+    ],
+    "expected": "[PERSON] besucht [CITY].\n\n[PERSON] bestätigt den Termin bei [ORGANIZATION]."
+  },
+  {
+    "id": "holdout03c-105",
+    "language": "en",
+    "ocr_noise": false,
+    "features": [
+      "repeats",
+      "ambiguous_geography"
+    ],
+    "text": "In Lüneburg, Maja Kirschbaum signed for Sonnenbogen Verein. The representative Maja Kirschbaum returned to Lüneburg.",
+    "spans": [
+      {
+        "start": 3,
+        "end": 11,
+        "label": "CITY",
+        "text": "Lüneburg"
+      },
+      {
+        "start": 13,
+        "end": 28,
+        "label": "PERSON",
+        "text": "Maja Kirschbaum"
+      },
+      {
+        "start": 40,
+        "end": 58,
+        "label": "ORGANIZATION",
+        "text": "Sonnenbogen Verein"
+      },
+      {
+        "start": 79,
+        "end": 94,
+        "label": "PERSON",
+        "text": "Maja Kirschbaum"
+      },
+      {
+        "start": 107,
+        "end": 115,
+        "label": "CITY",
+        "text": "Lüneburg"
+      }
+    ],
+    "expected": "In [CITY], [PERSON] signed for [ORGANIZATION]. The representative [PERSON] returned to [CITY]."
+  },
+  {
+    "id": "holdout03c-106",
+    "language": "de",
+    "ocr_noise": true,
+    "features": [
+      "line_wrap",
+      "organization"
+    ],
+    "text": "Name: Maja-\nKirschbaum\nOrt: Lüne-\nburg\nArbeitgeber: Sonnenbogen Verein.",
+    "spans": [
+      {
+        "start": 6,
+        "end": 22,
+        "label": "PERSON",
+        "text": "Maja-\nKirschbaum"
+      },
+      {
+        "start": 28,
+        "end": 38,
+        "label": "CITY",
+        "text": "Lüne-\nburg"
+      },
+      {
+        "start": 52,
+        "end": 70,
+        "label": "ORGANIZATION",
+        "text": "Sonnenbogen Verein"
+      }
+    ],
+    "expected": "Name: [PERSON]\nOrt: [CITY]\nArbeitgeber: [ORGANIZATION]."
+  },
+  {
+    "id": "holdout03c-107",
+    "language": "en",
+    "ocr_noise": true,
+    "features": [
+      "ocr_spelling",
+      "organization"
+    ],
+    "text": "Scanned record: Maja K1rschbaum resides in Lüneburg and works at Sonnenbogen Verein.",
+    "spans": [
+      {
+        "start": 16,
+        "end": 31,
+        "label": "PERSON",
+        "text": "Maja K1rschbaum"
+      },
+      {
+        "start": 43,
+        "end": 51,
+        "label": "CITY",
+        "text": "Lüneburg"
+      },
+      {
+        "start": 65,
+        "end": 83,
+        "label": "ORGANIZATION",
+        "text": "Sonnenbogen Verein"
+      }
+    ],
+    "expected": "Scanned record: [PERSON] resides in [CITY] and works at [ORGANIZATION]."
+  },
+  {
+    "id": "holdout03c-108",
+    "language": "de",
+    "ocr_noise": false,
+    "features": [
+      "religious_reference",
+      "no_inferred_affiliation"
+    ],
+    "text": "Das Thema konfessionslos wird in einem Bericht von Sonnenbogen Verein erwähnt. Für Maja Kirschbaum wird keine Religionszugehörigkeit behauptet.",
+    "spans": [
+      {
+        "start": 10,
+        "end": 24,
+        "label": "RELIGION",
+        "text": "konfessionslos"
+      },
+      {
+        "start": 51,
+        "end": 69,
+        "label": "ORGANIZATION",
+        "text": "Sonnenbogen Verein"
+      },
+      {
+        "start": 83,
+        "end": 98,
+        "label": "PERSON",
+        "text": "Maja Kirschbaum"
+      }
+    ],
+    "expected": "Das Thema [RELIGION] wird in einem Bericht von [ORGANIZATION] erwähnt. Für [PERSON] wird keine Religionszugehörigkeit behauptet."
+  },
+  {
+    "id": "holdout03c-109",
+    "language": "en",
+    "ocr_noise": false,
+    "features": [
+      "negative",
+      "religious_reference"
+    ],
+    "text": "Worksheet 111: a name alone establishes no religious affiliation. The plain record contains no named person, place, organization or contact details.",
+    "spans": [],
+    "expected": "Worksheet 111: a name alone establishes no religious affiliation. The plain record contains no named person, place, organization or contact details."
+  },
+  {
+    "id": "holdout03c-110",
+    "language": "de",
+    "ocr_noise": false,
+    "features": [
+      "organization",
+      "geography"
+    ],
+    "text": "Auskunft: Ronan Whitmore arbeitet für Beacon Valley Labs in Bath.",
+    "spans": [
+      {
+        "start": 10,
+        "end": 24,
+        "label": "PERSON",
+        "text": "Ronan Whitmore"
+      },
+      {
+        "start": 38,
+        "end": 56,
+        "label": "ORGANIZATION",
+        "text": "Beacon Valley Labs"
+      },
+      {
+        "start": 60,
+        "end": 64,
+        "label": "CITY",
+        "text": "Bath"
+      }
+    ],
+    "expected": "Auskunft: [PERSON] arbeitet für [ORGANIZATION] in [CITY]."
+  },
+  {
+    "id": "holdout03c-111",
+    "language": "en",
+    "ocr_noise": false,
+    "features": [
+      "organization",
+      "geography"
+    ],
+    "text": "The contact Ronan Whitmore represents Beacon Valley Labs near Bath.",
+    "spans": [
+      {
+        "start": 12,
+        "end": 26,
+        "label": "PERSON",
+        "text": "Ronan Whitmore"
+      },
+      {
+        "start": 38,
+        "end": 56,
+        "label": "ORGANIZATION",
+        "text": "Beacon Valley Labs"
+      },
+      {
+        "start": 62,
+        "end": 66,
+        "label": "CITY",
+        "text": "Bath"
+      }
+    ],
+    "expected": "The contact [PERSON] represents [ORGANIZATION] near [CITY]."
+  },
+  {
+    "id": "holdout03c-112",
+    "language": "de",
+    "ocr_noise": false,
+    "features": [
+      "affiliation",
+      "contacts"
+    ],
+    "text": "Ronan Whitmore nennt christlich als Zugehörigkeit. E-Mail: case112.review@example.invalid; Telefon: +49 541 730112.",
+    "spans": [
+      {
+        "start": 0,
+        "end": 14,
+        "label": "PERSON",
+        "text": "Ronan Whitmore"
+      },
+      {
+        "start": 21,
+        "end": 31,
+        "label": "RELIGION",
+        "text": "christlich"
+      },
+      {
+        "start": 59,
+        "end": 89,
+        "label": "EMAIL",
+        "text": "case112.review@example.invalid"
+      },
+      {
+        "start": 100,
+        "end": 114,
+        "label": "PHONE",
+        "text": "+49 541 730112"
+      }
+    ],
+    "expected": "[PERSON] nennt [RELIGION] als Zugehörigkeit. E-Mail: [EMAIL]; Telefon: [PHONE]."
+  },
+  {
+    "id": "holdout03c-113",
+    "language": "en",
+    "ocr_noise": false,
+    "features": [
+      "affiliation",
+      "contacts"
+    ],
+    "text": "Ronan Whitmore explicitly names Christianity as their faith. Write to case112.review@example.invalid or call +49 541 730112.",
+    "spans": [
+      {
+        "start": 0,
+        "end": 14,
+        "label": "PERSON",
+        "text": "Ronan Whitmore"
+      },
+      {
+        "start": 32,
+        "end": 44,
+        "label": "RELIGION",
+        "text": "Christianity"
+      },
+      {
+        "start": 70,
+        "end": 100,
+        "label": "EMAIL",
+        "text": "case112.review@example.invalid"
+      },
+      {
+        "start": 109,
+        "end": 123,
+        "label": "PHONE",
+        "text": "+49 541 730112"
+      }
+    ],
+    "expected": "[PERSON] explicitly names [RELIGION] as their faith. Write to [EMAIL] or call [PHONE]."
+  },
+  {
+    "id": "holdout03c-114",
+    "language": "de",
+    "ocr_noise": false,
+    "features": [
+      "repeats",
+      "paragraphs"
+    ],
+    "text": "Ronan Whitmore besucht Bath.\n\nRonan Whitmore bestätigt den Termin bei Beacon Valley Labs.",
+    "spans": [
+      {
+        "start": 0,
+        "end": 14,
+        "label": "PERSON",
+        "text": "Ronan Whitmore"
+      },
+      {
+        "start": 23,
+        "end": 27,
+        "label": "CITY",
+        "text": "Bath"
+      },
+      {
+        "start": 30,
+        "end": 44,
+        "label": "PERSON",
+        "text": "Ronan Whitmore"
+      },
+      {
+        "start": 70,
+        "end": 88,
+        "label": "ORGANIZATION",
+        "text": "Beacon Valley Labs"
+      }
+    ],
+    "expected": "[PERSON] besucht [CITY].\n\n[PERSON] bestätigt den Termin bei [ORGANIZATION]."
+  },
+  {
+    "id": "holdout03c-115",
+    "language": "en",
+    "ocr_noise": false,
+    "features": [
+      "repeats",
+      "ambiguous_geography"
+    ],
+    "text": "In Bath, Ronan Whitmore signed for Beacon Valley Labs. The representative Ronan Whitmore returned to Bath.",
+    "spans": [
+      {
+        "start": 3,
+        "end": 7,
+        "label": "CITY",
+        "text": "Bath"
+      },
+      {
+        "start": 9,
+        "end": 23,
+        "label": "PERSON",
+        "text": "Ronan Whitmore"
+      },
+      {
+        "start": 35,
+        "end": 53,
+        "label": "ORGANIZATION",
+        "text": "Beacon Valley Labs"
+      },
+      {
+        "start": 74,
+        "end": 88,
+        "label": "PERSON",
+        "text": "Ronan Whitmore"
+      },
+      {
+        "start": 101,
+        "end": 105,
+        "label": "CITY",
+        "text": "Bath"
+      }
+    ],
+    "expected": "In [CITY], [PERSON] signed for [ORGANIZATION]. The representative [PERSON] returned to [CITY]."
+  },
+  {
+    "id": "holdout03c-116",
+    "language": "de",
+    "ocr_noise": true,
+    "features": [
+      "line_wrap",
+      "organization"
+    ],
+    "text": "Name: Ronan-\nWhitmore\nOrt: Ba-\nth\nArbeitgeber: Beacon Valley Labs.",
+    "spans": [
+      {
+        "start": 6,
+        "end": 21,
+        "label": "PERSON",
+        "text": "Ronan-\nWhitmore"
+      },
+      {
+        "start": 27,
+        "end": 33,
+        "label": "CITY",
+        "text": "Ba-\nth"
+      },
+      {
+        "start": 47,
+        "end": 65,
+        "label": "ORGANIZATION",
+        "text": "Beacon Valley Labs"
+      }
+    ],
+    "expected": "Name: [PERSON]\nOrt: [CITY]\nArbeitgeber: [ORGANIZATION]."
+  },
+  {
+    "id": "holdout03c-117",
+    "language": "en",
+    "ocr_noise": true,
+    "features": [
+      "ocr_spelling",
+      "organization"
+    ],
+    "text": "Scanned record: R0nan Wh1tm0re resides in B4th and works at Beacon Valley Labs.",
+    "spans": [
+      {
+        "start": 16,
+        "end": 30,
+        "label": "PERSON",
+        "text": "R0nan Wh1tm0re"
+      },
+      {
+        "start": 42,
+        "end": 46,
+        "label": "CITY",
+        "text": "B4th"
+      },
+      {
+        "start": 60,
+        "end": 78,
+        "label": "ORGANIZATION",
+        "text": "Beacon Valley Labs"
+      }
+    ],
+    "expected": "Scanned record: [PERSON] resides in [CITY] and works at [ORGANIZATION]."
+  },
+  {
+    "id": "holdout03c-118",
+    "language": "de",
+    "ocr_noise": false,
+    "features": [
+      "religious_reference",
+      "no_inferred_affiliation"
+    ],
+    "text": "Das Thema christlich wird in einem Bericht von Beacon Valley Labs erwähnt. Für Ronan Whitmore wird keine Religionszugehörigkeit behauptet.",
+    "spans": [
+      {
+        "start": 10,
+        "end": 20,
+        "label": "RELIGION",
+        "text": "christlich"
+      },
+      {
+        "start": 47,
+        "end": 65,
+        "label": "ORGANIZATION",
+        "text": "Beacon Valley Labs"
+      },
+      {
+        "start": 79,
+        "end": 93,
+        "label": "PERSON",
+        "text": "Ronan Whitmore"
+      }
+    ],
+    "expected": "Das Thema [RELIGION] wird in einem Bericht von [ORGANIZATION] erwähnt. Für [PERSON] wird keine Religionszugehörigkeit behauptet."
+  },
+  {
+    "id": "holdout03c-119",
+    "language": "en",
+    "ocr_noise": false,
+    "features": [
+      "negative",
+      "religious_reference"
+    ],
+    "text": "Worksheet 112: a name alone establishes no religious affiliation. The plain record contains no named person, place, organization or contact details.",
+    "spans": [],
+    "expected": "Worksheet 112: a name alone establishes no religious affiliation. The plain record contains no named person, place, organization or contact details."
+  }
+]

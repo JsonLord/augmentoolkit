@@ -1,0 +1,18 @@
+{
+  "schema_version": "private-anonymization-staging/v1",
+  "deployment_enabled": false,
+  "production_identity_integration": "BLOCKED",
+  "host_adapter_entrypoint": null,
+  "worker_entrypoint": null,
+  "replicas": 1,
+  "ledger_backend": "single-host-local-sqlite",
+  "multi_host_shared_key_support": "BLOCKED: no shared durable backend implemented",
+  "host_key_domains": "Each host requires a distinct actual signing key; compare computed fingerprints, not aliases",
+  "resources": {"minimum_qualification_profile_vcpu": 4, "worker_memory_max_gib": 8, "recommended_host_memory_gib": 12, "model_instances": 1, "inference_threads": 2, "concurrent_jobs": 1},
+  "bounds": {"staging_max_text_characters": 10000, "maximum_job_runtime_seconds": 300, "queue_capacity": 2, "bounded_result_retention_required": true},
+  "model": {"id": "VAGOsolutions/SauerkrautLM-GLiNER", "revision": "ba967ee030b7e679dd5422cb16fcd1b379da38e1", "manifest": "ocr/anonymization/artifacts.json", "cache": "/var/cache/private-anonymization/model", "runtime_downloads": false},
+  "runtime": {"python": "3.11", "locks": ["ocr/requirements.lock", "ocr/anonymization/requirements.lock"], "persistent_process": true, "entrypoint_status": "BLOCKED until real host application and adapters exist", "automatic_restart": false},
+  "network": {"enabled": false, "public_ports": [], "listeners": [], "remote_transmission": false, "transport": "explicit approved local private filesystem only"},
+  "filesystem": {"state_root": "/var/lib/private-anonymization", "directories_mode": "0700", "classified_files_mode": "0600", "model_cache_read_only": true, "source_evidence_immutable": true, "encrypted_volume_required": true, "ledger_id_pinned_in_private_configuration": true, "startup_ledger_creation": false},
+  "authorization": {"authenticated_identity_required": true, "immutable_completed_review_store_required": true, "current_acl_and_revocation_required": true, "export_artifact_registry_required": true, "separate_transfer_scope": "anonymization:private-transfer", "automated_release_eligible": false, "automatic_exports": false}
+}

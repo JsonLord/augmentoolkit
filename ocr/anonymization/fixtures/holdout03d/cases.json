@@ -1,0 +1,2730 @@
+[
+  {
+    "id": "holdout03d-001",
+    "language": "de",
+    "scenario": "affiliation",
+    "ocr_noise": false,
+    "text": "Im Aufnahmebogen steht: Bekenntnis römisch-katholisch.",
+    "spans": [
+      {
+        "start": 35,
+        "end": 53,
+        "label": "RELIGION",
+        "text": "römisch-katholisch"
+      }
+    ],
+    "expected": "Im Aufnahmebogen steht: Bekenntnis [RELIGION]."
+  },
+  {
+    "id": "holdout03d-002",
+    "language": "en",
+    "scenario": "affiliation",
+    "ocr_noise": false,
+    "text": "Faith field on the admission card: Roman Catholic.",
+    "spans": [
+      {
+        "start": 35,
+        "end": 49,
+        "label": "RELIGION",
+        "text": "Roman Catholic"
+      }
+    ],
+    "expected": "Faith field on the admission card: [RELIGION]."
+  },
+  {
+    "id": "holdout03d-003",
+    "language": "de",
+    "scenario": "affiliation",
+    "ocr_noise": false,
+    "text": "Tabea Hornfels beschreibt ihre Tradition als sunnitisch.",
+    "spans": [
+      {
+        "start": 0,
+        "end": 14,
+        "label": "PERSON",
+        "text": "Tabea Hornfels"
+      },
+      {
+        "start": 45,
+        "end": 55,
+        "label": "RELIGION",
+        "text": "sunnitisch"
+      }
+    ],
+    "expected": "[PERSON] beschreibt ihre Tradition als [RELIGION]."
+  },
+  {
+    "id": "holdout03d-004",
+    "language": "en",
+    "scenario": "affiliation",
+    "ocr_noise": false,
+    "text": "Ewan Fairbrook identifies as Shia Muslim in the consent note.",
+    "spans": [
+      {
+        "start": 0,
+        "end": 14,
+        "label": "PERSON",
+        "text": "Ewan Fairbrook"
+      },
+      {
+        "start": 29,
+        "end": 40,
+        "label": "RELIGION",
+        "text": "Shia Muslim"
+      }
+    ],
+    "expected": "[PERSON] identifies as [RELIGION] in the consent note."
+  },
+  {
+    "id": "holdout03d-005",
+    "language": "de",
+    "scenario": "affiliation",
+    "ocr_noise": false,
+    "text": "Als Glaubensrichtung wurde Jesidentum eingetragen.",
+    "spans": [
+      {
+        "start": 27,
+        "end": 37,
+        "label": "RELIGION",
+        "text": "Jesidentum"
+      }
+    ],
+    "expected": "Als Glaubensrichtung wurde [RELIGION] eingetragen."
+  },
+  {
+    "id": "holdout03d-006",
+    "language": "en",
+    "scenario": "affiliation",
+    "ocr_noise": false,
+    "text": "The registrant selected Quaker under faith community.",
+    "spans": [
+      {
+        "start": 24,
+        "end": 30,
+        "label": "RELIGION",
+        "text": "Quaker"
+      }
+    ],
+    "expected": "The registrant selected [RELIGION] under faith community."
+  },
+  {
+    "id": "holdout03d-007",
+    "language": "de",
+    "scenario": "affiliation",
+    "ocr_noise": false,
+    "text": "Religiöse Selbstauskunft: Sikhismus; Veröffentlichung gesperrt.",
+    "spans": [
+      {
+        "start": 26,
+        "end": 35,
+        "label": "RELIGION",
+        "text": "Sikhismus"
+      }
+    ],
+    "expected": "Religiöse Selbstauskunft: [RELIGION]; Veröffentlichung gesperrt."
+  },
+  {
+    "id": "holdout03d-008",
+    "language": "en",
+    "scenario": "affiliation",
+    "ocr_noise": false,
+    "text": "The private survey records Hinduism as the participant's belief.",
+    "spans": [
+      {
+        "start": 27,
+        "end": 35,
+        "label": "RELIGION",
+        "text": "Hinduism"
+      }
+    ],
+    "expected": "The private survey records [RELIGION] as the participant's belief."
+  },
+  {
+    "id": "holdout03d-009",
+    "language": "de",
+    "scenario": "affiliation",
+    "ocr_noise": false,
+    "text": "Die Person gehört nach eigener Auskunft dem Judentum an.",
+    "spans": [
+      {
+        "start": 44,
+        "end": 52,
+        "label": "RELIGION",
+        "text": "Judentum"
+      }
+    ],
+    "expected": "Die Person gehört nach eigener Auskunft dem [RELIGION] an."
+  },
+  {
+    "id": "holdout03d-010",
+    "language": "en",
+    "scenario": "affiliation",
+    "ocr_noise": false,
+    "text": "The speaker described her religion as Buddhism.",
+    "spans": [
+      {
+        "start": 38,
+        "end": 46,
+        "label": "RELIGION",
+        "text": "Buddhism"
+      }
+    ],
+    "expected": "The speaker described her religion as [RELIGION]."
+  },
+  {
+    "id": "holdout03d-011",
+    "language": "de",
+    "scenario": "affiliation",
+    "ocr_noise": false,
+    "text": "Auf Seite zwei lautet die Angabe zur Religion Bahai.",
+    "spans": [
+      {
+        "start": 46,
+        "end": 51,
+        "label": "RELIGION",
+        "text": "Bahai"
+      }
+    ],
+    "expected": "Auf Seite zwei lautet die Angabe zur Religion [RELIGION]."
+  },
+  {
+    "id": "holdout03d-012",
+    "language": "en",
+    "scenario": "affiliation",
+    "ocr_noise": false,
+    "text": "In a handwritten footnote the applicant wrote Jainism.",
+    "spans": [
+      {
+        "start": 46,
+        "end": 53,
+        "label": "RELIGION",
+        "text": "Jainism"
+      }
+    ],
+    "expected": "In a handwritten footnote the applicant wrote [RELIGION]."
+  },
+  {
+    "id": "holdout03d-013",
+    "language": "de",
+    "scenario": "affiliation",
+    "ocr_noise": false,
+    "text": "Konfession des Antragstellers: evangelisch-lutherisch.",
+    "spans": [
+      {
+        "start": 31,
+        "end": 53,
+        "label": "RELIGION",
+        "text": "evangelisch-lutherisch"
+      }
+    ],
+    "expected": "Konfession des Antragstellers: [RELIGION]."
+  },
+  {
+    "id": "holdout03d-014",
+    "language": "en",
+    "scenario": "affiliation",
+    "ocr_noise": false,
+    "text": "The confidential intake identifies the resident as Seventh-day Adventist.",
+    "spans": [
+      {
+        "start": 51,
+        "end": 72,
+        "label": "RELIGION",
+        "text": "Seventh-day Adventist"
+      }
+    ],
+    "expected": "The confidential intake identifies the resident as [RELIGION]."
+  },
+  {
+    "id": "holdout03d-015",
+    "language": "de",
+    "scenario": "affiliation",
+    "ocr_noise": false,
+    "text": "Raban Moosfeld bekennt sich zum Christentum.",
+    "spans": [
+      {
+        "start": 0,
+        "end": 14,
+        "label": "PERSON",
+        "text": "Raban Moosfeld"
+      },
+      {
+        "start": 32,
+        "end": 43,
+        "label": "RELIGION",
+        "text": "Christentum"
+      }
+    ],
+    "expected": "[PERSON] bekennt sich zum [RELIGION]."
+  },
+  {
+    "id": "holdout03d-016",
+    "language": "en",
+    "scenario": "affiliation",
+    "ocr_noise": false,
+    "text": "Iona Crestwell states that she practices Zoroastrianism.",
+    "spans": [
+      {
+        "start": 0,
+        "end": 14,
+        "label": "PERSON",
+        "text": "Iona Crestwell"
+      },
+      {
+        "start": 41,
+        "end": 55,
+        "label": "RELIGION",
+        "text": "Zoroastrianism"
+      }
+    ],
+    "expected": "[PERSON] states that she practices [RELIGION]."
+  },
+  {
+    "id": "holdout03d-017",
+    "language": "de",
+    "scenario": "nonaffiliation",
+    "ocr_noise": false,
+    "text": "Die Antwort im Konfessionsfeld lautet konfessionsfrei.",
+    "spans": [
+      {
+        "start": 38,
+        "end": 53,
+        "label": "RELIGION",
+        "text": "konfessionsfrei"
+      }
+    ],
+    "expected": "Die Antwort im Konfessionsfeld lautet [RELIGION]."
+  },
+  {
+    "id": "holdout03d-018",
+    "language": "en",
+    "scenario": "nonaffiliation",
+    "ocr_noise": false,
+    "text": "Religious status: no religious affiliation.",
+    "spans": [
+      {
+        "start": 18,
+        "end": 42,
+        "label": "RELIGION",
+        "text": "no religious affiliation"
+      }
+    ],
+    "expected": "Religious status: [RELIGION]."
+  },
+  {
+    "id": "holdout03d-019",
+    "language": "de",
+    "scenario": "nonaffiliation",
+    "ocr_noise": false,
+    "text": "Antrag: Die Bewohnerin ist religionslos.",
+    "spans": [
+      {
+        "start": 27,
+        "end": 39,
+        "label": "RELIGION",
+        "text": "religionslos"
+      }
+    ],
+    "expected": "Antrag: Die Bewohnerin ist [RELIGION]."
+  },
+  {
+    "id": "holdout03d-020",
+    "language": "en",
+    "scenario": "nonaffiliation",
+    "ocr_noise": false,
+    "text": "On the registration slip the visitor wrote atheist.",
+    "spans": [
+      {
+        "start": 43,
+        "end": 50,
+        "label": "RELIGION",
+        "text": "atheist"
+      }
+    ],
+    "expected": "On the registration slip the visitor wrote [RELIGION]."
+  },
+  {
+    "id": "holdout03d-021",
+    "language": "de",
+    "scenario": "nonaffiliation",
+    "ocr_noise": false,
+    "text": "Selbstbeschreibung im versiegelten Fragebogen: agnostisch.",
+    "spans": [
+      {
+        "start": 47,
+        "end": 57,
+        "label": "RELIGION",
+        "text": "agnostisch"
+      }
+    ],
+    "expected": "Selbstbeschreibung im versiegelten Fragebogen: [RELIGION]."
+  },
+  {
+    "id": "holdout03d-022",
+    "language": "en",
+    "scenario": "nonaffiliation",
+    "ocr_noise": false,
+    "text": "The individual describes himself as agnostic.",
+    "spans": [
+      {
+        "start": 36,
+        "end": 44,
+        "label": "RELIGION",
+        "text": "agnostic"
+      }
+    ],
+    "expected": "The individual describes himself as [RELIGION]."
+  },
+  {
+    "id": "holdout03d-023",
+    "language": "de",
+    "scenario": "nonaffiliation",
+    "ocr_noise": false,
+    "text": "Zur Frage nach der Religion: ohne Konfession.",
+    "spans": [
+      {
+        "start": 29,
+        "end": 44,
+        "label": "RELIGION",
+        "text": "ohne Konfession"
+      }
+    ],
+    "expected": "Zur Frage nach der Religion: [RELIGION]."
+  },
+  {
+    "id": "holdout03d-024",
+    "language": "en",
+    "scenario": "nonaffiliation",
+    "ocr_noise": false,
+    "text": "The recorded answer was nonreligious, with no additional details.",
+    "spans": [
+      {
+        "start": 24,
+        "end": 36,
+        "label": "RELIGION",
+        "text": "nonreligious"
+      }
+    ],
+    "expected": "The recorded answer was [RELIGION], with no additional details."
+  },
+  {
+    "id": "holdout03d-025",
+    "language": "de",
+    "scenario": "nonaffiliation",
+    "ocr_noise": false,
+    "text": "Für den Eintrag gilt keine Religion als wörtliche Antwort.",
+    "spans": [
+      {
+        "start": 21,
+        "end": 35,
+        "label": "RELIGION",
+        "text": "keine Religion"
+      }
+    ],
+    "expected": "Für den Eintrag gilt [RELIGION] als wörtliche Antwort."
+  },
+  {
+    "id": "holdout03d-026",
+    "language": "en",
+    "scenario": "nonaffiliation",
+    "ocr_noise": false,
+    "text": "Affiliation was entered as religiously unaffiliated.",
+    "spans": [
+      {
+        "start": 27,
+        "end": 51,
+        "label": "RELIGION",
+        "text": "religiously unaffiliated"
+      }
+    ],
+    "expected": "Affiliation was entered as [RELIGION]."
+  },
+  {
+    "id": "holdout03d-027",
+    "language": "de",
+    "scenario": "nonaffiliation",
+    "ocr_noise": false,
+    "text": "Die vertrauliche Karte vermerkt konfessionslos neben dem Geburtsjahr.",
+    "spans": [
+      {
+        "start": 32,
+        "end": 46,
+        "label": "RELIGION",
+        "text": "konfessionslos"
+      }
+    ],
+    "expected": "Die vertrauliche Karte vermerkt [RELIGION] neben dem Geburtsjahr."
+  },
+  {
+    "id": "holdout03d-028",
+    "language": "en",
+    "scenario": "nonaffiliation",
+    "ocr_noise": false,
+    "text": "Personal belief: atheism; this field must remain private.",
+    "spans": [
+      {
+        "start": 17,
+        "end": 24,
+        "label": "RELIGION",
+        "text": "atheism"
+      }
+    ],
+    "expected": "Personal belief: [RELIGION]; this field must remain private."
+  },
+  {
+    "id": "holdout03d-029",
+    "language": "de",
+    "scenario": "nonaffiliation",
+    "ocr_noise": false,
+    "text": "Beim Interview wurde Atheismus als eigene Haltung genannt.",
+    "spans": [
+      {
+        "start": 21,
+        "end": 30,
+        "label": "RELIGION",
+        "text": "Atheismus"
+      }
+    ],
+    "expected": "Beim Interview wurde [RELIGION] als eigene Haltung genannt."
+  },
+  {
+    "id": "holdout03d-030",
+    "language": "en",
+    "scenario": "nonaffiliation",
+    "ocr_noise": false,
+    "text": "The resident's own answer is no religion.",
+    "spans": [
+      {
+        "start": 29,
+        "end": 40,
+        "label": "RELIGION",
+        "text": "no religion"
+      }
+    ],
+    "expected": "The resident's own answer is [RELIGION]."
+  },
+  {
+    "id": "holdout03d-031",
+    "language": "de",
+    "scenario": "nonaffiliation",
+    "ocr_noise": false,
+    "text": "Als Weltanschauung wird Agnostizismus angegeben.",
+    "spans": [
+      {
+        "start": 24,
+        "end": 37,
+        "label": "RELIGION",
+        "text": "Agnostizismus"
+      }
+    ],
+    "expected": "Als Weltanschauung wird [RELIGION] angegeben."
+  },
+  {
+    "id": "holdout03d-032",
+    "language": "en",
+    "scenario": "nonaffiliation",
+    "ocr_noise": false,
+    "text": "The form marks the applicant non-religious.",
+    "spans": [
+      {
+        "start": 29,
+        "end": 42,
+        "label": "RELIGION",
+        "text": "non-religious"
+      }
+    ],
+    "expected": "The form marks the applicant [RELIGION]."
+  },
+  {
+    "id": "holdout03d-033",
+    "language": "de",
+    "scenario": "belief_names",
+    "ocr_noise": false,
+    "text": "Ein Glossar definiert Daoismus auf der ersten Seite.",
+    "spans": [
+      {
+        "start": 22,
+        "end": 30,
+        "label": "RELIGION",
+        "text": "Daoismus"
+      }
+    ],
+    "expected": "Ein Glossar definiert [RELIGION] auf der ersten Seite."
+  },
+  {
+    "id": "holdout03d-034",
+    "language": "en",
+    "scenario": "belief_names",
+    "ocr_noise": false,
+    "text": "The index contains an entry for Shintoism.",
+    "spans": [
+      {
+        "start": 32,
+        "end": 41,
+        "label": "RELIGION",
+        "text": "Shintoism"
+      }
+    ],
+    "expected": "The index contains an entry for [RELIGION]."
+  },
+  {
+    "id": "holdout03d-035",
+    "language": "de",
+    "scenario": "belief_names",
+    "ocr_noise": false,
+    "text": "Die Karteikarte trägt nur das Stichwort Islam.",
+    "spans": [
+      {
+        "start": 40,
+        "end": 45,
+        "label": "RELIGION",
+        "text": "Islam"
+      }
+    ],
+    "expected": "Die Karteikarte trägt nur das Stichwort [RELIGION]."
+  },
+  {
+    "id": "holdout03d-036",
+    "language": "en",
+    "scenario": "belief_names",
+    "ocr_noise": false,
+    "text": "A dictionary heading reads Judaism.",
+    "spans": [
+      {
+        "start": 27,
+        "end": 34,
+        "label": "RELIGION",
+        "text": "Judaism"
+      }
+    ],
+    "expected": "A dictionary heading reads [RELIGION]."
+  },
+  {
+    "id": "holdout03d-037",
+    "language": "de",
+    "scenario": "belief_names",
+    "ocr_noise": false,
+    "text": "Im Inhaltsverzeichnis stehen Hinduismus und Buddhismus.",
+    "spans": [
+      {
+        "start": 29,
+        "end": 39,
+        "label": "RELIGION",
+        "text": "Hinduismus"
+      },
+      {
+        "start": 44,
+        "end": 54,
+        "label": "RELIGION",
+        "text": "Buddhismus"
+      }
+    ],
+    "expected": "Im Inhaltsverzeichnis stehen [RELIGION] und [RELIGION]."
+  },
+  {
+    "id": "holdout03d-038",
+    "language": "en",
+    "scenario": "belief_names",
+    "ocr_noise": false,
+    "text": "The glossary compares Christianity with Taoism.",
+    "spans": [
+      {
+        "start": 22,
+        "end": 34,
+        "label": "RELIGION",
+        "text": "Christianity"
+      },
+      {
+        "start": 40,
+        "end": 46,
+        "label": "RELIGION",
+        "text": "Taoism"
+      }
+    ],
+    "expected": "The glossary compares [RELIGION] with [RELIGION]."
+  },
+  {
+    "id": "holdout03d-039",
+    "language": "de",
+    "scenario": "belief_names",
+    "ocr_noise": false,
+    "text": "Das Museum beschriftet einen Abschnitt mit Jainismus.",
+    "spans": [
+      {
+        "start": 43,
+        "end": 52,
+        "label": "RELIGION",
+        "text": "Jainismus"
+      }
+    ],
+    "expected": "Das Museum beschriftet einen Abschnitt mit [RELIGION]."
+  },
+  {
+    "id": "holdout03d-040",
+    "language": "en",
+    "scenario": "belief_names",
+    "ocr_noise": false,
+    "text": "The catalog classifies the manuscript under Sikhism.",
+    "spans": [
+      {
+        "start": 44,
+        "end": 51,
+        "label": "RELIGION",
+        "text": "Sikhism"
+      }
+    ],
+    "expected": "The catalog classifies the manuscript under [RELIGION]."
+  },
+  {
+    "id": "holdout03d-041",
+    "language": "de",
+    "scenario": "belief_names",
+    "ocr_noise": false,
+    "text": "Der Buchtitel erwähnt Zoroastrismus, ohne Personen zu benennen.",
+    "spans": [
+      {
+        "start": 22,
+        "end": 35,
+        "label": "RELIGION",
+        "text": "Zoroastrismus"
+      }
+    ],
+    "expected": "Der Buchtitel erwähnt [RELIGION], ohne Personen zu benennen."
+  },
+  {
+    "id": "holdout03d-042",
+    "language": "en",
+    "scenario": "belief_names",
+    "ocr_noise": false,
+    "text": "A subject heading names Baháʼí Faith.",
+    "spans": [
+      {
+        "start": 24,
+        "end": 36,
+        "label": "RELIGION",
+        "text": "Baháʼí Faith"
+      }
+    ],
+    "expected": "A subject heading names [RELIGION]."
+  },
+  {
+    "id": "holdout03d-043",
+    "language": "de",
+    "scenario": "belief_names",
+    "ocr_noise": false,
+    "text": "Die Übersicht behandelt Katholizismus in einem historischen Kapitel.",
+    "spans": [
+      {
+        "start": 24,
+        "end": 37,
+        "label": "RELIGION",
+        "text": "Katholizismus"
+      }
+    ],
+    "expected": "Die Übersicht behandelt [RELIGION] in einem historischen Kapitel."
+  },
+  {
+    "id": "holdout03d-044",
+    "language": "en",
+    "scenario": "belief_names",
+    "ocr_noise": false,
+    "text": "The bibliography has a subsection titled Protestantism.",
+    "spans": [
+      {
+        "start": 41,
+        "end": 54,
+        "label": "RELIGION",
+        "text": "Protestantism"
+      }
+    ],
+    "expected": "The bibliography has a subsection titled [RELIGION]."
+  },
+  {
+    "id": "holdout03d-045",
+    "language": "de",
+    "scenario": "belief_names",
+    "ocr_noise": false,
+    "text": "Auf dem Deckblatt steht Orthodoxie.",
+    "spans": [
+      {
+        "start": 24,
+        "end": 34,
+        "label": "RELIGION",
+        "text": "Orthodoxie"
+      }
+    ],
+    "expected": "Auf dem Deckblatt steht [RELIGION]."
+  },
+  {
+    "id": "holdout03d-046",
+    "language": "en",
+    "scenario": "belief_names",
+    "ocr_noise": false,
+    "text": "A lecture outline begins with Orthodox Christianity.",
+    "spans": [
+      {
+        "start": 30,
+        "end": 51,
+        "label": "RELIGION",
+        "text": "Orthodox Christianity"
+      }
+    ],
+    "expected": "A lecture outline begins with [RELIGION]."
+  },
+  {
+    "id": "holdout03d-047",
+    "language": "de",
+    "scenario": "belief_names",
+    "ocr_noise": false,
+    "text": "Das Handbuch unterscheidet Sikhismus von Jainismus.",
+    "spans": [
+      {
+        "start": 27,
+        "end": 36,
+        "label": "RELIGION",
+        "text": "Sikhismus"
+      },
+      {
+        "start": 41,
+        "end": 50,
+        "label": "RELIGION",
+        "text": "Jainismus"
+      }
+    ],
+    "expected": "Das Handbuch unterscheidet [RELIGION] von [RELIGION]."
+  },
+  {
+    "id": "holdout03d-048",
+    "language": "en",
+    "scenario": "belief_names",
+    "ocr_noise": false,
+    "text": "The encyclopedia provides a chapter about Confucianism.",
+    "spans": [
+      {
+        "start": 42,
+        "end": 54,
+        "label": "RELIGION",
+        "text": "Confucianism"
+      }
+    ],
+    "expected": "The encyclopedia provides a chapter about [RELIGION]."
+  },
+  {
+    "id": "holdout03d-049",
+    "language": "de",
+    "scenario": "general_topics",
+    "ocr_noise": false,
+    "text": "Die Ausstellung erklärt das Fasten im Islam; Besucherangaben fehlen.",
+    "spans": [
+      {
+        "start": 38,
+        "end": 43,
+        "label": "RELIGION",
+        "text": "Islam"
+      }
+    ],
+    "expected": "Die Ausstellung erklärt das Fasten im [RELIGION]; Besucherangaben fehlen."
+  },
+  {
+    "id": "holdout03d-050",
+    "language": "en",
+    "scenario": "general_topics",
+    "ocr_noise": false,
+    "text": "The essay examines pilgrimage in Hinduism without naming a follower.",
+    "spans": [
+      {
+        "start": 33,
+        "end": 41,
+        "label": "RELIGION",
+        "text": "Hinduism"
+      }
+    ],
+    "expected": "The essay examines pilgrimage in [RELIGION] without naming a follower."
+  },
+  {
+    "id": "holdout03d-051",
+    "language": "de",
+    "scenario": "general_topics",
+    "ocr_noise": false,
+    "text": "Historische Randnotiz: Christentum im frühen Mittelalter.",
+    "spans": [
+      {
+        "start": 23,
+        "end": 34,
+        "label": "RELIGION",
+        "text": "Christentum"
+      }
+    ],
+    "expected": "Historische Randnotiz: [RELIGION] im frühen Mittelalter."
+  },
+  {
+    "id": "holdout03d-052",
+    "language": "en",
+    "scenario": "general_topics",
+    "ocr_noise": false,
+    "text": "The radio program discusses Buddhism as a topic, not the presenter's identity.",
+    "spans": [
+      {
+        "start": 28,
+        "end": 36,
+        "label": "RELIGION",
+        "text": "Buddhism"
+      }
+    ],
+    "expected": "The radio program discusses [RELIGION] as a topic, not the presenter's identity."
+  },
+  {
+    "id": "holdout03d-053",
+    "language": "de",
+    "scenario": "general_topics",
+    "ocr_noise": false,
+    "text": "Auf der Leseliste steht ein Werk zum Judentum.",
+    "spans": [
+      {
+        "start": 37,
+        "end": 45,
+        "label": "RELIGION",
+        "text": "Judentum"
+      }
+    ],
+    "expected": "Auf der Leseliste steht ein Werk zum [RELIGION]."
+  },
+  {
+    "id": "holdout03d-054",
+    "language": "en",
+    "scenario": "general_topics",
+    "ocr_noise": false,
+    "text": "A public seminar on Jainism does not establish anyone's affiliation.",
+    "spans": [
+      {
+        "start": 20,
+        "end": 27,
+        "label": "RELIGION",
+        "text": "Jainism"
+      }
+    ],
+    "expected": "A public seminar on [RELIGION] does not establish anyone's affiliation."
+  },
+  {
+    "id": "holdout03d-055",
+    "language": "de",
+    "scenario": "general_topics",
+    "ocr_noise": false,
+    "text": "Die Wandtafel erläutert Bahai als historischen Gegenstand.",
+    "spans": [
+      {
+        "start": 24,
+        "end": 29,
+        "label": "RELIGION",
+        "text": "Bahai"
+      }
+    ],
+    "expected": "Die Wandtafel erläutert [RELIGION] als historischen Gegenstand."
+  },
+  {
+    "id": "holdout03d-056",
+    "language": "en",
+    "scenario": "general_topics",
+    "ocr_noise": false,
+    "text": "The podcast's subject is Sikhism, with no personal disclosures.",
+    "spans": [
+      {
+        "start": 25,
+        "end": 32,
+        "label": "RELIGION",
+        "text": "Sikhism"
+      }
+    ],
+    "expected": "The podcast's subject is [RELIGION], with no personal disclosures."
+  },
+  {
+    "id": "holdout03d-057",
+    "language": "de",
+    "scenario": "general_topics",
+    "ocr_noise": false,
+    "text": "Kapitelüberschrift: Atheismus und gesellschaftlicher Wandel.",
+    "spans": [
+      {
+        "start": 20,
+        "end": 29,
+        "label": "RELIGION",
+        "text": "Atheismus"
+      }
+    ],
+    "expected": "Kapitelüberschrift: [RELIGION] und gesellschaftlicher Wandel."
+  },
+  {
+    "id": "holdout03d-058",
+    "language": "en",
+    "scenario": "general_topics",
+    "ocr_noise": false,
+    "text": "The chart compares atheism and agnosticism at a conceptual level.",
+    "spans": [
+      {
+        "start": 19,
+        "end": 26,
+        "label": "RELIGION",
+        "text": "atheism"
+      },
+      {
+        "start": 31,
+        "end": 42,
+        "label": "RELIGION",
+        "text": "agnosticism"
+      }
+    ],
+    "expected": "The chart compares [RELIGION] and [RELIGION] at a conceptual level."
+  },
+  {
+    "id": "holdout03d-059",
+    "language": "de",
+    "scenario": "general_topics",
+    "ocr_noise": false,
+    "text": "Ein Forschungstext beschreibt Shintoismus ohne individuelle Angaben.",
+    "spans": [
+      {
+        "start": 30,
+        "end": 41,
+        "label": "RELIGION",
+        "text": "Shintoismus"
+      }
+    ],
+    "expected": "Ein Forschungstext beschreibt [RELIGION] ohne individuelle Angaben."
+  },
+  {
+    "id": "holdout03d-060",
+    "language": "en",
+    "scenario": "general_topics",
+    "ocr_noise": false,
+    "text": "The librarian assigned Taoism as a subject keyword.",
+    "spans": [
+      {
+        "start": 23,
+        "end": 29,
+        "label": "RELIGION",
+        "text": "Taoism"
+      }
+    ],
+    "expected": "The librarian assigned [RELIGION] as a subject keyword."
+  },
+  {
+    "id": "holdout03d-061",
+    "language": "de",
+    "scenario": "general_topics",
+    "ocr_noise": false,
+    "text": "Die Zeitleiste beschreibt den Protestantismus als Bewegung.",
+    "spans": [
+      {
+        "start": 30,
+        "end": 45,
+        "label": "RELIGION",
+        "text": "Protestantismus"
+      }
+    ],
+    "expected": "Die Zeitleiste beschreibt den [RELIGION] als Bewegung."
+  },
+  {
+    "id": "holdout03d-062",
+    "language": "en",
+    "scenario": "general_topics",
+    "ocr_noise": false,
+    "text": "The audio guide explains Catholicism to an unspecified audience.",
+    "spans": [
+      {
+        "start": 25,
+        "end": 36,
+        "label": "RELIGION",
+        "text": "Catholicism"
+      }
+    ],
+    "expected": "The audio guide explains [RELIGION] to an unspecified audience."
+  },
+  {
+    "id": "holdout03d-063",
+    "language": "de",
+    "scenario": "general_topics",
+    "ocr_noise": false,
+    "text": "Ein allgemeiner Artikel nennt konfessionslos als statistische Kategorie.",
+    "spans": [
+      {
+        "start": 30,
+        "end": 44,
+        "label": "RELIGION",
+        "text": "konfessionslos"
+      }
+    ],
+    "expected": "Ein allgemeiner Artikel nennt [RELIGION] als statistische Kategorie."
+  },
+  {
+    "id": "holdout03d-064",
+    "language": "en",
+    "scenario": "general_topics",
+    "ocr_noise": false,
+    "text": "A terminology sheet explains non-religious; it contains no respondent records.",
+    "spans": [
+      {
+        "start": 29,
+        "end": 42,
+        "label": "RELIGION",
+        "text": "non-religious"
+      }
+    ],
+    "expected": "A terminology sheet explains [RELIGION]; it contains no respondent records."
+  },
+  {
+    "id": "holdout03d-065",
+    "language": "de",
+    "scenario": "negation_quotation",
+    "ocr_noise": false,
+    "text": "Im Protokoll steht: »Ich bin nicht muslimisch.«",
+    "spans": [
+      {
+        "start": 35,
+        "end": 45,
+        "label": "RELIGION",
+        "text": "muslimisch"
+      }
+    ],
+    "expected": "Im Protokoll steht: »Ich bin nicht [RELIGION].«"
+  },
+  {
+    "id": "holdout03d-066",
+    "language": "en",
+    "scenario": "negation_quotation",
+    "ocr_noise": false,
+    "text": "The witness said, \"I am not Christian.\"",
+    "spans": [
+      {
+        "start": 28,
+        "end": 37,
+        "label": "RELIGION",
+        "text": "Christian"
+      }
+    ],
+    "expected": "The witness said, \"I am not [RELIGION].\""
+  },
+  {
+    "id": "holdout03d-067",
+    "language": "de",
+    "scenario": "negation_quotation",
+    "ocr_noise": false,
+    "text": "Sie widerspricht dem Eintrag katholisch ausdrücklich.",
+    "spans": [
+      {
+        "start": 29,
+        "end": 39,
+        "label": "RELIGION",
+        "text": "katholisch"
+      }
+    ],
+    "expected": "Sie widerspricht dem Eintrag [RELIGION] ausdrücklich."
+  },
+  {
+    "id": "holdout03d-068",
+    "language": "en",
+    "scenario": "negation_quotation",
+    "ocr_noise": false,
+    "text": "The interviewee rejected the label atheist.",
+    "spans": [
+      {
+        "start": 35,
+        "end": 42,
+        "label": "RELIGION",
+        "text": "atheist"
+      }
+    ],
+    "expected": "The interviewee rejected the label [RELIGION]."
+  },
+  {
+    "id": "holdout03d-069",
+    "language": "de",
+    "scenario": "negation_quotation",
+    "ocr_noise": false,
+    "text": "Das Wort »buddhistisch« ist ein Zitat aus einem Lehrbuch.",
+    "spans": [
+      {
+        "start": 10,
+        "end": 22,
+        "label": "RELIGION",
+        "text": "buddhistisch"
+      }
+    ],
+    "expected": "Das Wort »[RELIGION]« ist ein Zitat aus einem Lehrbuch."
+  },
+  {
+    "id": "holdout03d-070",
+    "language": "en",
+    "scenario": "negation_quotation",
+    "ocr_noise": false,
+    "text": "\"Jewish\" appears in a quotation, not a claim about the editor.",
+    "spans": [
+      {
+        "start": 1,
+        "end": 7,
+        "label": "RELIGION",
+        "text": "Jewish"
+      }
+    ],
+    "expected": "\"[RELIGION]\" appears in a quotation, not a claim about the editor."
+  },
+  {
+    "id": "holdout03d-071",
+    "language": "de",
+    "scenario": "negation_quotation",
+    "ocr_noise": false,
+    "text": "Niemand behauptet hier, die Autorin sei hinduistisch.",
+    "spans": [
+      {
+        "start": 40,
+        "end": 52,
+        "label": "RELIGION",
+        "text": "hinduistisch"
+      }
+    ],
+    "expected": "Niemand behauptet hier, die Autorin sei [RELIGION]."
+  },
+  {
+    "id": "holdout03d-072",
+    "language": "en",
+    "scenario": "negation_quotation",
+    "ocr_noise": false,
+    "text": "No one alleged that the resident was Muslim.",
+    "spans": [
+      {
+        "start": 37,
+        "end": 43,
+        "label": "RELIGION",
+        "text": "Muslim"
+      }
+    ],
+    "expected": "No one alleged that the resident was [RELIGION]."
+  },
+  {
+    "id": "holdout03d-073",
+    "language": "de",
+    "scenario": "negation_quotation",
+    "ocr_noise": false,
+    "text": "»Ohne Konfession« wurde als mögliche Antwort vorgelesen.",
+    "spans": [
+      {
+        "start": 1,
+        "end": 16,
+        "label": "RELIGION",
+        "text": "Ohne Konfession"
+      }
+    ],
+    "expected": "»[RELIGION]« wurde als mögliche Antwort vorgelesen."
+  },
+  {
+    "id": "holdout03d-074",
+    "language": "en",
+    "scenario": "negation_quotation",
+    "ocr_noise": false,
+    "text": "The clerk read the option \"no religion\" aloud.",
+    "spans": [
+      {
+        "start": 27,
+        "end": 38,
+        "label": "RELIGION",
+        "text": "no religion"
+      }
+    ],
+    "expected": "The clerk read the option \"[RELIGION]\" aloud."
+  },
+  {
+    "id": "holdout03d-075",
+    "language": "de",
+    "scenario": "negation_quotation",
+    "ocr_noise": false,
+    "text": "Nicht evangelisch, sondern agnostisch: so lautet die Korrektur.",
+    "spans": [
+      {
+        "start": 6,
+        "end": 17,
+        "label": "RELIGION",
+        "text": "evangelisch"
+      },
+      {
+        "start": 27,
+        "end": 37,
+        "label": "RELIGION",
+        "text": "agnostisch"
+      }
+    ],
+    "expected": "Nicht [RELIGION], sondern [RELIGION]: so lautet die Korrektur."
+  },
+  {
+    "id": "holdout03d-076",
+    "language": "en",
+    "scenario": "negation_quotation",
+    "ocr_noise": false,
+    "text": "The note corrects Catholic to nonreligious.",
+    "spans": [
+      {
+        "start": 18,
+        "end": 26,
+        "label": "RELIGION",
+        "text": "Catholic"
+      },
+      {
+        "start": 30,
+        "end": 42,
+        "label": "RELIGION",
+        "text": "nonreligious"
+      }
+    ],
+    "expected": "The note corrects [RELIGION] to [RELIGION]."
+  },
+  {
+    "id": "holdout03d-077",
+    "language": "de",
+    "scenario": "negation_quotation",
+    "ocr_noise": false,
+    "text": "Die Rezension zitiert Judentum, ohne einen Glauben zuzuschreiben.",
+    "spans": [
+      {
+        "start": 22,
+        "end": 30,
+        "label": "RELIGION",
+        "text": "Judentum"
+      }
+    ],
+    "expected": "Die Rezension zitiert [RELIGION], ohne einen Glauben zuzuschreiben."
+  },
+  {
+    "id": "holdout03d-078",
+    "language": "en",
+    "scenario": "negation_quotation",
+    "ocr_noise": false,
+    "text": "A reviewer underlined \"Baha'i\" in the supplied excerpt.",
+    "spans": [
+      {
+        "start": 23,
+        "end": 29,
+        "label": "RELIGION",
+        "text": "Baha'i"
+      }
+    ],
+    "expected": "A reviewer underlined \"[RELIGION]\" in the supplied excerpt."
+  },
+  {
+    "id": "holdout03d-079",
+    "language": "de",
+    "scenario": "negation_quotation",
+    "ocr_noise": false,
+    "text": "Die Behauptung einer islamischen Zugehörigkeit wurde zurückgewiesen.",
+    "spans": [
+      {
+        "start": 21,
+        "end": 32,
+        "label": "RELIGION",
+        "text": "islamischen"
+      }
+    ],
+    "expected": "Die Behauptung einer [RELIGION] Zugehörigkeit wurde zurückgewiesen."
+  },
+  {
+    "id": "holdout03d-080",
+    "language": "en",
+    "scenario": "negation_quotation",
+    "ocr_noise": false,
+    "text": "The statement \"Buddhist\" was disputed in the correction sheet.",
+    "spans": [
+      {
+        "start": 15,
+        "end": 23,
+        "label": "RELIGION",
+        "text": "Buddhist"
+      }
+    ],
+    "expected": "The statement \"[RELIGION]\" was disputed in the correction sheet."
+  },
+  {
+    "id": "holdout03d-081",
+    "language": "de",
+    "scenario": "ambiguity",
+    "ocr_noise": false,
+    "text": "Ein orthodoxes Sortierverfahren ist hier eine mathematische Metapher.",
+    "spans": [],
+    "expected": "Ein orthodoxes Sortierverfahren ist hier eine mathematische Metapher."
+  },
+  {
+    "id": "holdout03d-082",
+    "language": "en",
+    "scenario": "ambiguity",
+    "ocr_noise": false,
+    "text": "Her catholic tastes include jazz and astronomy.",
+    "spans": [],
+    "expected": "Her catholic tastes include jazz and astronomy."
+  },
+  {
+    "id": "holdout03d-083",
+    "language": "de",
+    "scenario": "ambiguity",
+    "ocr_noise": false,
+    "text": "Die evangelikale Werbemetapher beschreibt keine Religionszugehörigkeit.",
+    "spans": [],
+    "expected": "Die evangelikale Werbemetapher beschreibt keine Religionszugehörigkeit."
+  },
+  {
+    "id": "holdout03d-084",
+    "language": "en",
+    "scenario": "ambiguity",
+    "ocr_noise": false,
+    "text": "An evangelical sales pitch is the example in this marketing exercise.",
+    "spans": [],
+    "expected": "An evangelical sales pitch is the example in this marketing exercise."
+  },
+  {
+    "id": "holdout03d-085",
+    "language": "de",
+    "scenario": "ambiguity",
+    "ocr_noise": false,
+    "text": "Der Patient wurde orthodox getauft, wie der geschützte Eintrag berichtet.",
+    "spans": [
+      {
+        "start": 18,
+        "end": 26,
+        "label": "RELIGION",
+        "text": "orthodox"
+      }
+    ],
+    "expected": "Der Patient wurde [RELIGION] getauft, wie der geschützte Eintrag berichtet."
+  },
+  {
+    "id": "holdout03d-086",
+    "language": "en",
+    "scenario": "ambiguity",
+    "ocr_noise": false,
+    "text": "The baptismal record identifies the denomination as Orthodox.",
+    "spans": [
+      {
+        "start": 52,
+        "end": 60,
+        "label": "RELIGION",
+        "text": "Orthodox"
+      }
+    ],
+    "expected": "The baptismal record identifies the denomination as [RELIGION]."
+  },
+  {
+    "id": "holdout03d-087",
+    "language": "de",
+    "scenario": "ambiguity",
+    "ocr_noise": false,
+    "text": "Konfession: evangelisch; Algorithmus: konventionell.",
+    "spans": [
+      {
+        "start": 12,
+        "end": 23,
+        "label": "RELIGION",
+        "text": "evangelisch"
+      }
+    ],
+    "expected": "Konfession: [RELIGION]; Algorithmus: konventionell."
+  },
+  {
+    "id": "holdout03d-088",
+    "language": "en",
+    "scenario": "ambiguity",
+    "ocr_noise": false,
+    "text": "The faith survey selected Evangelical under denomination.",
+    "spans": [
+      {
+        "start": 26,
+        "end": 37,
+        "label": "RELIGION",
+        "text": "Evangelical"
+      }
+    ],
+    "expected": "The faith survey selected [RELIGION] under denomination."
+  },
+  {
+    "id": "holdout03d-089",
+    "language": "de",
+    "scenario": "ambiguity",
+    "ocr_noise": false,
+    "text": "Eine säkulare Rechtsordnung nennt keine persönlichen Bekenntnisse.",
+    "spans": [],
+    "expected": "Eine säkulare Rechtsordnung nennt keine persönlichen Bekenntnisse."
+  },
+  {
+    "id": "holdout03d-090",
+    "language": "en",
+    "scenario": "ambiguity",
+    "ocr_noise": false,
+    "text": "The meeting has an unaffiliated chair and no membership declarations.",
+    "spans": [],
+    "expected": "The meeting has an unaffiliated chair and no membership declarations."
+  },
+  {
+    "id": "holdout03d-091",
+    "language": "de",
+    "scenario": "ambiguity",
+    "ocr_noise": false,
+    "text": "Als Religion ist christlich vermerkt, nicht als Personenname.",
+    "spans": [
+      {
+        "start": 17,
+        "end": 27,
+        "label": "RELIGION",
+        "text": "christlich"
+      }
+    ],
+    "expected": "Als Religion ist [RELIGION] vermerkt, nicht als Personenname."
+  },
+  {
+    "id": "holdout03d-092",
+    "language": "en",
+    "scenario": "ambiguity",
+    "ocr_noise": false,
+    "text": "The religion field is Christian, distinct from the given-name column.",
+    "spans": [
+      {
+        "start": 22,
+        "end": 31,
+        "label": "RELIGION",
+        "text": "Christian"
+      }
+    ],
+    "expected": "The religion field is [RELIGION], distinct from the given-name column."
+  },
+  {
+    "id": "holdout03d-093",
+    "language": "de",
+    "scenario": "ambiguity",
+    "ocr_noise": false,
+    "text": "Die goldene Regel im Handwerk ist kein personenbezogenes Religionsmerkmal.",
+    "spans": [],
+    "expected": "Die goldene Regel im Handwerk ist kein personenbezogenes Religionsmerkmal."
+  },
+  {
+    "id": "holdout03d-094",
+    "language": "en",
+    "scenario": "ambiguity",
+    "ocr_noise": false,
+    "text": "The orthodox spelling of a variable is a programming concern.",
+    "spans": [],
+    "expected": "The orthodox spelling of a variable is a programming concern."
+  },
+  {
+    "id": "holdout03d-095",
+    "language": "de",
+    "scenario": "ambiguity",
+    "ocr_noise": false,
+    "text": "Im Glaubensregister steht jüdisch als vertrauliche Angabe.",
+    "spans": [
+      {
+        "start": 26,
+        "end": 33,
+        "label": "RELIGION",
+        "text": "jüdisch"
+      }
+    ],
+    "expected": "Im Glaubensregister steht [RELIGION] als vertrauliche Angabe."
+  },
+  {
+    "id": "holdout03d-096",
+    "language": "en",
+    "scenario": "ambiguity",
+    "ocr_noise": false,
+    "text": "The theological syllabus labels a tradition Reformed.",
+    "spans": [
+      {
+        "start": 44,
+        "end": 52,
+        "label": "RELIGION",
+        "text": "Reformed"
+      }
+    ],
+    "expected": "The theological syllabus labels a tradition [RELIGION]."
+  },
+  {
+    "id": "holdout03d-097",
+    "language": "de",
+    "scenario": "ocr_noise",
+    "ocr_noise": true,
+    "text": "Religion laut Scan: Buddh1smus.",
+    "spans": [
+      {
+        "start": 20,
+        "end": 30,
+        "label": "RELIGION",
+        "text": "Buddh1smus"
+      }
+    ],
+    "expected": "Religion laut Scan: [RELIGION]."
+  },
+  {
+    "id": "holdout03d-098",
+    "language": "en",
+    "scenario": "ocr_noise",
+    "ocr_noise": true,
+    "text": "The scanned belief field reads Christlanity.",
+    "spans": [
+      {
+        "start": 31,
+        "end": 43,
+        "label": "RELIGION",
+        "text": "Christlanity"
+      }
+    ],
+    "expected": "The scanned belief field reads [RELIGION]."
+  },
+  {
+    "id": "holdout03d-099",
+    "language": "de",
+    "scenario": "ocr_noise",
+    "ocr_noise": true,
+    "text": "Konfession im OCR-Text: konfessions-\nlos.",
+    "spans": [
+      {
+        "start": 24,
+        "end": 40,
+        "label": "RELIGION",
+        "text": "konfessions-\nlos"
+      }
+    ],
+    "expected": "Konfession im OCR-Text: [RELIGION]."
+  },
+  {
+    "id": "holdout03d-100",
+    "language": "en",
+    "scenario": "ocr_noise",
+    "ocr_noise": true,
+    "text": "Faith from the scan: non-\nreligious.",
+    "spans": [
+      {
+        "start": 21,
+        "end": 35,
+        "label": "RELIGION",
+        "text": "non-\nreligious"
+      }
+    ],
+    "expected": "Faith from the scan: [RELIGION]."
+  },
+  {
+    "id": "holdout03d-101",
+    "language": "de",
+    "scenario": "ocr_noise",
+    "ocr_noise": true,
+    "text": "Die Lesart katho1isch ist im Faksimile markiert.",
+    "spans": [
+      {
+        "start": 11,
+        "end": 21,
+        "label": "RELIGION",
+        "text": "katho1isch"
+      }
+    ],
+    "expected": "Die Lesart [RELIGION] ist im Faksimile markiert."
+  },
+  {
+    "id": "holdout03d-102",
+    "language": "en",
+    "scenario": "ocr_noise",
+    "ocr_noise": true,
+    "text": "Belief value after OCR: Hinduisrn.",
+    "spans": [
+      {
+        "start": 24,
+        "end": 33,
+        "label": "RELIGION",
+        "text": "Hinduisrn"
+      }
+    ],
+    "expected": "Belief value after OCR: [RELIGION]."
+  },
+  {
+    "id": "holdout03d-103",
+    "language": "de",
+    "scenario": "ocr_noise",
+    "ocr_noise": true,
+    "text": "Im Formular wurde agnos-\ntisch getrennt gesetzt.",
+    "spans": [
+      {
+        "start": 18,
+        "end": 30,
+        "label": "RELIGION",
+        "text": "agnos-\ntisch"
+      }
+    ],
+    "expected": "Im Formular wurde [RELIGION] getrennt gesetzt."
+  },
+  {
+    "id": "holdout03d-104",
+    "language": "en",
+    "scenario": "ocr_noise",
+    "ocr_noise": true,
+    "text": "The scanned heading says Juda-\nism.",
+    "spans": [
+      {
+        "start": 25,
+        "end": 34,
+        "label": "RELIGION",
+        "text": "Juda-\nism"
+      }
+    ],
+    "expected": "The scanned heading says [RELIGION]."
+  },
+  {
+    "id": "holdout03d-105",
+    "language": "de",
+    "scenario": "ocr_noise",
+    "ocr_noise": true,
+    "text": "Eine Zeile enthält lslam mit verwechseltem Anfangsbuchstaben.",
+    "spans": [
+      {
+        "start": 19,
+        "end": 24,
+        "label": "RELIGION",
+        "text": "lslam"
+      }
+    ],
+    "expected": "Eine Zeile enthält [RELIGION] mit verwechseltem Anfangsbuchstaben."
+  },
+  {
+    "id": "holdout03d-106",
+    "language": "en",
+    "scenario": "ocr_noise",
+    "ocr_noise": true,
+    "text": "The OCR extracted S1khism in the private religion column.",
+    "spans": [
+      {
+        "start": 18,
+        "end": 25,
+        "label": "RELIGION",
+        "text": "S1khism"
+      }
+    ],
+    "expected": "The OCR extracted [RELIGION] in the private religion column."
+  },
+  {
+    "id": "holdout03d-107",
+    "language": "de",
+    "scenario": "ocr_noise",
+    "ocr_noise": true,
+    "text": "Die handschriftliche Angabe lautet buddhis-\ntisch.",
+    "spans": [
+      {
+        "start": 35,
+        "end": 49,
+        "label": "RELIGION",
+        "text": "buddhis-\ntisch"
+      }
+    ],
+    "expected": "Die handschriftliche Angabe lautet [RELIGION]."
+  },
+  {
+    "id": "holdout03d-108",
+    "language": "en",
+    "scenario": "ocr_noise",
+    "ocr_noise": true,
+    "text": "The line-broken subject is Zoroas-\ntrianism.",
+    "spans": [
+      {
+        "start": 27,
+        "end": 43,
+        "label": "RELIGION",
+        "text": "Zoroas-\ntrianism"
+      }
+    ],
+    "expected": "The line-broken subject is [RELIGION]."
+  },
+  {
+    "id": "holdout03d-109",
+    "language": "de",
+    "scenario": "ocr_noise",
+    "ocr_noise": true,
+    "text": "Aus dem Scan: Fenja Torwald, Bekenntnis Judenturn.",
+    "spans": [
+      {
+        "start": 14,
+        "end": 27,
+        "label": "PERSON",
+        "text": "Fenja Torwald"
+      },
+      {
+        "start": 40,
+        "end": 49,
+        "label": "RELIGION",
+        "text": "Judenturn"
+      }
+    ],
+    "expected": "Aus dem Scan: [PERSON], Bekenntnis [RELIGION]."
+  },
+  {
+    "id": "holdout03d-110",
+    "language": "en",
+    "scenario": "ocr_noise",
+    "ocr_noise": true,
+    "text": "The noisy note names Orin Wexford and Cath0licism.",
+    "spans": [
+      {
+        "start": 21,
+        "end": 33,
+        "label": "PERSON",
+        "text": "Orin Wexford"
+      },
+      {
+        "start": 38,
+        "end": 49,
+        "label": "RELIGION",
+        "text": "Cath0licism"
+      }
+    ],
+    "expected": "The noisy note names [PERSON] and [RELIGION]."
+  },
+  {
+    "id": "holdout03d-111",
+    "language": "de",
+    "scenario": "ocr_noise",
+    "ocr_noise": true,
+    "text": "Der OCR-Wert konfesslonsfrei bleibt vertraulich.",
+    "spans": [
+      {
+        "start": 13,
+        "end": 28,
+        "label": "RELIGION",
+        "text": "konfesslonsfrei"
+      }
+    ],
+    "expected": "Der OCR-Wert [RELIGION] bleibt vertraulich."
+  },
+  {
+    "id": "holdout03d-112",
+    "language": "en",
+    "scenario": "ocr_noise",
+    "ocr_noise": true,
+    "text": "Scanned status text: agn0stic.",
+    "spans": [
+      {
+        "start": 21,
+        "end": 29,
+        "label": "RELIGION",
+        "text": "agn0stic"
+      }
+    ],
+    "expected": "Scanned status text: [RELIGION]."
+  },
+  {
+    "id": "holdout03d-113",
+    "language": "de",
+    "scenario": "multiple_entities",
+    "ocr_noise": false,
+    "text": "Silja Dornbach aus Rostock meldet Judentum beim Morgenkai Institut.",
+    "spans": [
+      {
+        "start": 0,
+        "end": 14,
+        "label": "PERSON",
+        "text": "Silja Dornbach"
+      },
+      {
+        "start": 19,
+        "end": 26,
+        "label": "CITY",
+        "text": "Rostock"
+      },
+      {
+        "start": 34,
+        "end": 42,
+        "label": "RELIGION",
+        "text": "Judentum"
+      },
+      {
+        "start": 48,
+        "end": 66,
+        "label": "ORGANIZATION",
+        "text": "Morgenkai Institut"
+      }
+    ],
+    "expected": "[PERSON] aus [CITY] meldet [RELIGION] beim [ORGANIZATION]."
+  },
+  {
+    "id": "holdout03d-114",
+    "language": "en",
+    "scenario": "multiple_entities",
+    "ocr_noise": false,
+    "text": "Nolan Briarwood in York lists Jainism on the Cobalt Quay Trust form.",
+    "spans": [
+      {
+        "start": 0,
+        "end": 15,
+        "label": "PERSON",
+        "text": "Nolan Briarwood"
+      },
+      {
+        "start": 19,
+        "end": 23,
+        "label": "CITY",
+        "text": "York"
+      },
+      {
+        "start": 30,
+        "end": 37,
+        "label": "RELIGION",
+        "text": "Jainism"
+      },
+      {
+        "start": 45,
+        "end": 62,
+        "label": "ORGANIZATION",
+        "text": "Cobalt Quay Trust"
+      }
+    ],
+    "expected": "[PERSON] in [CITY] lists [RELIGION] on the [ORGANIZATION] form."
+  },
+  {
+    "id": "holdout03d-115",
+    "language": "de",
+    "scenario": "multiple_entities",
+    "ocr_noise": false,
+    "text": "Bernsteinpfad Stiftung vermerkt Henrik Wiesenau als konfessionslos.",
+    "spans": [
+      {
+        "start": 0,
+        "end": 22,
+        "label": "ORGANIZATION",
+        "text": "Bernsteinpfad Stiftung"
+      },
+      {
+        "start": 32,
+        "end": 47,
+        "label": "PERSON",
+        "text": "Henrik Wiesenau"
+      },
+      {
+        "start": 52,
+        "end": 66,
+        "label": "RELIGION",
+        "text": "konfessionslos"
+      }
+    ],
+    "expected": "[ORGANIZATION] vermerkt [PERSON] als [RELIGION]."
+  },
+  {
+    "id": "holdout03d-116",
+    "language": "en",
+    "scenario": "multiple_entities",
+    "ocr_noise": false,
+    "text": "The Silver Estuary Council stores Ada Merefield's atheism response.",
+    "spans": [
+      {
+        "start": 4,
+        "end": 26,
+        "label": "ORGANIZATION",
+        "text": "Silver Estuary Council"
+      },
+      {
+        "start": 34,
+        "end": 47,
+        "label": "PERSON",
+        "text": "Ada Merefield"
+      },
+      {
+        "start": 50,
+        "end": 57,
+        "label": "RELIGION",
+        "text": "atheism"
+      }
+    ],
+    "expected": "The [ORGANIZATION] stores [PERSON]'s [RELIGION] response."
+  },
+  {
+    "id": "holdout03d-117",
+    "language": "de",
+    "scenario": "multiple_entities",
+    "ocr_noise": false,
+    "text": "Ida Talbrück nennt Islam; Kontakt: ida.tal@example.invalid.",
+    "spans": [
+      {
+        "start": 0,
+        "end": 12,
+        "label": "PERSON",
+        "text": "Ida Talbrück"
+      },
+      {
+        "start": 19,
+        "end": 24,
+        "label": "RELIGION",
+        "text": "Islam"
+      },
+      {
+        "start": 35,
+        "end": 58,
+        "label": "EMAIL",
+        "text": "ida.tal@example.invalid"
+      }
+    ],
+    "expected": "[PERSON] nennt [RELIGION]; Kontakt: [EMAIL]."
+  },
+  {
+    "id": "holdout03d-118",
+    "language": "en",
+    "scenario": "multiple_entities",
+    "ocr_noise": false,
+    "text": "Lyle Ashcombe wrote Buddhism; contact lyle.a@example.invalid.",
+    "spans": [
+      {
+        "start": 0,
+        "end": 13,
+        "label": "PERSON",
+        "text": "Lyle Ashcombe"
+      },
+      {
+        "start": 20,
+        "end": 28,
+        "label": "RELIGION",
+        "text": "Buddhism"
+      },
+      {
+        "start": 38,
+        "end": 60,
+        "label": "EMAIL",
+        "text": "lyle.a@example.invalid"
+      }
+    ],
+    "expected": "[PERSON] wrote [RELIGION]; contact [EMAIL]."
+  },
+  {
+    "id": "holdout03d-119",
+    "language": "de",
+    "scenario": "multiple_entities",
+    "ocr_noise": false,
+    "text": "Rückfrage an Arvid Sandborn: +49 381 482701; Status religionslos.",
+    "spans": [
+      {
+        "start": 13,
+        "end": 27,
+        "label": "PERSON",
+        "text": "Arvid Sandborn"
+      },
+      {
+        "start": 29,
+        "end": 43,
+        "label": "PHONE",
+        "text": "+49 381 482701"
+      },
+      {
+        "start": 52,
+        "end": 64,
+        "label": "RELIGION",
+        "text": "religionslos"
+      }
+    ],
+    "expected": "Rückfrage an [PERSON]: [PHONE]; Status [RELIGION]."
+  },
+  {
+    "id": "holdout03d-120",
+    "language": "en",
+    "scenario": "multiple_entities",
+    "ocr_noise": false,
+    "text": "Call Mira Fenwick at +44 1904 582701; belief Hinduism.",
+    "spans": [
+      {
+        "start": 5,
+        "end": 17,
+        "label": "PERSON",
+        "text": "Mira Fenwick"
+      },
+      {
+        "start": 21,
+        "end": 36,
+        "label": "PHONE",
+        "text": "+44 1904 582701"
+      },
+      {
+        "start": 45,
+        "end": 53,
+        "label": "RELIGION",
+        "text": "Hinduism"
+      }
+    ],
+    "expected": "Call [PERSON] at [PHONE]; belief [RELIGION]."
+  },
+  {
+    "id": "holdout03d-121",
+    "language": "de",
+    "scenario": "multiple_entities",
+    "ocr_noise": false,
+    "text": "Erfurt: Svea Morgenau korrigiert katholisch zu agnostisch.",
+    "spans": [
+      {
+        "start": 0,
+        "end": 6,
+        "label": "CITY",
+        "text": "Erfurt"
+      },
+      {
+        "start": 8,
+        "end": 21,
+        "label": "PERSON",
+        "text": "Svea Morgenau"
+      },
+      {
+        "start": 33,
+        "end": 43,
+        "label": "RELIGION",
+        "text": "katholisch"
+      },
+      {
+        "start": 47,
+        "end": 57,
+        "label": "RELIGION",
+        "text": "agnostisch"
+      }
+    ],
+    "expected": "[CITY]: [PERSON] korrigiert [RELIGION] zu [RELIGION]."
+  },
+  {
+    "id": "holdout03d-122",
+    "language": "en",
+    "scenario": "multiple_entities",
+    "ocr_noise": false,
+    "text": "Bristol: Owen Thornley replaced Christianity with no religion.",
+    "spans": [
+      {
+        "start": 0,
+        "end": 7,
+        "label": "CITY",
+        "text": "Bristol"
+      },
+      {
+        "start": 9,
+        "end": 22,
+        "label": "PERSON",
+        "text": "Owen Thornley"
+      },
+      {
+        "start": 32,
+        "end": 44,
+        "label": "RELIGION",
+        "text": "Christianity"
+      },
+      {
+        "start": 50,
+        "end": 61,
+        "label": "RELIGION",
+        "text": "no religion"
+      }
+    ],
+    "expected": "[CITY]: [PERSON] replaced [RELIGION] with [RELIGION]."
+  },
+  {
+    "id": "holdout03d-123",
+    "language": "de",
+    "scenario": "multiple_entities",
+    "ocr_noise": false,
+    "text": "Jona Falkenau und Jona Falkenau erscheinen mit Sikhismus zweimal.",
+    "spans": [
+      {
+        "start": 0,
+        "end": 13,
+        "label": "PERSON",
+        "text": "Jona Falkenau"
+      },
+      {
+        "start": 18,
+        "end": 31,
+        "label": "PERSON",
+        "text": "Jona Falkenau"
+      },
+      {
+        "start": 47,
+        "end": 56,
+        "label": "RELIGION",
+        "text": "Sikhismus"
+      }
+    ],
+    "expected": "[PERSON] und [PERSON] erscheinen mit [RELIGION] zweimal."
+  },
+  {
+    "id": "holdout03d-124",
+    "language": "en",
+    "scenario": "multiple_entities",
+    "ocr_noise": false,
+    "text": "Esme Rowanby repeated Taoism, then signed Esme Rowanby again.",
+    "spans": [
+      {
+        "start": 0,
+        "end": 12,
+        "label": "PERSON",
+        "text": "Esme Rowanby"
+      },
+      {
+        "start": 22,
+        "end": 28,
+        "label": "RELIGION",
+        "text": "Taoism"
+      },
+      {
+        "start": 42,
+        "end": 54,
+        "label": "PERSON",
+        "text": "Esme Rowanby"
+      }
+    ],
+    "expected": "[PERSON] repeated [RELIGION], then signed [PERSON] again."
+  },
+  {
+    "id": "holdout03d-125",
+    "language": "de",
+    "scenario": "multiple_entities",
+    "ocr_noise": false,
+    "text": "Interner Datensatz des Hafenbogen Archivs: Kiel, evangelisch.",
+    "spans": [
+      {
+        "start": 23,
+        "end": 41,
+        "label": "ORGANIZATION",
+        "text": "Hafenbogen Archivs"
+      },
+      {
+        "start": 43,
+        "end": 47,
+        "label": "CITY",
+        "text": "Kiel"
+      },
+      {
+        "start": 49,
+        "end": 60,
+        "label": "RELIGION",
+        "text": "evangelisch"
+      }
+    ],
+    "expected": "Interner Datensatz des [ORGANIZATION]: [CITY], [RELIGION]."
+  },
+  {
+    "id": "holdout03d-126",
+    "language": "en",
+    "scenario": "multiple_entities",
+    "ocr_noise": false,
+    "text": "A Maple Tide Institute record from Durham mentions Judaism.",
+    "spans": [
+      {
+        "start": 2,
+        "end": 22,
+        "label": "ORGANIZATION",
+        "text": "Maple Tide Institute"
+      },
+      {
+        "start": 35,
+        "end": 41,
+        "label": "CITY",
+        "text": "Durham"
+      },
+      {
+        "start": 51,
+        "end": 58,
+        "label": "RELIGION",
+        "text": "Judaism"
+      }
+    ],
+    "expected": "A [ORGANIZATION] record from [CITY] mentions [RELIGION]."
+  },
+  {
+    "id": "holdout03d-127",
+    "language": "de",
+    "scenario": "multiple_entities",
+    "ocr_noise": false,
+    "text": "Liv Hohenrain nennt Bonn und Bahai; liv.h@example.invalid bleibt intern.",
+    "spans": [
+      {
+        "start": 0,
+        "end": 13,
+        "label": "PERSON",
+        "text": "Liv Hohenrain"
+      },
+      {
+        "start": 20,
+        "end": 24,
+        "label": "CITY",
+        "text": "Bonn"
+      },
+      {
+        "start": 29,
+        "end": 34,
+        "label": "RELIGION",
+        "text": "Bahai"
+      },
+      {
+        "start": 36,
+        "end": 57,
+        "label": "EMAIL",
+        "text": "liv.h@example.invalid"
+      }
+    ],
+    "expected": "[PERSON] nennt [CITY] und [RELIGION]; [EMAIL] bleibt intern."
+  },
+  {
+    "id": "holdout03d-128",
+    "language": "en",
+    "scenario": "multiple_entities",
+    "ocr_noise": false,
+    "text": "Reed Alderwick, Bath, agnosticism; reed.a@example.invalid is private.",
+    "spans": [
+      {
+        "start": 0,
+        "end": 14,
+        "label": "PERSON",
+        "text": "Reed Alderwick"
+      },
+      {
+        "start": 16,
+        "end": 20,
+        "label": "CITY",
+        "text": "Bath"
+      },
+      {
+        "start": 22,
+        "end": 33,
+        "label": "RELIGION",
+        "text": "agnosticism"
+      },
+      {
+        "start": 35,
+        "end": 57,
+        "label": "EMAIL",
+        "text": "reed.a@example.invalid"
+      }
+    ],
+    "expected": "[PERSON], [CITY], [RELIGION]; [EMAIL] is private."
+  },
+  {
+    "id": "holdout03d-129",
+    "language": "de",
+    "scenario": "formats_repetition",
+    "ocr_noise": false,
+    "text": "| Bekenntnis | Islam | Freigabe | nein |",
+    "spans": [
+      {
+        "start": 15,
+        "end": 20,
+        "label": "RELIGION",
+        "text": "Islam"
+      }
+    ],
+    "expected": "| Bekenntnis | [RELIGION] | Freigabe | nein |"
+  },
+  {
+    "id": "holdout03d-130",
+    "language": "en",
+    "scenario": "formats_repetition",
+    "ocr_noise": false,
+    "text": "{\"belief\":\"Buddhism\",\"public\":false}",
+    "spans": [
+      {
+        "start": 11,
+        "end": 19,
+        "label": "RELIGION",
+        "text": "Buddhism"
+      }
+    ],
+    "expected": "{\"belief\":\"[RELIGION]\",\"public\":false}"
+  },
+  {
+    "id": "holdout03d-131",
+    "language": "de",
+    "scenario": "formats_repetition",
+    "ocr_noise": false,
+    "text": "Notiz A: konfessionsfrei. Notiz B: konfessionsfrei.",
+    "spans": [
+      {
+        "start": 9,
+        "end": 24,
+        "label": "RELIGION",
+        "text": "konfessionsfrei"
+      },
+      {
+        "start": 35,
+        "end": 50,
+        "label": "RELIGION",
+        "text": "konfessionsfrei"
+      }
+    ],
+    "expected": "Notiz A: [RELIGION]. Notiz B: [RELIGION]."
+  },
+  {
+    "id": "holdout03d-132",
+    "language": "en",
+    "scenario": "formats_repetition",
+    "ocr_noise": false,
+    "text": "Row one: atheist; row two: atheist.",
+    "spans": [
+      {
+        "start": 9,
+        "end": 16,
+        "label": "RELIGION",
+        "text": "atheist"
+      },
+      {
+        "start": 27,
+        "end": 34,
+        "label": "RELIGION",
+        "text": "atheist"
+      }
+    ],
+    "expected": "Row one: [RELIGION]; row two: [RELIGION]."
+  },
+  {
+    "id": "holdout03d-133",
+    "language": "de",
+    "scenario": "formats_repetition",
+    "ocr_noise": false,
+    "text": "RELIGION=Judentum; QUELLE=Selbstauskunft",
+    "spans": [
+      {
+        "start": 9,
+        "end": 17,
+        "label": "RELIGION",
+        "text": "Judentum"
+      }
+    ],
+    "expected": "RELIGION=[RELIGION]; QUELLE=Selbstauskunft"
+  },
+  {
+    "id": "holdout03d-134",
+    "language": "en",
+    "scenario": "formats_repetition",
+    "ocr_noise": false,
+    "text": "BELIEF=Shinto; SOURCE=self-report",
+    "spans": [
+      {
+        "start": 7,
+        "end": 13,
+        "label": "RELIGION",
+        "text": "Shinto"
+      }
+    ],
+    "expected": "BELIEF=[RELIGION]; SOURCE=self-report"
+  },
+  {
+    "id": "holdout03d-135",
+    "language": "de",
+    "scenario": "formats_repetition",
+    "ocr_noise": false,
+    "text": "• Weltanschauung: Agnostizismus\n• Weitergabe: gesperrt",
+    "spans": [
+      {
+        "start": 18,
+        "end": 31,
+        "label": "RELIGION",
+        "text": "Agnostizismus"
+      }
+    ],
+    "expected": "• Weltanschauung: [RELIGION]\n• Weitergabe: gesperrt"
+  },
+  {
+    "id": "holdout03d-136",
+    "language": "en",
+    "scenario": "formats_repetition",
+    "ocr_noise": false,
+    "text": "1. Faith: Sikhism\n2. Access: restricted",
+    "spans": [
+      {
+        "start": 10,
+        "end": 17,
+        "label": "RELIGION",
+        "text": "Sikhism"
+      }
+    ],
+    "expected": "1. Faith: [RELIGION]\n2. Access: restricted"
+  },
+  {
+    "id": "holdout03d-137",
+    "language": "de",
+    "scenario": "formats_repetition",
+    "ocr_noise": false,
+    "text": "Seitenrand Katholizismus / Fußnote Katholizismus.",
+    "spans": [
+      {
+        "start": 11,
+        "end": 24,
+        "label": "RELIGION",
+        "text": "Katholizismus"
+      },
+      {
+        "start": 35,
+        "end": 48,
+        "label": "RELIGION",
+        "text": "Katholizismus"
+      }
+    ],
+    "expected": "Seitenrand [RELIGION] / Fußnote [RELIGION]."
+  },
+  {
+    "id": "holdout03d-138",
+    "language": "en",
+    "scenario": "formats_repetition",
+    "ocr_noise": false,
+    "text": "Margin Hinduism; footnote Hinduism.",
+    "spans": [
+      {
+        "start": 7,
+        "end": 15,
+        "label": "RELIGION",
+        "text": "Hinduism"
+      },
+      {
+        "start": 26,
+        "end": 34,
+        "label": "RELIGION",
+        "text": "Hinduism"
+      }
+    ],
+    "expected": "Margin [RELIGION]; footnote [RELIGION]."
+  },
+  {
+    "id": "holdout03d-139",
+    "language": "de",
+    "scenario": "formats_repetition",
+    "ocr_noise": false,
+    "text": "Eingabefeld «ohne Konfession» — nur intern.",
+    "spans": [
+      {
+        "start": 13,
+        "end": 28,
+        "label": "RELIGION",
+        "text": "ohne Konfession"
+      }
+    ],
+    "expected": "Eingabefeld «[RELIGION]» — nur intern."
+  },
+  {
+    "id": "holdout03d-140",
+    "language": "en",
+    "scenario": "formats_repetition",
+    "ocr_noise": false,
+    "text": "Checkbox ☑ non-religious; do not publish.",
+    "spans": [
+      {
+        "start": 11,
+        "end": 24,
+        "label": "RELIGION",
+        "text": "non-religious"
+      }
+    ],
+    "expected": "Checkbox ☑ [RELIGION]; do not publish."
+  },
+  {
+    "id": "holdout03d-141",
+    "language": "de",
+    "scenario": "formats_repetition",
+    "ocr_noise": false,
+    "text": "Christentum → Atheismus ist als Änderung notiert.",
+    "spans": [
+      {
+        "start": 0,
+        "end": 11,
+        "label": "RELIGION",
+        "text": "Christentum"
+      },
+      {
+        "start": 14,
+        "end": 23,
+        "label": "RELIGION",
+        "text": "Atheismus"
+      }
+    ],
+    "expected": "[RELIGION] → [RELIGION] ist als Änderung notiert."
+  },
+  {
+    "id": "holdout03d-142",
+    "language": "en",
+    "scenario": "formats_repetition",
+    "ocr_noise": false,
+    "text": "Christianity → agnosticism is the recorded correction.",
+    "spans": [
+      {
+        "start": 0,
+        "end": 12,
+        "label": "RELIGION",
+        "text": "Christianity"
+      },
+      {
+        "start": 15,
+        "end": 26,
+        "label": "RELIGION",
+        "text": "agnosticism"
+      }
+    ],
+    "expected": "[RELIGION] → [RELIGION] is the recorded correction."
+  },
+  {
+    "id": "holdout03d-143",
+    "language": "de",
+    "scenario": "formats_repetition",
+    "ocr_noise": false,
+    "text": "Bekenntnis\tBuddhismus\tgeprüft=offen",
+    "spans": [
+      {
+        "start": 11,
+        "end": 21,
+        "label": "RELIGION",
+        "text": "Buddhismus"
+      }
+    ],
+    "expected": "Bekenntnis\t[RELIGION]\tgeprüft=offen"
+  },
+  {
+    "id": "holdout03d-144",
+    "language": "en",
+    "scenario": "formats_repetition",
+    "ocr_noise": false,
+    "text": "religion\tJainism\treview=pending",
+    "spans": [
+      {
+        "start": 9,
+        "end": 16,
+        "label": "RELIGION",
+        "text": "Jainism"
+      }
+    ],
+    "expected": "religion\t[RELIGION]\treview=pending"
+  },
+  {
+    "id": "holdout03d-145",
+    "language": "de",
+    "scenario": "negative_controls",
+    "ocr_noise": false,
+    "text": "Die Lieferung enthält zwölf Schrauben und einen Lieferschein.",
+    "spans": [],
+    "expected": "Die Lieferung enthält zwölf Schrauben und einen Lieferschein."
+  },
+  {
+    "id": "holdout03d-146",
+    "language": "en",
+    "scenario": "negative_controls",
+    "ocr_noise": false,
+    "text": "A blue folder sits beside the empty filing tray.",
+    "spans": [],
+    "expected": "A blue folder sits beside the empty filing tray."
+  },
+  {
+    "id": "holdout03d-147",
+    "language": "de",
+    "scenario": "negative_controls",
+    "ocr_noise": false,
+    "text": "Das Formular enthält keine ausgefüllten persönlichen Felder.",
+    "spans": [],
+    "expected": "Das Formular enthält keine ausgefüllten persönlichen Felder."
+  },
+  {
+    "id": "holdout03d-148",
+    "language": "en",
+    "scenario": "negative_controls",
+    "ocr_noise": false,
+    "text": "The spelling correction changes a comma to a semicolon.",
+    "spans": [],
+    "expected": "The spelling correction changes a comma to a semicolon."
+  },
+  {
+    "id": "holdout03d-149",
+    "language": "de",
+    "scenario": "negative_controls",
+    "ocr_noise": false,
+    "text": "Der Kalender zeigt nur Wochentage ohne Termine.",
+    "spans": [],
+    "expected": "Der Kalender zeigt nur Wochentage ohne Termine."
+  },
+  {
+    "id": "holdout03d-150",
+    "language": "en",
+    "scenario": "negative_controls",
+    "ocr_noise": false,
+    "text": "The maintenance note records a loose hinge.",
+    "spans": [],
+    "expected": "The maintenance note records a loose hinge."
+  },
+  {
+    "id": "holdout03d-151",
+    "language": "de",
+    "scenario": "negative_controls",
+    "ocr_noise": false,
+    "text": "Eine Überschrift erklärt die Bedienung der Taschenlampe.",
+    "spans": [],
+    "expected": "Eine Überschrift erklärt die Bedienung der Taschenlampe."
+  },
+  {
+    "id": "holdout03d-152",
+    "language": "en",
+    "scenario": "negative_controls",
+    "ocr_noise": false,
+    "text": "A measurement table lists height and width without identifiers.",
+    "spans": [],
+    "expected": "A measurement table lists height and width without identifiers."
+  },
+  {
+    "id": "holdout03d-153",
+    "language": "de",
+    "scenario": "negative_controls",
+    "ocr_noise": false,
+    "text": "Das Prüfprotokoll enthält ausschließlich Materialnummern aus Buchstaben.",
+    "spans": [],
+    "expected": "Das Prüfprotokoll enthält ausschließlich Materialnummern aus Buchstaben."
+  },
+  {
+    "id": "holdout03d-154",
+    "language": "en",
+    "scenario": "negative_controls",
+    "ocr_noise": false,
+    "text": "The anonymous inventory includes pencils and unmarked boxes.",
+    "spans": [],
+    "expected": "The anonymous inventory includes pencils and unmarked boxes."
+  },
+  {
+    "id": "holdout03d-155",
+    "language": "de",
+    "scenario": "negative_controls",
+    "ocr_noise": false,
+    "text": "Die Zutatenliste nennt Mehl, Wasser und Salz.",
+    "spans": [],
+    "expected": "Die Zutatenliste nennt Mehl, Wasser und Salz."
+  },
+  {
+    "id": "holdout03d-156",
+    "language": "en",
+    "scenario": "negative_controls",
+    "ocr_noise": false,
+    "text": "The diagram shows arrows connecting unlabeled circles.",
+    "spans": [],
+    "expected": "The diagram shows arrows connecting unlabeled circles."
+  },
+  {
+    "id": "holdout03d-157",
+    "language": "de",
+    "scenario": "negative_controls",
+    "ocr_noise": false,
+    "text": "Der Absatz behandelt die Grammatik unpersönlicher Sätze.",
+    "spans": [],
+    "expected": "Der Absatz behandelt die Grammatik unpersönlicher Sätze."
+  },
+  {
+    "id": "holdout03d-158",
+    "language": "en",
+    "scenario": "negative_controls",
+    "ocr_noise": false,
+    "text": "A draft contains only instructions for replacing printer paper.",
+    "spans": [],
+    "expected": "A draft contains only instructions for replacing printer paper."
+  },
+  {
+    "id": "holdout03d-159",
+    "language": "de",
+    "scenario": "negative_controls",
+    "ocr_noise": false,
+    "text": "Die leere Tabelle hat Spalten für Farbe und Gewicht.",
+    "spans": [],
+    "expected": "Die leere Tabelle hat Spalten für Farbe und Gewicht."
+  },
+  {
+    "id": "holdout03d-160",
+    "language": "en",
+    "scenario": "negative_controls",
+    "ocr_noise": false,
+    "text": "No religious status, personal name, address or contact is supplied.",
+    "spans": [],
+    "expected": "No religious status, personal name, address or contact is supplied."
+  }
+]

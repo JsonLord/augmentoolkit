@@ -1,0 +1,1631 @@
+{
+  "model": "VAGOsolutions/SauerkrautLM-GLiNER",
+  "revision": "ba967ee030b7e679dd5422cb16fcd1b379da38e1",
+  "loading_ms": 16846.075134002604,
+  "experiments": {
+    "reviewed_baseline": {
+      "prompts": {
+        "PERSON": "person",
+        "CITY": "city",
+        "RELIGION": "religion",
+        "EMAIL": "email address",
+        "PHONE": "phone number",
+        "ORGANIZATION": "organization"
+      },
+      "threshold": 0.5,
+      "suites": {
+        "qualification": {
+          "documents": 40,
+          "ner_entity_metrics": {
+            "PERSON": {
+              "tp": 18,
+              "fp": 4,
+              "fn": 2,
+              "precision": 0.8181818181818182,
+              "recall": 0.9,
+              "f1": 0.8571428571428572
+            },
+            "CITY": {
+              "tp": 14,
+              "fp": 0,
+              "fn": 3,
+              "precision": 1.0,
+              "recall": 0.8235294117647058,
+              "f1": 0.9032258064516129
+            },
+            "RELIGION": {
+              "tp": 6,
+              "fp": 0,
+              "fn": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "EMAIL": {
+              "tp": 2,
+              "fp": 0,
+              "fn": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "PHONE": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "ORGANIZATION": {
+              "tp": 1,
+              "fp": 3,
+              "fn": 1,
+              "precision": 0.25,
+              "recall": 0.5,
+              "f1": 0.3333333333333333
+            }
+          },
+          "combined_entity_metrics": {
+            "PERSON": {
+              "tp": 18,
+              "fp": 4,
+              "fn": 2,
+              "precision": 0.8181818181818182,
+              "recall": 0.9,
+              "f1": 0.8571428571428572
+            },
+            "CITY": {
+              "tp": 14,
+              "fp": 0,
+              "fn": 3,
+              "precision": 1.0,
+              "recall": 0.8235294117647058,
+              "f1": 0.9032258064516129
+            },
+            "RELIGION": {
+              "tp": 6,
+              "fp": 0,
+              "fn": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "EMAIL": {
+              "tp": 2,
+              "fp": 0,
+              "fn": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "PHONE": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "ORGANIZATION": {
+              "tp": 1,
+              "fp": 3,
+              "fn": 1,
+              "precision": 0.25,
+              "recall": 0.5,
+              "f1": 0.3333333333333333
+            }
+          },
+          "unredacted_canaries": {
+            "PERSON": 0,
+            "CITY": 1,
+            "RELIGION": 0,
+            "EMAIL": 0,
+            "PHONE": 0,
+            "ORGANIZATION": 0
+          },
+          "literal_unredacted_canaries": {
+            "PERSON": 0,
+            "CITY": 1,
+            "RELIGION": 0,
+            "EMAIL": 0,
+            "PHONE": 0,
+            "ORGANIZATION": 0
+          },
+          "document_exact_match_rate": 0.825,
+          "groups": {
+            "de": {
+              "documents": 10,
+              "exact_matches": 8,
+              "false_negatives": 1
+            },
+            "en": {
+              "documents": 29,
+              "exact_matches": 24,
+              "false_negatives": 5
+            },
+            "mixed": {
+              "documents": 1,
+              "exact_matches": 1,
+              "false_negatives": 0
+            },
+            "ocr_noise": {
+              "documents": 4,
+              "exact_matches": 2,
+              "false_negatives": 2
+            }
+          },
+          "blocked_documents": 0,
+          "failure_codes": {},
+          "warm_latency_ms": {
+            "median": 80.88414799567545,
+            "max": 108.47490000014659
+          },
+          "automated_release_eligible": false,
+          "qualification_passed": false
+        },
+        "validation": {
+          "documents": 10,
+          "ner_entity_metrics": {
+            "PERSON": {
+              "tp": 7,
+              "fp": 0,
+              "fn": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "CITY": {
+              "tp": 4,
+              "fp": 0,
+              "fn": 1,
+              "precision": 1.0,
+              "recall": 0.8,
+              "f1": 0.888888888888889
+            },
+            "RELIGION": {
+              "tp": 2,
+              "fp": 1,
+              "fn": 0,
+              "precision": 0.6666666666666666,
+              "recall": 1.0,
+              "f1": 0.8
+            },
+            "EMAIL": {
+              "tp": 2,
+              "fp": 0,
+              "fn": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "PHONE": {
+              "tp": 2,
+              "fp": 0,
+              "fn": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "ORGANIZATION": {
+              "tp": 2,
+              "fp": 2,
+              "fn": 0,
+              "precision": 0.5,
+              "recall": 1.0,
+              "f1": 0.6666666666666666
+            }
+          },
+          "combined_entity_metrics": {
+            "PERSON": {
+              "tp": 7,
+              "fp": 0,
+              "fn": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "CITY": {
+              "tp": 4,
+              "fp": 0,
+              "fn": 1,
+              "precision": 1.0,
+              "recall": 0.8,
+              "f1": 0.888888888888889
+            },
+            "RELIGION": {
+              "tp": 2,
+              "fp": 1,
+              "fn": 0,
+              "precision": 0.6666666666666666,
+              "recall": 1.0,
+              "f1": 0.8
+            },
+            "EMAIL": {
+              "tp": 2,
+              "fp": 0,
+              "fn": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "PHONE": {
+              "tp": 2,
+              "fp": 0,
+              "fn": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "ORGANIZATION": {
+              "tp": 2,
+              "fp": 2,
+              "fn": 0,
+              "precision": 0.5,
+              "recall": 1.0,
+              "f1": 0.6666666666666666
+            }
+          },
+          "unredacted_canaries": {
+            "PERSON": 0,
+            "CITY": 0,
+            "RELIGION": 0,
+            "EMAIL": 0,
+            "PHONE": 0,
+            "ORGANIZATION": 0
+          },
+          "literal_unredacted_canaries": {
+            "PERSON": 0,
+            "CITY": 0,
+            "RELIGION": 0,
+            "EMAIL": 0,
+            "PHONE": 0,
+            "ORGANIZATION": 0
+          },
+          "document_exact_match_rate": 0.7,
+          "groups": {
+            "de": {
+              "documents": 5,
+              "exact_matches": 3,
+              "false_negatives": 1
+            },
+            "en": {
+              "documents": 5,
+              "exact_matches": 4,
+              "false_negatives": 0
+            },
+            "ocr_noise": {
+              "documents": 2,
+              "exact_matches": 2,
+              "false_negatives": 0
+            }
+          },
+          "blocked_documents": 0,
+          "failure_codes": {},
+          "warm_latency_ms": {
+            "median": 85.85079599288292,
+            "max": 113.26126799394842
+          },
+          "automated_release_eligible": false,
+          "qualification_passed": true
+        }
+      }
+    },
+    "lower_threshold": {
+      "prompts": {
+        "PERSON": "person",
+        "CITY": "city",
+        "RELIGION": "religion",
+        "EMAIL": "email address",
+        "PHONE": "phone number",
+        "ORGANIZATION": "organization"
+      },
+      "threshold": 0.35,
+      "suites": {
+        "qualification": {
+          "documents": 40,
+          "ner_entity_metrics": {
+            "PERSON": {
+              "tp": 18,
+              "fp": 4,
+              "fn": 2,
+              "precision": 0.8181818181818182,
+              "recall": 0.9,
+              "f1": 0.8571428571428572
+            },
+            "CITY": {
+              "tp": 14,
+              "fp": 0,
+              "fn": 3,
+              "precision": 1.0,
+              "recall": 0.8235294117647058,
+              "f1": 0.9032258064516129
+            },
+            "RELIGION": {
+              "tp": 6,
+              "fp": 0,
+              "fn": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "EMAIL": {
+              "tp": 2,
+              "fp": 0,
+              "fn": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "PHONE": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "ORGANIZATION": {
+              "tp": 1,
+              "fp": 3,
+              "fn": 1,
+              "precision": 0.25,
+              "recall": 0.5,
+              "f1": 0.3333333333333333
+            }
+          },
+          "combined_entity_metrics": {
+            "PERSON": {
+              "tp": 18,
+              "fp": 4,
+              "fn": 2,
+              "precision": 0.8181818181818182,
+              "recall": 0.9,
+              "f1": 0.8571428571428572
+            },
+            "CITY": {
+              "tp": 14,
+              "fp": 0,
+              "fn": 3,
+              "precision": 1.0,
+              "recall": 0.8235294117647058,
+              "f1": 0.9032258064516129
+            },
+            "RELIGION": {
+              "tp": 6,
+              "fp": 0,
+              "fn": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "EMAIL": {
+              "tp": 2,
+              "fp": 0,
+              "fn": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "PHONE": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "ORGANIZATION": {
+              "tp": 1,
+              "fp": 3,
+              "fn": 1,
+              "precision": 0.25,
+              "recall": 0.5,
+              "f1": 0.3333333333333333
+            }
+          },
+          "unredacted_canaries": {
+            "PERSON": 0,
+            "CITY": 1,
+            "RELIGION": 0,
+            "EMAIL": 0,
+            "PHONE": 0,
+            "ORGANIZATION": 0
+          },
+          "literal_unredacted_canaries": {
+            "PERSON": 0,
+            "CITY": 1,
+            "RELIGION": 0,
+            "EMAIL": 0,
+            "PHONE": 0,
+            "ORGANIZATION": 0
+          },
+          "document_exact_match_rate": 0.825,
+          "groups": {
+            "de": {
+              "documents": 10,
+              "exact_matches": 8,
+              "false_negatives": 1
+            },
+            "en": {
+              "documents": 29,
+              "exact_matches": 24,
+              "false_negatives": 5
+            },
+            "mixed": {
+              "documents": 1,
+              "exact_matches": 1,
+              "false_negatives": 0
+            },
+            "ocr_noise": {
+              "documents": 4,
+              "exact_matches": 2,
+              "false_negatives": 2
+            }
+          },
+          "blocked_documents": 0,
+          "failure_codes": {},
+          "warm_latency_ms": {
+            "median": 80.21907749935053,
+            "max": 88.23647900135256
+          },
+          "automated_release_eligible": false,
+          "qualification_passed": false
+        },
+        "validation": {
+          "documents": 10,
+          "ner_entity_metrics": {
+            "PERSON": {
+              "tp": 7,
+              "fp": 0,
+              "fn": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "CITY": {
+              "tp": 4,
+              "fp": 0,
+              "fn": 1,
+              "precision": 1.0,
+              "recall": 0.8,
+              "f1": 0.888888888888889
+            },
+            "RELIGION": {
+              "tp": 2,
+              "fp": 1,
+              "fn": 0,
+              "precision": 0.6666666666666666,
+              "recall": 1.0,
+              "f1": 0.8
+            },
+            "EMAIL": {
+              "tp": 2,
+              "fp": 0,
+              "fn": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "PHONE": {
+              "tp": 2,
+              "fp": 0,
+              "fn": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "ORGANIZATION": {
+              "tp": 2,
+              "fp": 2,
+              "fn": 0,
+              "precision": 0.5,
+              "recall": 1.0,
+              "f1": 0.6666666666666666
+            }
+          },
+          "combined_entity_metrics": {
+            "PERSON": {
+              "tp": 7,
+              "fp": 0,
+              "fn": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "CITY": {
+              "tp": 4,
+              "fp": 0,
+              "fn": 1,
+              "precision": 1.0,
+              "recall": 0.8,
+              "f1": 0.888888888888889
+            },
+            "RELIGION": {
+              "tp": 2,
+              "fp": 1,
+              "fn": 0,
+              "precision": 0.6666666666666666,
+              "recall": 1.0,
+              "f1": 0.8
+            },
+            "EMAIL": {
+              "tp": 2,
+              "fp": 0,
+              "fn": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "PHONE": {
+              "tp": 2,
+              "fp": 0,
+              "fn": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "ORGANIZATION": {
+              "tp": 2,
+              "fp": 2,
+              "fn": 0,
+              "precision": 0.5,
+              "recall": 1.0,
+              "f1": 0.6666666666666666
+            }
+          },
+          "unredacted_canaries": {
+            "PERSON": 0,
+            "CITY": 0,
+            "RELIGION": 0,
+            "EMAIL": 0,
+            "PHONE": 0,
+            "ORGANIZATION": 0
+          },
+          "literal_unredacted_canaries": {
+            "PERSON": 0,
+            "CITY": 0,
+            "RELIGION": 0,
+            "EMAIL": 0,
+            "PHONE": 0,
+            "ORGANIZATION": 0
+          },
+          "document_exact_match_rate": 0.7,
+          "groups": {
+            "de": {
+              "documents": 5,
+              "exact_matches": 3,
+              "false_negatives": 1
+            },
+            "en": {
+              "documents": 5,
+              "exact_matches": 4,
+              "false_negatives": 0
+            },
+            "ocr_noise": {
+              "documents": 2,
+              "exact_matches": 2,
+              "false_negatives": 0
+            }
+          },
+          "blocked_documents": 0,
+          "failure_codes": {},
+          "warm_latency_ms": {
+            "median": 85.42744599981233,
+            "max": 119.25176299700979
+          },
+          "automated_release_eligible": false,
+          "qualification_passed": true
+        }
+      }
+    },
+    "geographic_prompt": {
+      "prompts": {
+        "PERSON": "person",
+        "CITY": "location",
+        "RELIGION": "religion",
+        "EMAIL": "email address",
+        "PHONE": "phone number",
+        "ORGANIZATION": "organization"
+      },
+      "threshold": 0.5,
+      "suites": {
+        "qualification": {
+          "documents": 40,
+          "ner_entity_metrics": {
+            "PERSON": {
+              "tp": 18,
+              "fp": 3,
+              "fn": 2,
+              "precision": 0.8571428571428571,
+              "recall": 0.9,
+              "f1": 0.8780487804878048
+            },
+            "CITY": {
+              "tp": 16,
+              "fp": 2,
+              "fn": 1,
+              "precision": 0.8888888888888888,
+              "recall": 0.9411764705882353,
+              "f1": 0.9142857142857143
+            },
+            "RELIGION": {
+              "tp": 6,
+              "fp": 0,
+              "fn": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "EMAIL": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 1,
+              "precision": 1.0,
+              "recall": 0.5,
+              "f1": 0.6666666666666666
+            },
+            "PHONE": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "ORGANIZATION": {
+              "tp": 1,
+              "fp": 2,
+              "fn": 1,
+              "precision": 0.3333333333333333,
+              "recall": 0.5,
+              "f1": 0.4
+            }
+          },
+          "combined_entity_metrics": {
+            "PERSON": {
+              "tp": 18,
+              "fp": 3,
+              "fn": 2,
+              "precision": 0.8571428571428571,
+              "recall": 0.9,
+              "f1": 0.8780487804878048
+            },
+            "CITY": {
+              "tp": 16,
+              "fp": 1,
+              "fn": 1,
+              "precision": 0.9411764705882353,
+              "recall": 0.9411764705882353,
+              "f1": 0.9411764705882353
+            },
+            "RELIGION": {
+              "tp": 6,
+              "fp": 0,
+              "fn": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "EMAIL": {
+              "tp": 2,
+              "fp": 0,
+              "fn": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "PHONE": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "ORGANIZATION": {
+              "tp": 1,
+              "fp": 2,
+              "fn": 1,
+              "precision": 0.3333333333333333,
+              "recall": 0.5,
+              "f1": 0.4
+            }
+          },
+          "unredacted_canaries": {
+            "PERSON": 0,
+            "CITY": 0,
+            "RELIGION": 0,
+            "EMAIL": 0,
+            "PHONE": 0,
+            "ORGANIZATION": 0
+          },
+          "literal_unredacted_canaries": {
+            "PERSON": 0,
+            "CITY": 0,
+            "RELIGION": 0,
+            "EMAIL": 0,
+            "PHONE": 0,
+            "ORGANIZATION": 0
+          },
+          "document_exact_match_rate": 0.875,
+          "groups": {
+            "de": {
+              "documents": 10,
+              "exact_matches": 8,
+              "false_negatives": 1
+            },
+            "en": {
+              "documents": 29,
+              "exact_matches": 26,
+              "false_negatives": 3
+            },
+            "mixed": {
+              "documents": 1,
+              "exact_matches": 1,
+              "false_negatives": 0
+            },
+            "ocr_noise": {
+              "documents": 4,
+              "exact_matches": 2,
+              "false_negatives": 2
+            }
+          },
+          "blocked_documents": 0,
+          "failure_codes": {},
+          "warm_latency_ms": {
+            "median": 80.78234650020022,
+            "max": 89.95303700794466
+          },
+          "automated_release_eligible": false,
+          "qualification_passed": true
+        },
+        "validation": {
+          "documents": 10,
+          "ner_entity_metrics": {
+            "PERSON": {
+              "tp": 7,
+              "fp": 0,
+              "fn": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "CITY": {
+              "tp": 5,
+              "fp": 1,
+              "fn": 0,
+              "precision": 0.8333333333333334,
+              "recall": 1.0,
+              "f1": 0.9090909090909091
+            },
+            "RELIGION": {
+              "tp": 2,
+              "fp": 1,
+              "fn": 0,
+              "precision": 0.6666666666666666,
+              "recall": 1.0,
+              "f1": 0.8
+            },
+            "EMAIL": {
+              "tp": 2,
+              "fp": 0,
+              "fn": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "PHONE": {
+              "tp": 2,
+              "fp": 0,
+              "fn": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "ORGANIZATION": {
+              "tp": 2,
+              "fp": 0,
+              "fn": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          },
+          "combined_entity_metrics": {
+            "PERSON": {
+              "tp": 7,
+              "fp": 0,
+              "fn": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "CITY": {
+              "tp": 5,
+              "fp": 1,
+              "fn": 0,
+              "precision": 0.8333333333333334,
+              "recall": 1.0,
+              "f1": 0.9090909090909091
+            },
+            "RELIGION": {
+              "tp": 2,
+              "fp": 1,
+              "fn": 0,
+              "precision": 0.6666666666666666,
+              "recall": 1.0,
+              "f1": 0.8
+            },
+            "EMAIL": {
+              "tp": 2,
+              "fp": 0,
+              "fn": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "PHONE": {
+              "tp": 2,
+              "fp": 0,
+              "fn": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "ORGANIZATION": {
+              "tp": 2,
+              "fp": 0,
+              "fn": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          },
+          "unredacted_canaries": {
+            "PERSON": 0,
+            "CITY": 0,
+            "RELIGION": 0,
+            "EMAIL": 0,
+            "PHONE": 0,
+            "ORGANIZATION": 0
+          },
+          "literal_unredacted_canaries": {
+            "PERSON": 0,
+            "CITY": 0,
+            "RELIGION": 0,
+            "EMAIL": 0,
+            "PHONE": 0,
+            "ORGANIZATION": 0
+          },
+          "document_exact_match_rate": 0.8,
+          "groups": {
+            "de": {
+              "documents": 5,
+              "exact_matches": 4,
+              "false_negatives": 0
+            },
+            "en": {
+              "documents": 5,
+              "exact_matches": 4,
+              "false_negatives": 0
+            },
+            "ocr_noise": {
+              "documents": 2,
+              "exact_matches": 2,
+              "false_negatives": 0
+            }
+          },
+          "blocked_documents": 0,
+          "failure_codes": {},
+          "warm_latency_ms": {
+            "median": 86.73016350076068,
+            "max": 113.46212399075739
+          },
+          "automated_release_eligible": false,
+          "qualification_passed": true
+        }
+      }
+    },
+    "geographic_and_company_prompt": {
+      "prompts": {
+        "PERSON": "person",
+        "CITY": "location",
+        "RELIGION": "religion",
+        "EMAIL": "email address",
+        "PHONE": "phone number",
+        "ORGANIZATION": "company or organization"
+      },
+      "threshold": 0.5,
+      "suites": {
+        "qualification": {
+          "documents": 40,
+          "ner_entity_metrics": {
+            "PERSON": {
+              "tp": 18,
+              "fp": 4,
+              "fn": 2,
+              "precision": 0.8181818181818182,
+              "recall": 0.9,
+              "f1": 0.8571428571428572
+            },
+            "CITY": {
+              "tp": 16,
+              "fp": 4,
+              "fn": 1,
+              "precision": 0.8,
+              "recall": 0.9411764705882353,
+              "f1": 0.8648648648648648
+            },
+            "RELIGION": {
+              "tp": 6,
+              "fp": 0,
+              "fn": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "EMAIL": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 2,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            "PHONE": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "ORGANIZATION": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 2,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            }
+          },
+          "combined_entity_metrics": {
+            "PERSON": {
+              "tp": 18,
+              "fp": 4,
+              "fn": 2,
+              "precision": 0.8181818181818182,
+              "recall": 0.9,
+              "f1": 0.8571428571428572
+            },
+            "CITY": {
+              "tp": 16,
+              "fp": 2,
+              "fn": 1,
+              "precision": 0.8888888888888888,
+              "recall": 0.9411764705882353,
+              "f1": 0.9142857142857143
+            },
+            "RELIGION": {
+              "tp": 6,
+              "fp": 0,
+              "fn": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "EMAIL": {
+              "tp": 2,
+              "fp": 0,
+              "fn": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "PHONE": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "ORGANIZATION": {
+              "tp": 0,
+              "fp": 0,
+              "fn": 2,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            }
+          },
+          "unredacted_canaries": {
+            "PERSON": 0,
+            "CITY": 0,
+            "RELIGION": 0,
+            "EMAIL": 0,
+            "PHONE": 0,
+            "ORGANIZATION": 1
+          },
+          "literal_unredacted_canaries": {
+            "PERSON": 0,
+            "CITY": 0,
+            "RELIGION": 0,
+            "EMAIL": 0,
+            "PHONE": 0,
+            "ORGANIZATION": 1
+          },
+          "document_exact_match_rate": 0.825,
+          "groups": {
+            "de": {
+              "documents": 10,
+              "exact_matches": 8,
+              "false_negatives": 1
+            },
+            "en": {
+              "documents": 29,
+              "exact_matches": 24,
+              "false_negatives": 4
+            },
+            "mixed": {
+              "documents": 1,
+              "exact_matches": 1,
+              "false_negatives": 0
+            },
+            "ocr_noise": {
+              "documents": 4,
+              "exact_matches": 2,
+              "false_negatives": 2
+            }
+          },
+          "blocked_documents": 0,
+          "failure_codes": {},
+          "warm_latency_ms": {
+            "median": 81.41350599908037,
+            "max": 111.50511199957691
+          },
+          "automated_release_eligible": false,
+          "qualification_passed": false
+        },
+        "validation": {
+          "documents": 10,
+          "ner_entity_metrics": {
+            "PERSON": {
+              "tp": 7,
+              "fp": 0,
+              "fn": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "CITY": {
+              "tp": 5,
+              "fp": 1,
+              "fn": 0,
+              "precision": 0.8333333333333334,
+              "recall": 1.0,
+              "f1": 0.9090909090909091
+            },
+            "RELIGION": {
+              "tp": 2,
+              "fp": 1,
+              "fn": 0,
+              "precision": 0.6666666666666666,
+              "recall": 1.0,
+              "f1": 0.8
+            },
+            "EMAIL": {
+              "tp": 2,
+              "fp": 0,
+              "fn": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "PHONE": {
+              "tp": 2,
+              "fp": 0,
+              "fn": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "ORGANIZATION": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 1,
+              "precision": 1.0,
+              "recall": 0.5,
+              "f1": 0.6666666666666666
+            }
+          },
+          "combined_entity_metrics": {
+            "PERSON": {
+              "tp": 7,
+              "fp": 0,
+              "fn": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "CITY": {
+              "tp": 5,
+              "fp": 1,
+              "fn": 0,
+              "precision": 0.8333333333333334,
+              "recall": 1.0,
+              "f1": 0.9090909090909091
+            },
+            "RELIGION": {
+              "tp": 2,
+              "fp": 1,
+              "fn": 0,
+              "precision": 0.6666666666666666,
+              "recall": 1.0,
+              "f1": 0.8
+            },
+            "EMAIL": {
+              "tp": 2,
+              "fp": 0,
+              "fn": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "PHONE": {
+              "tp": 2,
+              "fp": 0,
+              "fn": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "ORGANIZATION": {
+              "tp": 1,
+              "fp": 0,
+              "fn": 1,
+              "precision": 1.0,
+              "recall": 0.5,
+              "f1": 0.6666666666666666
+            }
+          },
+          "unredacted_canaries": {
+            "PERSON": 0,
+            "CITY": 0,
+            "RELIGION": 0,
+            "EMAIL": 0,
+            "PHONE": 0,
+            "ORGANIZATION": 1
+          },
+          "literal_unredacted_canaries": {
+            "PERSON": 0,
+            "CITY": 0,
+            "RELIGION": 0,
+            "EMAIL": 0,
+            "PHONE": 0,
+            "ORGANIZATION": 1
+          },
+          "document_exact_match_rate": 0.7,
+          "groups": {
+            "de": {
+              "documents": 5,
+              "exact_matches": 3,
+              "false_negatives": 1
+            },
+            "en": {
+              "documents": 5,
+              "exact_matches": 4,
+              "false_negatives": 0
+            },
+            "ocr_noise": {
+              "documents": 2,
+              "exact_matches": 2,
+              "false_negatives": 0
+            }
+          },
+          "blocked_documents": 0,
+          "failure_codes": {},
+          "warm_latency_ms": {
+            "median": 88.579570496222,
+            "max": 130.01443599932827
+          },
+          "automated_release_eligible": false,
+          "qualification_passed": false
+        }
+      }
+    }
+  },
+  "baseline_diagnosis": [
+    {
+      "suite": "qualification",
+      "case_id": "baseline-14",
+      "text": "Welcome to Los Angeles, California.",
+      "normalized": "Welcome to Los Angeles, California.",
+      "gold": [
+        {
+          "start": 11,
+          "end": 22,
+          "label": "CITY",
+          "text": "Los Angeles"
+        },
+        {
+          "start": 24,
+          "end": 34,
+          "label": "CITY",
+          "text": "California"
+        }
+      ],
+      "predictions": [
+        {
+          "start": 11,
+          "end": 22,
+          "label": "CITY",
+          "text": "Los Angeles",
+          "score": 0.9600135684013367,
+          "source": "multilingual_ner",
+          "model_revision": "ba967ee030b7e679dd5422cb16fcd1b379da38e1",
+          "normalization": "identity"
+        }
+      ],
+      "errors": {
+        "CITY": {
+          "false_positives": [],
+          "false_negatives": [
+            {
+              "start": 24,
+              "end": 34,
+              "label": "CITY",
+              "text": "California"
+            }
+          ]
+        },
+        "ORGANIZATION": {
+          "false_positives": [],
+          "false_negatives": []
+        }
+      },
+      "uncovered_city": [
+        {
+          "start": 24,
+          "end": 34,
+          "label": "CITY",
+          "text": "California"
+        }
+      ],
+      "tokens": [
+        "<bos>",
+        "▁Welcome",
+        "▁to",
+        "▁Los",
+        "▁Angeles",
+        ",",
+        "▁California",
+        ".",
+        "<eos>"
+      ],
+      "low_threshold_predictions": [
+        {
+          "start": 11,
+          "end": 22,
+          "text": "Los Angeles",
+          "label": "city",
+          "score": 0.9600135684013367
+        },
+        {
+          "start": 24,
+          "end": 34,
+          "text": "California",
+          "label": "organization",
+          "score": 0.18358616530895233
+        }
+      ]
+    },
+    {
+      "suite": "qualification",
+      "case_id": "baseline-26",
+      "text": "I visited the Jordan river.",
+      "normalized": "I visited the Jordan river.",
+      "gold": [
+        {
+          "start": 14,
+          "end": 20,
+          "label": "CITY",
+          "text": "Jordan"
+        }
+      ],
+      "predictions": [
+        {
+          "start": 14,
+          "end": 20,
+          "label": "ORGANIZATION",
+          "text": "Jordan",
+          "score": 0.9476938843727112,
+          "source": "multilingual_ner",
+          "model_revision": "ba967ee030b7e679dd5422cb16fcd1b379da38e1",
+          "normalization": "identity"
+        }
+      ],
+      "errors": {
+        "CITY": {
+          "false_positives": [],
+          "false_negatives": [
+            {
+              "start": 14,
+              "end": 20,
+              "label": "CITY",
+              "text": "Jordan"
+            }
+          ]
+        },
+        "ORGANIZATION": {
+          "false_positives": [
+            {
+              "start": 14,
+              "end": 20,
+              "label": "ORGANIZATION",
+              "text": "Jordan",
+              "score": 0.9476938843727112,
+              "source": "multilingual_ner",
+              "model_revision": "ba967ee030b7e679dd5422cb16fcd1b379da38e1",
+              "normalization": "identity"
+            }
+          ],
+          "false_negatives": []
+        }
+      }
+    },
+    {
+      "suite": "qualification",
+      "case_id": "baseline-31",
+      "text": "Welcome to Nevv Y0rk.",
+      "normalized": "Welcome to Nevv Y0rk.",
+      "gold": [
+        {
+          "start": 11,
+          "end": 20,
+          "label": "CITY",
+          "text": "Nevv Y0rk"
+        }
+      ],
+      "predictions": [
+        {
+          "start": 11,
+          "end": 20,
+          "label": "ORGANIZATION",
+          "text": "Nevv Y0rk",
+          "score": 0.8832855820655823,
+          "source": "multilingual_ner",
+          "model_revision": "ba967ee030b7e679dd5422cb16fcd1b379da38e1",
+          "normalization": "identity"
+        }
+      ],
+      "errors": {
+        "CITY": {
+          "false_positives": [],
+          "false_negatives": [
+            {
+              "start": 11,
+              "end": 20,
+              "label": "CITY",
+              "text": "Nevv Y0rk"
+            }
+          ]
+        },
+        "ORGANIZATION": {
+          "false_positives": [
+            {
+              "start": 11,
+              "end": 20,
+              "label": "ORGANIZATION",
+              "text": "Nevv Y0rk",
+              "score": 0.8832855820655823,
+              "source": "multilingual_ner",
+              "model_revision": "ba967ee030b7e679dd5422cb16fcd1b379da38e1",
+              "normalization": "identity"
+            }
+          ],
+          "false_negatives": []
+        }
+      }
+    },
+    {
+      "suite": "qualification",
+      "case_id": "baseline-37",
+      "text": "I work for Google Inc.",
+      "normalized": "I work for Google Inc.",
+      "gold": [
+        {
+          "start": 11,
+          "end": 22,
+          "label": "ORGANIZATION",
+          "text": "Google Inc."
+        }
+      ],
+      "predictions": [
+        {
+          "start": 11,
+          "end": 21,
+          "label": "ORGANIZATION",
+          "text": "Google Inc",
+          "score": 0.8677961826324463,
+          "source": "multilingual_ner",
+          "model_revision": "ba967ee030b7e679dd5422cb16fcd1b379da38e1",
+          "normalization": "identity"
+        }
+      ],
+      "errors": {
+        "CITY": {
+          "false_positives": [],
+          "false_negatives": []
+        },
+        "ORGANIZATION": {
+          "false_positives": [
+            {
+              "start": 11,
+              "end": 21,
+              "label": "ORGANIZATION",
+              "text": "Google Inc",
+              "score": 0.8677961826324463,
+              "source": "multilingual_ner",
+              "model_revision": "ba967ee030b7e679dd5422cb16fcd1b379da38e1",
+              "normalization": "identity"
+            }
+          ],
+          "false_negatives": [
+            {
+              "start": 11,
+              "end": 22,
+              "label": "ORGANIZATION",
+              "text": "Google Inc."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "suite": "validation",
+      "case_id": "validation-04",
+      "text": "Nora Winter besucht Köln. Nora Winter bleibt dort.",
+      "normalized": "Nora Winter besucht Köln. Nora Winter bleibt dort.",
+      "gold": [
+        {
+          "start": 0,
+          "end": 11,
+          "label": "PERSON",
+          "text": "Nora Winter"
+        },
+        {
+          "start": 20,
+          "end": 24,
+          "label": "CITY",
+          "text": "Köln"
+        },
+        {
+          "start": 26,
+          "end": 37,
+          "label": "PERSON",
+          "text": "Nora Winter"
+        }
+      ],
+      "predictions": [
+        {
+          "start": 0,
+          "end": 11,
+          "label": "PERSON",
+          "text": "Nora Winter",
+          "score": 0.9986635446548462,
+          "source": "multilingual_ner",
+          "model_revision": "ba967ee030b7e679dd5422cb16fcd1b379da38e1",
+          "normalization": "identity"
+        },
+        {
+          "start": 20,
+          "end": 24,
+          "label": "ORGANIZATION",
+          "text": "Köln",
+          "score": 0.9306344985961914,
+          "source": "multilingual_ner",
+          "model_revision": "ba967ee030b7e679dd5422cb16fcd1b379da38e1",
+          "normalization": "identity"
+        },
+        {
+          "start": 26,
+          "end": 37,
+          "label": "PERSON",
+          "text": "Nora Winter",
+          "score": 0.999085545539856,
+          "source": "multilingual_ner",
+          "model_revision": "ba967ee030b7e679dd5422cb16fcd1b379da38e1",
+          "normalization": "identity"
+        }
+      ],
+      "errors": {
+        "CITY": {
+          "false_positives": [],
+          "false_negatives": [
+            {
+              "start": 20,
+              "end": 24,
+              "label": "CITY",
+              "text": "Köln"
+            }
+          ]
+        },
+        "ORGANIZATION": {
+          "false_positives": [
+            {
+              "start": 20,
+              "end": 24,
+              "label": "ORGANIZATION",
+              "text": "Köln",
+              "score": 0.9306344985961914,
+              "source": "multilingual_ner",
+              "model_revision": "ba967ee030b7e679dd5422cb16fcd1b379da38e1",
+              "normalization": "identity"
+            }
+          ],
+          "false_negatives": []
+        }
+      }
+    },
+    {
+      "suite": "validation",
+      "case_id": "validation-05",
+      "text": "Jordan is a river, and Jordan Miller is a person.",
+      "normalized": "Jordan is a river, and Jordan Miller is a person.",
+      "gold": [
+        {
+          "start": 23,
+          "end": 36,
+          "label": "PERSON",
+          "text": "Jordan Miller"
+        }
+      ],
+      "predictions": [
+        {
+          "start": 0,
+          "end": 6,
+          "label": "ORGANIZATION",
+          "text": "Jordan",
+          "score": 0.8391314744949341,
+          "source": "multilingual_ner",
+          "model_revision": "ba967ee030b7e679dd5422cb16fcd1b379da38e1",
+          "normalization": "identity"
+        },
+        {
+          "start": 23,
+          "end": 36,
+          "label": "PERSON",
+          "text": "Jordan Miller",
+          "score": 0.9865352511405945,
+          "source": "multilingual_ner",
+          "model_revision": "ba967ee030b7e679dd5422cb16fcd1b379da38e1",
+          "normalization": "identity"
+        }
+      ],
+      "errors": {
+        "CITY": {
+          "false_positives": [],
+          "false_negatives": []
+        },
+        "ORGANIZATION": {
+          "false_positives": [
+            {
+              "start": 0,
+              "end": 6,
+              "label": "ORGANIZATION",
+              "text": "Jordan",
+              "score": 0.8391314744949341,
+              "source": "multilingual_ner",
+              "model_revision": "ba967ee030b7e679dd5422cb16fcd1b379da38e1",
+              "normalization": "identity"
+            }
+          ],
+          "false_negatives": []
+        }
+      }
+    }
+  ],
+  "peak_rss_mib": 3057.8984375
+}
