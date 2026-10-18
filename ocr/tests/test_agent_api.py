@@ -1,10 +1,12 @@
 import os
+
 os.environ["OCR_CPU_AUTH_TOKEN"] = "test-token"
 
 import pytest
 from fastapi.testclient import TestClient
-from ocr.worker_api import create_app
 from ocr.config import Settings
+from ocr.worker_api import create_app
+
 
 class MockBackend:
     class Health:
