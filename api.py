@@ -87,16 +87,20 @@ except FileNotFoundError:
 except yaml.YAMLError as e:
     print(f"ERROR: Error parsing super config file {SUPER_CONFIG_PATH}: {e}")
 
-INPUTS_DIR = PyPath("./inputs").resolve()
-OUTPUTS_DIR = PyPath("./outputs").resolve()
+ATK_DATA_ROOT = PyPath(os.environ.get("ATK_DATA_ROOT", "/tmp/augmentoolkit")).resolve()
+ATK_DATA_ROOT.mkdir(parents=True, exist_ok=True)
+
+INPUTS_DIR = (ATK_DATA_ROOT / "inputs").resolve()
+OUTPUTS_DIR = (ATK_DATA_ROOT / "outputs").resolve()
 GENERATION_DIR = PyPath("./generation").resolve()
-CONFIGS_DIR = PyPath("./external_configs").resolve()
+CONFIGS_DIR = (ATK_DATA_ROOT / "external_configs").resolve()
+LOGS_DIR = (ATK_DATA_ROOT / "logs").resolve()
 MAX_FILE_SIZE = 1024 * 1024 * 1000
 
-LOGS_DIR = PyPath("./logs").resolve()
+for d in (INPUTS_DIR, OUTPUTS_DIR, CONFIGS_DIR, LOGS_DIR):
+    d.mkdir(parents=True, exist_ok=True)
 
-INPUTS_DIR.mkdir(exist_ok=True)
-OUTPUTS_DIR.mkdir(exist_ok=True)
+
 GENERATION_DIR.mkdir(exist_ok=True)
 CONFIGS_DIR.mkdir(exist_ok=True)
 LOGS_DIR.mkdir(exist_ok=True)
@@ -264,6 +268,8 @@ def queue_pipeline_run(request: PipelineRunRequest):
         )
     except Exception as e:
         logger.error(f"ERROR during pipeline queueing: {e}", exc_info=True)
+        if "Redis" in str(e) or "111" in str(e):
+             raise HTTPException(status_code=503, detail="Job functionality disabled: Huey/Redis unavailable.")
         raise HTTPException(
             status_code=500,
             detail=f"Failed to enqueue pipeline task: {e}",
