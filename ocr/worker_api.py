@@ -89,7 +89,12 @@ def create_app(settings=None, backend=None):
         app.state.backend = backend
         yield
 
-    app = FastAPI(title="Authenticated PP-OCRv6 Small worker", version="1.0.0", lifespan=lifespan)
+    app = FastAPI(
+        docs_url="/api-docs",
+        title="Authenticated PP-OCRv6 Small worker",
+        version="1.0.0",
+        lifespan=lifespan,
+    )
     app.add_middleware(
         Guard,
         token=settings.worker_token,

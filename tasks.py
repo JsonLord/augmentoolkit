@@ -32,8 +32,11 @@ if TYPE_CHECKING:
 
 PIPELINE_RUNNER_SCRIPT = "run_augmentoolkit.py"
 ATK3_DIRECTORY = os.path.dirname(os.path.abspath(__file__))
+ATK_DATA_ROOT = os.environ.get("ATK_DATA_ROOT", "/tmp/augmentoolkit")
+os.makedirs(ATK_DATA_ROOT, exist_ok=True)
+
 SUPER_CONFIG_PATH = os.path.join(ATK3_DIRECTORY, "super_config.yaml")
-LOGS_DIR = os.path.join(ATK3_DIRECTORY, "logs")
+LOGS_DIR = os.path.join(ATK_DATA_ROOT, "logs")
 os.makedirs(LOGS_DIR, exist_ok=True)
 
 logging.basicConfig(level=logging.INFO)
@@ -109,7 +112,7 @@ def resolve_job_output_dir(
         return str(output_dir_path if output_dir_path.is_absolute() else (Path(ATK3_DIRECTORY) / output_dir_value).resolve())
 
     job_id_str = durable_job_id or params.get("job_id") or params.get("task_id") or "default_job"
-    fallback_dir = (Path(ATK3_DIRECTORY) / "outputs" / job_id_str).resolve()
+    fallback_dir = (Path(ATK_DATA_ROOT) / "outputs" / job_id_str).resolve()
     fallback_dir.mkdir(parents=True, exist_ok=True)
     return str(fallback_dir)
 
@@ -295,7 +298,7 @@ def run_pipeline_task(
     if hf_source_repo and source_path:
         try:
             print(f"Job {durable_job_id}: Downloading source path '{source_path}' from {hf_source_repo} (revision: {source_revision})...")
-            local_inputs_target = os.path.join(ATK3_DIRECTORY, "inputs", source_path)
+            local_inputs_target = os.path.join(ATK_DATA_ROOT, "inputs", source_path)
             ckpt_mgr.hf_manager.download_folder(
                 path_in_repo=source_path,
                 local_dir=local_inputs_target,
