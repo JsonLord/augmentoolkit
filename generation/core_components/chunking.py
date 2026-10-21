@@ -546,6 +546,11 @@ def write_text(output_dir, text_list):
     Returns:
         int: Number of files successfully written.
     """
+    # In hosted mode, metadata cannot redirect writes outside the approved root.
+    from pathlib import Path
+    from app_storage import confined_path, data_directory
+    if os.environ.get("ATK_DATA_ROOT"):
+        output_dir = str(confined_path(data_directory("outputs"), output_dir))
     # Ensure output directory exists
     os.makedirs(output_dir, exist_ok=True)
 
@@ -553,14 +558,14 @@ def write_text(output_dir, text_list):
 
     for item in tqdm(text_list, desc="Writing files"):
         if "text" not in item or "metadata" not in item:
-            print(f"Warning: Skipping item missing required fields: {item}")
+            print("Warning: Skipping item missing required fields (content omitted)")
             continue
 
         # Get the relative file path from metadata
         relative_path = item["metadata"]
 
         # Create the full output path
-        full_path = os.path.join(output_dir, relative_path)
+        full_path = str(confined_path(Path(output_dir), relative_path))
 
         # Create any necessary subdirectories
         file_dir = os.path.dirname(full_path)

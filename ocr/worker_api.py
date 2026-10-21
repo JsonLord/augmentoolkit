@@ -16,7 +16,7 @@ from .schemas import OCROptions, RasterPage, SafeError
 security = HTTPBearer()
 
 
-def create_app(settings=None, backend=None):
+def create_app(settings=None, backend=None, *, remote_enabled=False):
     settings = settings or Settings.from_env()
 
     @asynccontextmanager
@@ -38,7 +38,7 @@ def create_app(settings=None, backend=None):
             openai_key = os.getenv("OPENAI_COMPATIBLE_API")
             openai_model = os.getenv("OPENAI_COMPATIBLE_MODEL", "alias-ocr")
 
-            if openai_url and openai_key:
+            if remote_enabled and openai_url and openai_key:
                 from .adapters.freellm_alias import FreeLLMAlias
 
                 alias_backend = FreeLLMAlias(openai_url, openai_key)
@@ -87,9 +87,19 @@ def create_app(settings=None, backend=None):
 
             backend = AutoBackend(cpu_backend, alias_backend, openai_model)
         app.state.backend = backend
-        yield
+        try:
+            yield
+        finally:
+            alias = getattr(backend, "alias", None)
+            if alias is not None:
+                await alias.close()
 
-    app = FastAPI(title="Authenticated PP-OCRv6 Small worker", version="1.0.0", lifespan=lifespan)
+    app = FastAPI(
+        docs_url="/docs",
+        title="Authenticated PP-OCRv6 Small worker",
+        version="1.0.0",
+        lifespan=lifespan,
+    )
     app.add_middleware(
         Guard,
         token=settings.worker_token,
@@ -126,8 +136,11 @@ def create_app(settings=None, backend=None):
     async def page(
         file: UploadFile = File(...),
         request_id: str = Form(""),
+        sensitivity: str = Form(...),
         options: str = Form("{}"),
     ):
+        if sensitivity != "D0":
+            raise SafeError("invalid_worker_options")
         # Reject rather than grow an unbounded HTTP queue on a two-core worker.
         if admission.locked():
             await file.close()
@@ -153,7 +166,7 @@ def create_app(settings=None, backend=None):
             )
             if not (await app.state.backend.health()).ready:
                 raise SafeError("model_not_ready")
-            return await app.state.backend.recognize(p, OCROptions())
+            return await app.state.backend.recognize(p, OCROptions(sensitivity=sensitivity))
 
     @app.get("/v1/models", dependencies=[Depends(security)])
     async def list_models():
@@ -257,6 +270,12 @@ def create_app(settings=None, backend=None):
             except Exception:
                 raise SafeError("unsupported_media") from None
 
+            if (
+                "sensitivity" not in req.ocr_options.model_fields_set
+                or req.ocr_options.sensitivity != "D0"
+            ):
+                raise SafeError("explicit_d0_required")
+
             from .classify import features
             from .ingest import decode_image, encode
 
@@ -275,9 +294,9 @@ def create_app(settings=None, backend=None):
                 features=features(data_enc),
             )
 
-            # Force sensitivity to D0
             opts = req.ocr_options
-            opts.sensitivity = "D0"
+            if "sensitivity" not in opts.model_fields_set or opts.sensitivity != "D0":
+                raise SafeError("explicit_d0_required")
             opts._req_model = req.model
 
             result = await app.state.backend.recognize(p, opts)

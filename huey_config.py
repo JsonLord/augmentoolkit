@@ -12,6 +12,8 @@ huey = RedisHuey(
     host=REDIS_HOST,
     port=REDIS_PORT,
     db=REDIS_DB,
+    socket_connect_timeout=2,
+    socket_timeout=2,
     # Add other RedisHuey parameters if needed (e.g., password, connection_pool)
 )
 

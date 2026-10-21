@@ -41,12 +41,14 @@ class RemoteCPU:
             return BackendHealth(ready=False, code="cpu_worker_unavailable")
 
     async def recognize(self, page, options):
+        if options.sensitivity != "D0":
+            raise SafeError("explicit_d0_required")
         r = await request_json(
             self.client,
             "POST",
             self.url + "/internal/ocr/page",
             files={"file": ("page.png", page.image, "image/png")},
-            data={"request_id": page.page_id, "options": "{}"},
+            data={"request_id": page.page_id, "options": "{}", "sensitivity": options.sensitivity},
         )
         try:
             result = OCRPageResult.model_validate(r)

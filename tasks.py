@@ -27,14 +27,17 @@ from augmentoolkit.hf_persistence import (
     HFHubError,
 )
 
+from app_storage import confined_path, data_directory, normalize_mutable_paths
+
 if TYPE_CHECKING:
     from huey.api import Task
 
 PIPELINE_RUNNER_SCRIPT = "run_augmentoolkit.py"
 ATK3_DIRECTORY = os.path.dirname(os.path.abspath(__file__))
+ATK_DATA_ROOT = str(data_directory())
+
 SUPER_CONFIG_PATH = os.path.join(ATK3_DIRECTORY, "super_config.yaml")
-LOGS_DIR = os.path.join(ATK3_DIRECTORY, "logs")
-os.makedirs(LOGS_DIR, exist_ok=True)
+LOGS_DIR = str(data_directory("logs"))
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -76,6 +79,18 @@ def find_first_output_dir(
     return None
 
 
+def resolve_authorized_config(config_path: str) -> Path:
+    with open(SUPER_CONFIG_PATH, "r", encoding="utf-8") as f:
+        aliases = (yaml.safe_load(f) or {}).get("path_aliases", {})
+    if config_path in aliases:
+        value = resolve_path(config_path, aliases)
+        if not value.endswith(".yaml"):
+            value += ".yaml"
+        # Only exact operator-maintained aliases authorize source config reads.
+        return confined_path(Path(ATK3_DIRECTORY), value)
+    return confined_path(data_directory("external_configs"), config_path)
+
+
 def resolve_job_output_dir(
     node_path: str,
     config_path: Optional[str] = None,
@@ -89,27 +104,17 @@ def resolve_job_output_dir(
     if "output_dir" in params:
         output_dir_value = params["output_dir"]
     elif config_path:
-        try:
-            if os.path.exists(SUPER_CONFIG_PATH):
-                with open(SUPER_CONFIG_PATH, "r", encoding="utf-8") as f:
-                    super_config = yaml.safe_load(f)
-                path_aliases = super_config.get("path_aliases", {})
-                resolved_config_from_alias = resolve_path(config_path, path_aliases)
-                abs_config_path = Path(ATK3_DIRECTORY) / resolved_config_from_alias
-                if abs_config_path.is_file():
-                    with open(abs_config_path, "r", encoding="utf-8") as f:
-                        config_data = yaml.safe_load(f)
-                    if config_data:
-                        output_dir_value = find_first_output_dir(config_data)
-        except Exception as e:
-            logger.warning(f"Error resolving config output_dir: {e}")
+        abs_config_path = resolve_authorized_config(config_path)
+        with abs_config_path.open("r", encoding="utf-8") as f:
+            config_data = yaml.safe_load(f) or {}
+        output_dir_value = find_first_output_dir(config_data)
 
     if output_dir_value and isinstance(output_dir_value, str):
         output_dir_path = Path(output_dir_value)
-        return str(output_dir_path if output_dir_path.is_absolute() else (Path(ATK3_DIRECTORY) / output_dir_value).resolve())
+        return str(confined_path(data_directory("outputs"), output_dir_path))
 
     job_id_str = durable_job_id or params.get("job_id") or params.get("task_id") or "default_job"
-    fallback_dir = (Path(ATK3_DIRECTORY) / "outputs" / job_id_str).resolve()
+    fallback_dir = confined_path(data_directory("outputs"), job_id_str)
     fallback_dir.mkdir(parents=True, exist_ok=True)
     return str(fallback_dir)
 
@@ -172,7 +177,7 @@ class JobLockHeartbeat:
                 break
             try:
                 curr_owner = redis_client.get(self.lock_key)
-                if curr_owner and curr_owner.decode("utf-8") == self.task_id:
+                if curr_owner and (curr_owner.decode("utf-8") if isinstance(curr_owner, bytes) else curr_owner) == self.task_id:
                     redis_client.pexpire(self.lock_key, self.lease_ms)
                 else:
                     logger.warning(f"Heartbeat lost lock ownership for job {self.job_id}")
@@ -193,11 +198,18 @@ def run_pipeline_task(
     managing separate durable job_id and ephemeral Huey task_id with atomic Redis lock ownership,
     fail-closed remote persistence, and incremental sharded dataset uploading.
     """
+    if os.environ.get("ATK_JOB_EXECUTION_ENABLED", "false").lower() != "true":
+        raise RuntimeError("Job execution is disabled by the operator")
     task_id = str(task.id)
     if parameters is None:
         parameters = {}
 
     durable_job_id = str(parameters.get("job_id") or parameters.get("task_id") or task_id)
+    # Validate before acquiring a lease: rejected paths must not strand a lock.
+    parameters = normalize_mutable_paths(parameters)
+    validated_output_dir = resolve_job_output_dir(
+        node_path, config_path, parameters, durable_job_id
+    )
 
     redis_pid_key = f"worker_pid_for_task:{task_id}"
     redis_output_dir_key = f"output_dir_for_task:{task_id}"
@@ -209,7 +221,7 @@ def run_pipeline_task(
     lock_acquired = redis_client.set(job_lock_key, task_id, nx=True, px=JOB_LOCK_TIMEOUT * 1000)
     if not lock_acquired:
         curr_owner = redis_client.get(job_lock_key)
-        owner_str = curr_owner.decode("utf-8") if curr_owner else "unknown"
+        owner_str = (curr_owner.decode("utf-8") if isinstance(curr_owner, bytes) else curr_owner) if curr_owner else "unknown"
         if owner_str != task_id:
             msg = f"Job '{durable_job_id}' is currently locked/executing under task ID '{owner_str}'. Duplicate execution rejected."
             logger.error(msg)
@@ -245,15 +257,11 @@ def run_pipeline_task(
         )
         raise
 
+    parameters_flat = normalize_mutable_paths(parameters_flat)
     parameters_flat["task_id"] = task_id
     parameters_flat["job_id"] = durable_job_id
 
-    resolved_output_dir = resolve_job_output_dir(
-        node_path=node_path,
-        config_path=config_path,
-        parameters=parameters_flat,
-        durable_job_id=durable_job_id,
-    )
+    resolved_output_dir = validated_output_dir
     parameters_flat["output_dir"] = resolved_output_dir
 
     hf_source_repo = parameters_flat.get("hf_source_repo") or os.environ.get("HF_SOURCE_REPO", "")
@@ -295,7 +303,7 @@ def run_pipeline_task(
     if hf_source_repo and source_path:
         try:
             print(f"Job {durable_job_id}: Downloading source path '{source_path}' from {hf_source_repo} (revision: {source_revision})...")
-            local_inputs_target = os.path.join(ATK3_DIRECTORY, "inputs", source_path)
+            local_inputs_target = str(confined_path(data_directory("inputs"), source_path))
             ckpt_mgr.hf_manager.download_folder(
                 path_in_repo=source_path,
                 local_dir=local_inputs_target,
@@ -396,10 +404,11 @@ def run_pipeline_task(
             params_json_for_command = json.dumps(parameters_flat)
             command.extend(["--override-json", params_json_for_command])
 
-        log_file_path = os.path.join(LOGS_DIR, f"{task_id}.log")
+        log_file_path = str(confined_path(Path(LOGS_DIR), f"{task_id}.log"))
         try:
-            log_file = open(log_file_path, "w", encoding="utf-8")
-        except IOError:
+            log_fd = os.open(log_file_path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+            log_file = os.fdopen(log_fd, "w", encoding="utf-8")
+        except OSError:
             log_file = None
 
         if log_file:
@@ -409,6 +418,7 @@ def run_pipeline_task(
                 stderr=log_file,
                 cwd=ATK3_DIRECTORY,
                 env=sub_env,
+                umask=0o077,
             )
         else:
             process = subprocess.Popen(
@@ -417,6 +427,7 @@ def run_pipeline_task(
                 stderr=subprocess.DEVNULL,
                 cwd=ATK3_DIRECTORY,
                 env=sub_env,
+                umask=0o077,
             )
 
         if process is None:

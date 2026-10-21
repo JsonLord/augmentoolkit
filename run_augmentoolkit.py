@@ -54,8 +54,6 @@ def flatten_config(config, no_flatten_keys=None):
             if key in flattened:
                 raise ValueError(f"Key conflict: '{key}'")
             flattened[key] = value
-    print("FLATTENED")
-    print(flattened)
     return flattened
 
 
@@ -139,6 +137,13 @@ def run_pipeline_config(
     )  # Get no_flatten from loaded/merged config
     flattened_config = flatten_config(config, no_flatten_keys=no_flatten_keys)
     flattened_config.update(override_fields)
+    # Hosted workers merge config only after API checks; validate that merged
+    # writable state too. Standalone legacy CLI keeps its documented paths.
+    import os
+    if os.environ.get("ATK_DATA_ROOT"):
+        from app_storage import normalize_mutable_paths
+        flattened_config = normalize_mutable_paths(flattened_config)
+
 
     # Import the target function using the resolved node path
     try:
@@ -214,7 +219,7 @@ def main():
         print(f"Running single pipeline specified via command line arguments:")
         print(f"  Node: {args.node}")
         print(f"  Config: {args.config}")
-        print(f"  Overrides: {override_params}")
+        print("  Overrides supplied (values omitted)")
         run_pipeline(args.node, args.config, override_params)
     else:
         print("Running pipelines defined in super_config.yaml 'pipeline_order'.")
@@ -244,7 +249,7 @@ def main():
             print(f"Running pipeline from super_config:")
             print(f"  Node: {pipeline['node']}")
             print(f"  Config: {pipeline.get('config')}")  # Use .get for optional config
-            print(f"  Parameters: {pipeline_params}")
+            print("  Parameters supplied (values omitted)")
 
             run_pipeline(
                 pipeline["node"], pipeline.get("config"), pipeline_params

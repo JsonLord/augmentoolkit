@@ -138,7 +138,10 @@ class RapidCPU:
         async with self.lock:
             task = asyncio.create_task(asyncio.to_thread(self._recognize, page))
             try:
-                return await asyncio.shield(task)
+                result = await asyncio.shield(task)
+                result.sensitivity = options.sensitivity
+                result.page_id = page.page_id
+                return result
             except asyncio.CancelledError:
                 await task
                 raise

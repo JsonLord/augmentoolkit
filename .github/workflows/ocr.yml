@@ -1,9 +1,5 @@
 name: Hybrid OCR offline tests
-on:
-  push:
-    paths: ['ocr/**', 'augmentoolkit/utils/offline_chunking.py', 'generation/core_components/chunking.py', 'pytest-ocr.ini', '.github/workflows/ocr.yml']
-  pull_request:
-    paths: ['ocr/**', 'augmentoolkit/utils/offline_chunking.py', 'generation/core_components/chunking.py', 'pytest-ocr.ini', '.github/workflows/ocr.yml']
+on: [push, pull_request]
 permissions:
   contents: read
 jobs:

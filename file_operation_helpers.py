@@ -10,6 +10,8 @@ from fastapi import HTTPException, BackgroundTasks
 from fastapi.responses import FileResponse
 from pydantic import BaseModel, Field
 
+from app_storage import confined_path, StorageViolation
+
 logger = logging.getLogger(__name__)
 
 
@@ -35,34 +37,10 @@ class MoveItemRequest(BaseModel):
 
 def get_safe_path(base_dir: PyPath, unsafe_path: str) -> PyPath:
     """Safely join a base directory with a user-provided path, preventing traversal."""
-    # print(f"DEBUG [get_safe_path]: Received base_dir='{base_dir}', unsafe_path='{unsafe_path}'")
     try:
-        # Normalize the path to resolve '..' etc.
-        joined_path = base_dir / unsafe_path
-        # print(f"DEBUG [get_safe_path]: Joined path='{joined_path}'")
-        resolved_path = joined_path.resolve()
-        # print(f"DEBUG [get_safe_path]: Resolved path='{resolved_path}'")
-        base_dir_resolved = base_dir.resolve()
-        # print(f"DEBUG [get_safe_path]: Resolved base_dir='{base_dir_resolved}'")
-
-        # Ensure the final path is within the base_dir
-        # Check if resolved_path starts with base_dir resolved path
-        is_safe = str(resolved_path).startswith(str(base_dir_resolved))
-        # print(f"DEBUG [get_safe_path]: Checking safety: '{resolved_path}' startswith '{base_dir_resolved}' -> {is_safe}")
-        if not is_safe:
-            # print(f"ERROR [get_safe_path]: Path traversal attempt detected!")
-            raise HTTPException(status_code=400, detail="Invalid path: Access denied.")
-        # print(f"DEBUG [get_safe_path]: Path deemed safe. Returning '{resolved_path}'")
-        return resolved_path
-    except Exception as e:
-        # Catch potential resolution errors or permission issues during resolve()
-        # print(f"ERROR [get_safe_path]: Exception during path resolution/validation for unsafe_path='{unsafe_path}' in base_dir='{base_dir}': {e}")
-        logger.error(
-            f"Path resolution/validation error for {unsafe_path} in {base_dir}: {e}"
-        )
-        raise HTTPException(
-            status_code=400, detail=f"Invalid or inaccessible path: {unsafe_path}"
-        )
+        return confined_path(base_dir, unsafe_path)
+    except StorageViolation:
+        raise HTTPException(400, "Invalid path: Access denied") from None
 
 
 def zip_directory(folder_path: PyPath, zip_path: PyPath):
@@ -70,6 +48,8 @@ def zip_directory(folder_path: PyPath, zip_path: PyPath):
     # print(f"DEBUG [zip_directory]: Zipping '{folder_path}' to '{zip_path}'") # Added basic debug print
     with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as zipf:
         for root, dirs, files in os.walk(folder_path):
+            for name in dirs + files:
+                get_safe_path(folder_path, str(PyPath(root) / name))
             # Calculate the archive name relative to the folder being zipped
             current_dir_path = PyPath(root)
             relative_dir = current_dir_path.relative_to(folder_path)
@@ -101,7 +81,8 @@ def get_dir_structure(
     try:
         items_iterator = list(dir_path.iterdir())  # Convert to list to see count
         # print(f"DEBUG [get_dir_structure]: Found {len(items_iterator)} items in '{dir_path}'")
-        for item in sorted(items_iterator):  # Sort for consistent output
+        for item in sorted(items_iterator):
+            get_safe_path(base_path_for_relative, str(item))  # Sort for consistent output
             # print(f"DEBUG [get_dir_structure]: Processing item: '{item}'")
             is_dir = item.is_dir()
             # print(f"DEBUG [get_dir_structure]:   Is directory? {is_dir}")
@@ -127,6 +108,8 @@ def get_dir_structure(
             structure.append(node)
         # print(f"DEBUG [get_dir_structure]: Finished processing '{dir_path}'. Returning structure with {len(structure)} items.")
         return structure
+    except HTTPException:
+        raise
     except FileNotFoundError:
         # This shouldn't happen if called on an existing dir, but handle defensively
         # print(f"ERROR [get_dir_structure]: FileNotFoundError encountered for dir_path='{dir_path}'")

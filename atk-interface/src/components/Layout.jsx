@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import { useNavigation } from '../context/NavigationContext';
+import OperatorAccess from './OperatorAccess';
 import atkLogo from '../assets/atk-logo-notscuffed.png';
 
 const animationStyles = `
@@ -16,11 +17,13 @@ const animationStyles = `
 function Layout() {
   const { highlightedNavLink, setHighlightedNavLink } = useNavigation();
   const location = useLocation();
+  const [operatorEpoch, setOperatorEpoch] = useState(0);
   const [serverOnline, setServerOnline] = useState(false);
   const [datagenServerOnline, setDatagenServerOnline] = useState(false);
 
   // Check for server on port 8003
   useEffect(() => {
+    if (import.meta.env.VITE_LOCAL_SERVICES !== 'true') return;
     const checkServerStatus = async () => {
       try {
         const baseUrl = window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost'
@@ -61,6 +64,7 @@ function Layout() {
 
   // Check for datagen inference server on port 8082
   useEffect(() => {
+    if (import.meta.env.VITE_LOCAL_SERVICES !== 'true') return;
     const checkDatagenServerStatus = async () => {
       try {
         // Try OpenAI-compatible endpoint
@@ -136,8 +140,9 @@ function Layout() {
         
         {/* TODO: Add Settings/Boring Mode Toggle */}
       </nav>
+      <OperatorAccess onChange={() => setOperatorEpoch((value) => value + 1)} />
       <main className="flex-grow overflow-auto">
-        <Outlet /> {/* Child routes will render here */}
+        <Outlet key={operatorEpoch} /> {/* Child routes will render here */}
       </main>
       <style>{animationStyles}</style>
     </div>

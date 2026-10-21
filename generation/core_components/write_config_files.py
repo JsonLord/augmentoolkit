@@ -102,6 +102,12 @@ def write_training_config(
         # Add any Mistral-specific configurations here if needed
         pass
 
+    # Hosted generation must never write configuration/model state into source.
+    if os.environ.get("ATK_DATA_ROOT"):
+        from app_storage import confined_path, data_directory, normalize_mutable_paths
+        output_path = str(confined_path(data_directory("generation"), output_path))
+        config = normalize_mutable_paths(config)
+
     # Write configuration to file
     with open(output_path, "w", encoding="utf-8") as f:
         yaml.dump(config, f, default_flow_style=False, sort_keys=False)

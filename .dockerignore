@@ -1,0 +1,14 @@
+.git
+.venv
+**/__pycache__
+**/.pytest_cache
+**/.ruff_cache
+atk-interface/node_modules
+atk-interface/dist
+inputs
+outputs
+logs
+external_configs
+helper_process_logs
+*.log
+.env*

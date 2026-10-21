@@ -1,3 +1,4 @@
+import { authenticatedFetch } from './utils/operatorAuth';
 import { handleApiError, getApiUrl } from './utils/apiUtils';
 
 const API_BASE_URL = window.location.origin; // Use current origin for deployment
@@ -38,20 +39,20 @@ async function handleApiResponse(response) {
 // --- Config API --- 
 
 export async function fetchConfigStructure(relativePath = '') {
-  const path = relativePath ? `/${encodeURIComponent(relativePath)}` : '.';
-  const response = await fetch(`${API_BASE_URL}/configs/structure/${path}`);
+  const path = relativePath ? encodeURIComponent(relativePath) : '';
+  const response = await authenticatedFetch(`${API_BASE_URL}/configs/structure/${path}`);
   return handleApiResponse(response);
 }
 
 export async function fetchConfigContent(relativePath) {
   if (!relativePath) throw new Error('Relative path is required for fetchConfigContent');
-  const response = await fetch(`${API_BASE_URL}/configs/content/${encodeURIComponent(relativePath)}`);
+  const response = await authenticatedFetch(`${API_BASE_URL}/configs/content/${encodeURIComponent(relativePath)}`);
   return handleApiResponse(response);
 }
 
 export async function saveConfigContent(relativePath, content) {
   if (!relativePath) throw new Error('Relative path is required for saveConfigContent');
-  const response = await fetch(`${API_BASE_URL}/configs/content/${encodeURIComponent(relativePath)}`, {
+  const response = await authenticatedFetch(`${API_BASE_URL}/configs/content/${encodeURIComponent(relativePath)}`, {
     method: 'POST',
     headers: { 'Content-Type': 'text/plain' },
     body: content,
@@ -66,7 +67,7 @@ export async function saveConfigContent(relativePath, content) {
  */
 export const createConfigDirectory = async (relativePath) => {
   const url = getApiUrl('/configs/directory');
-  const response = await fetch(url, {
+  const response = await authenticatedFetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ relative_path: relativePath }),
@@ -82,7 +83,7 @@ export const createConfigDirectory = async (relativePath) => {
  */
 export const deleteConfigItem = async (relativePath) => {
     const url = getApiUrl(`/configs/${encodeURIComponent(relativePath)}`);
-    const response = await fetch(url, { method: 'DELETE' });
+    const response = await authenticatedFetch(url, { method: 'DELETE' });
     // Use handleApiResponse which includes error handling
     return handleApiResponse(response);
 };
@@ -95,7 +96,7 @@ export const deleteConfigItem = async (relativePath) => {
  */
 export const moveConfigItem = async (sourceRelativePath, destinationRelativePath) => {
     const url = getApiUrl('/configs/move');
-    const response = await fetch(url, {
+    const response = await authenticatedFetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -115,7 +116,7 @@ export const moveConfigItem = async (sourceRelativePath, destinationRelativePath
  */
 export const duplicateConfig = async (sourceAlias, destinationRelativePath) => {
     const url = getApiUrl('/configs/duplicate');
-    const response = await fetch(url, {
+    const response = await authenticatedFetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -135,7 +136,7 @@ export const duplicateConfig = async (sourceAlias, destinationRelativePath) => {
 export const fetchAvailableConfigAliases = async () => {
   // TODO: Verify/Implement the corresponding backend endpoint GET /configs/aliases
   const url = getApiUrl('/configs/aliases'); // Assuming this endpoint exists
-  const response = await fetch(url);
+  const response = await authenticatedFetch(url);
   // Use handleApiResponse which includes error handling
   return handleApiResponse(response);
 };
@@ -143,13 +144,13 @@ export const fetchAvailableConfigAliases = async () => {
 // --- Pipeline API --- 
 
 export const fetchAvailablePipelines = async () => {
-  const response = await fetch(getApiUrl('/pipelines/available'));
+  const response = await authenticatedFetch(getApiUrl('/pipelines/available'));
   if (!response.ok) throw new Error('Failed to fetch available pipelines');
   return response.json();
 };
 
 export async function runPipeline(nodePath, parameters) {
-    const response = await fetch(`${API_BASE_URL}/pipelines/run`, {
+    const response = await authenticatedFetch(`${API_BASE_URL}/pipelines/run`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ node_path: nodePath, parameters: parameters }),
@@ -161,7 +162,7 @@ export async function runPipeline(nodePath, parameters) {
 
 export const fetchInputStructure = async (relativePath = '.') => {
     const url = getApiUrl(`/inputs/structure/${encodeURIComponent(relativePath)}`);
-    const response = await fetch(url);
+    const response = await authenticatedFetch(url);
     if (!response.ok) {
         await handleApiError(response, 'fetch input structure');
     }
@@ -173,7 +174,7 @@ export const uploadInputFiles = async (relativePath, files) => {
     const formData = new FormData();
     files.forEach(file => formData.append('files', file, file.name)); // Use 'files' as key
 
-    const response = await fetch(url, {
+    const response = await authenticatedFetch(url, {
         method: 'POST',
         body: formData,
         // No 'Content-Type' header, browser sets it with boundary for multipart/form-data
@@ -198,7 +199,7 @@ export const uploadInputFiles = async (relativePath, files) => {
 
 export const downloadInputItem = async (relativePath) => {
     const url = getApiUrl(`/inputs/download/${encodeURIComponent(relativePath)}`);
-    const response = await fetch(url);
+    const response = await authenticatedFetch(url);
     if (!response.ok) {
         await handleApiError(response, `download input item: ${relativePath}`);
     }
@@ -208,7 +209,7 @@ export const downloadInputItem = async (relativePath) => {
 
 export const deleteInputItem = async (relativePath) => {
     const url = getApiUrl(`/inputs/${encodeURIComponent(relativePath)}`);
-    const response = await fetch(url, { method: 'DELETE' });
+    const response = await authenticatedFetch(url, { method: 'DELETE' });
     if (!response.ok) {
         await handleApiError(response, `delete input item: ${relativePath}`);
     }
@@ -217,7 +218,7 @@ export const deleteInputItem = async (relativePath) => {
 
 export const createInputDirectory = async (relativePath) => {
   const url = getApiUrl('/inputs/directory');
-  const response = await fetch(url, {
+  const response = await authenticatedFetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ relative_path: relativePath }),
@@ -236,7 +237,7 @@ export const createInputDirectory = async (relativePath) => {
  */
 export const moveInputItem = async (sourceRelativePath, destinationRelativePath) => {
     const url = getApiUrl('/inputs/move');
-    const response = await fetch(url, {
+    const response = await authenticatedFetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -254,7 +255,7 @@ export const moveInputItem = async (sourceRelativePath, destinationRelativePath)
 
 export const fetchOutputStructure = async (relativePath = '.') => {
     const url = getApiUrl(`/outputs/structure/${encodeURIComponent(relativePath)}`);
-    const response = await fetch(url);
+    const response = await authenticatedFetch(url);
     if (!response.ok) {
         await handleApiError(response, 'fetch output structure');
     }
@@ -263,7 +264,7 @@ export const fetchOutputStructure = async (relativePath = '.') => {
 
 export const downloadOutputItem = async (relativePath) => {
     const url = getApiUrl(`/outputs/download/${encodeURIComponent(relativePath)}`);
-    const response = await fetch(url);
+    const response = await authenticatedFetch(url);
     if (!response.ok) {
         await handleApiError(response, `download output item: ${relativePath}`);
     }
@@ -273,7 +274,7 @@ export const downloadOutputItem = async (relativePath) => {
 
 export const deleteOutputItem = async (relativePath) => {
     const url = getApiUrl(`/outputs/${encodeURIComponent(relativePath)}`);
-    const response = await fetch(url, { method: 'DELETE' });
+    const response = await authenticatedFetch(url, { method: 'DELETE' });
     if (!response.ok) {
         await handleApiError(response, `delete output item: ${relativePath}`);
     }
@@ -282,7 +283,7 @@ export const deleteOutputItem = async (relativePath) => {
 
 export const moveOutputItem = async (sourceRelativePath, destinationRelativePath) => {
     const url = getApiUrl('/outputs/move');
-    const response = await fetch(url, {
+    const response = await authenticatedFetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -306,7 +307,7 @@ export const moveOutputItem = async (sourceRelativePath, destinationRelativePath
 export const fetchTaskStatus = async (taskId) => {
     if (!taskId) throw new Error('Task ID is required for fetchTaskStatus');
     const url = getApiUrl(`/tasks/${encodeURIComponent(taskId)}/status`);
-    const response = await fetch(url);
+    const response = await authenticatedFetch(url);
     if (!response.ok) {
         await handleApiError(response, `fetch task status for ${taskId}`);
     }
@@ -321,7 +322,7 @@ export const fetchTaskStatus = async (taskId) => {
 export const fetchTaskParameters = async (taskId) => {
     if (!taskId) throw new Error('Task ID is required for fetchTaskParameters');
     const url = getApiUrl(`/tasks/${encodeURIComponent(taskId)}/parameters`);
-    const response = await fetch(url);
+    const response = await authenticatedFetch(url);
     // Handle 404 specifically for parameters, as it might just mean they weren't stored/expired
     if (response.status === 404) {
         console.warn(`Parameters not found for task ${taskId}. They might not have been stored or may have expired.`);
@@ -341,7 +342,7 @@ export const fetchTaskParameters = async (taskId) => {
 export const interruptTask = async (taskId) => {
     if (!taskId) throw new Error('Task ID is required for interruptTask');
     const url = getApiUrl(`/tasks/${encodeURIComponent(taskId)}/interrupt`);
-    const response = await fetch(url, { method: 'POST' });
+    const response = await authenticatedFetch(url, { method: 'POST' });
     if (!response.ok) {
         await handleApiError(response, `interrupt task ${taskId}`);
     }
@@ -354,7 +355,7 @@ export const interruptTask = async (taskId) => {
  */
 export const fetchTaskQueue = async () => {
     const url = getApiUrl('/tasks/queue');
-    const response = await fetch(url);
+    const response = await authenticatedFetch(url);
     if (!response.ok) {
         await handleApiError(response, 'fetch task queue');
     }
@@ -373,7 +374,7 @@ export const fetchTaskLogs = async (taskId, tail) => {
     if (tail !== undefined && tail !== null) {
         url += `?tail=${tail}`;
     }
-    const response = await fetch(url);
+    const response = await authenticatedFetch(url);
     // Handle 404 gracefully, log file might not exist yet
     if (response.status === 404) {
          console.log(`Log file for task ${taskId} not found.`);
@@ -393,7 +394,7 @@ export const fetchTaskLogs = async (taskId, tail) => {
 export const deleteTaskLogs = async (taskId) => {
     if (!taskId) throw new Error('Task ID is required for deleteTaskLogs');
     const url = getApiUrl(`/tasks/${encodeURIComponent(taskId)}/logs`);
-    const response = await fetch(url, { method: 'DELETE' });
+    const response = await authenticatedFetch(url, { method: 'DELETE' });
     if (!response.ok) {
         await handleApiError(response, `delete task logs for ${taskId}`);
     }
@@ -408,7 +409,7 @@ export const deleteTaskLogs = async (taskId) => {
 export const downloadTaskOutput = async (taskId) => {
     if (!taskId) throw new Error('Task ID is required for downloadTaskOutput');
     const url = getApiUrl(`/tasks/${encodeURIComponent(taskId)}/outputs/download`);
-    const response = await fetch(url);
+    const response = await authenticatedFetch(url);
     if (!response.ok) {
         // Handle 404 specifically - output might not exist
          if (response.status === 404) {
@@ -467,7 +468,7 @@ export const clearAllLogs = async () => {
 // Utility function assumed to exist from other files (InputManager/ConfigSelector context)
 // If it doesn't exist, it needs to be created.
 async function fetchWithErrorHandling(url, options = {}) {
-    const response = await fetch(url, options);
+    const response = await authenticatedFetch(url, options);
     if (!response.ok) {
         let errorPayload;
         try {

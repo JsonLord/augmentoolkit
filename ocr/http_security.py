@@ -20,7 +20,7 @@ class Guard:
         if scope["type"] != "http":
             return await self.app(scope, receive, send)
         headers = dict(scope.get("headers", []))
-        path = scope["path"]
+        path = scope["path"].removeprefix(scope.get("root_path", "")) or "/"
         # Only /health and documentation endpoints are unauthenticated
         if path not in ("/health", "/docs", "/openapi.json", "/redoc"):
             if not self.token:

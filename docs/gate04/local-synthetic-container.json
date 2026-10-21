@@ -1,0 +1,131 @@
+{
+  "image": "augmentoolkit-gate04",
+  "synthetic_only": true,
+  "passed": true,
+  "non_root_read_only_startup": true,
+  "mounted_ocr_ready": true,
+  "redis_unavailable_fail_closed": true,
+  "synthetic_d0": {
+    "seconds": 1.433,
+    "result": {
+      "schema_version": "ocr-page/v1",
+      "page_index": 0,
+      "page_id": "agent-page",
+      "source": "cpu_ocr",
+      "engine": "pp-ocrv6-small",
+      "backend_version": "rapidocr/3.10.0;onnxruntime/1.24.1",
+      "provider_destination": "local-cpu",
+      "text": "Public\nOCR\nbenchmark.",
+      "markdown": "Public\nOCR\nbenchmark.",
+      "image_width": 1000,
+      "image_height": 160,
+      "rotation": 0,
+      "transform": "source-raster; normalized 0..1000",
+      "blocks": [
+        {
+          "type": "text",
+          "text": "Public",
+          "bbox_1000": [
+            20.0,
+            206.25,
+            195.0,
+            637.5
+          ],
+          "polygon_1000": [
+            [
+              21.0,
+              206.25
+            ],
+            [
+              195.0,
+              218.75
+            ],
+            [
+              194.0,
+              637.5
+            ],
+            [
+              20.0,
+              618.75
+            ]
+          ],
+          "confidence": 0.99996,
+          "confidence_kind": "rapidocr-recognition"
+        },
+        {
+          "type": "text",
+          "text": "OCR",
+          "bbox_1000": [
+            166.0,
+            168.75,
+            303.0,
+            625.0
+          ],
+          "polygon_1000": [
+            [
+              166.0,
+              175.0
+            ],
+            [
+              303.0,
+              168.75
+            ],
+            [
+              303.0,
+              618.75
+            ],
+            [
+              166.0,
+              625.0
+            ]
+          ],
+          "confidence": 0.99981,
+          "confidence_kind": "rapidocr-recognition"
+        },
+        {
+          "type": "text",
+          "text": "benchmark.",
+          "bbox_1000": [
+            295.0,
+            225.0,
+            601.0,
+            631.25
+          ],
+          "polygon_1000": [
+            [
+              295.0,
+              225.0
+            ],
+            [
+              601.0,
+              225.0
+            ],
+            [
+              601.0,
+              631.25
+            ],
+            [
+              295.0,
+              631.25
+            ]
+          ],
+          "confidence": 0.99999,
+          "confidence_kind": "rapidocr-recognition"
+        }
+      ],
+      "flags": [],
+      "route_reason": "",
+      "latency_ms": 0.0,
+      "attempt_count": 0,
+      "attempts": [],
+      "alternatives": [],
+      "sensitivity": "D0"
+    }
+  },
+  "nine_sensitive_or_missing_class_rejections": true,
+  "browser": {
+    "unlock_inputs_lock": true,
+    "javascript_errors": []
+  },
+  "only_web_server_no_job_worker": true
+}
