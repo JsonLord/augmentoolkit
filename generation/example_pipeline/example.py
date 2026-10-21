@@ -6,9 +6,8 @@ This pipeline demonstrates how to make a basic Augmentoolkit pipeline. It is use
 """
 
 import json
-import os
 import re
-
+import traceback
 from augmentoolkit.generation_functions.hashing_and_ordering import hash_input_list
 from augmentoolkit.generation_functions.pipeline_step_class import PipelineStep
 from augmentoolkit.utils.extract_first_words import remove_think_tags
@@ -24,11 +23,16 @@ from generation.core_components.chunking import (
     read_and_chunk_text,
     subset_text_list,
 )
+from generation.core_components.filter_chunks import create_filter_chunks_step
 from generation.core_components.meta_datagen import create_meta_dataset
 from generation.core_components.setup_components import (
-    make_relative_to_self,
     setup_semaphore_and_engines,
+    make_relative_to_self,
 )
+
+import os
+from transformers import AutoTokenizer
+
 from redis_config import set_progress
 
 
@@ -54,10 +58,10 @@ async def example_pipeline(  # NOTE requirement: the pipeline must have the same
     example_heading,
     key3,
     do_meta_datagen: bool = False,
-    meta_datagen_keys: list[str] | None = None,
-    meta_datagen_extras: list[str] | None = None,
+    meta_datagen_keys: list[str] = [],
+    meta_datagen_extras: list[str] = [],
     read_files_manually: bool = True,
-    text_chunks_passed_in: list[str] | None = None,
+    text_chunks_passed_in: list[str] = [],
     cost_per_million_small_input: float = 0.0,
     cost_per_million_small_output: float = 0.0,
     cost_per_million_large_input: float = 0.0,
@@ -68,12 +72,6 @@ async def example_pipeline(  # NOTE requirement: the pipeline must have the same
     **kwargs,  # All pipelines MUST have **kwargs to ensure forward compatibility with new common arguments.
 ):
     # Check if kwargs is not empty and print all keys and values if present
-    if text_chunks_passed_in is None:
-        text_chunks_passed_in = []
-    if meta_datagen_extras is None:
-        meta_datagen_extras = []
-    if meta_datagen_keys is None:
-        meta_datagen_keys = []
     if (
         kwargs
     ):  # NOTE standard anti-footgun measure reminding people of excess args they are passing.
@@ -108,7 +106,7 @@ async def example_pipeline(  # NOTE requirement: the pipeline must have the same
         "name": "Large model",
     }
 
-    run_task_with_limit, engine_wrapper, _engine_wrapper_large, _ = (
+    run_task_with_limit, engine_wrapper, engine_wrapper_large, _ = (
         setup_semaphore_and_engines(  # in contrast to previous versions of Augmentoolkit, there is now a function which sets up your standard engine wrappers and semaphore. Hooray for abstraction saving us time!
             concurrency_limit,
             small_model,
@@ -200,7 +198,7 @@ async def example_pipeline(  # NOTE requirement: the pipeline must have the same
     # The reason we use a dict instead of a list is to avoid difficult completion order bugs and annoyances.
     # The typical pattern is that we start with a list when we chunk our input text; then we convert it to a dict for processing; then we convert it back to a list for saving.
 
-    count_total_tokens(
+    total_tokens = count_total_tokens(
         sentence_chunks
     )  # counting the total number of tokens is important for later cost estimation.
 
@@ -306,7 +304,7 @@ async def example_pipeline(  # NOTE requirement: the pipeline must have the same
     # Literally all we have to do is save our items to a .jsonl in the output dir. AI is capable of writing most such output functions or code as it is very standard.
     sharegpt_format_items = []
 
-    for item in sentence_hashed_dict.values():
+    for index, item in sentence_hashed_dict.items():
         if "poetry" in item:
             sharegpt_item = {
                 "conversations": [

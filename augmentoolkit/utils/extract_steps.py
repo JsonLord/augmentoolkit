@@ -1,7 +1,7 @@
 import re
 
 
-def extract_steps(text, steps=None):
+def extract_steps(text, steps=[2, 4, 5]):
     """
     Extracts the specified steps from the text.
 
@@ -12,11 +12,9 @@ def extract_steps(text, steps=None):
     Returns:
     str: A new string with each specified step's content on its own line.
     """
-    if steps is None:
-        steps = [2, 4, 5]
-    step_pattern = "|".join([rf"Step {step}\." for step in steps])
+    step_pattern = "|".join([f"Step {step}\." for step in steps])
     matches = re.findall(
-        rf"({step_pattern})\s*(.*?)\s*(?=(Step \d\.|$))", text, re.DOTALL
+        f"({step_pattern})\s*(.*?)\s*(?=(Step \d\.|$))", text, re.DOTALL
     )
 
     # Extract and join the matched content, skipping the "Step n." part

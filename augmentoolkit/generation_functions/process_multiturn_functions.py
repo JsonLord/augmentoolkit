@@ -1,3 +1,4 @@
+import re
 
 
 def has_sequential_chars(string1, string2, n):
@@ -267,7 +268,7 @@ def call_all_processors(multiturn_conversation, qatuples):
 if __name__ == "__main__":
     # Test cases for has_sequential_chars
     print("Testing has_sequential_chars:")
-    print(has_sequential_chars("hello", "worldhello", 3))
+    print(has_sequential_chars("hello", "worldhello", 3))  #
     print("Expected True")
     print(has_sequential_chars("abc", "defghijkl", 2))  # Expected False
     print("Expected False")
@@ -401,7 +402,7 @@ if __name__ == "__main__":
         ("Charname1", "What's your favorite color?"),
         ("Charname2", "Black, like my soul."),
     ]
-    print(check_each_question_contains_q_from_tuples(conv5, qatuples1 + [], 6))
+    print(check_each_question_contains_q_from_tuples(conv5, qatuples1 + [], 6))  #
     print("Expected True (question contains part of qatuple question)")
 
     # Test cases for check_for_unintended_repeated_quotes
@@ -460,7 +461,7 @@ if __name__ == "__main__":
             "It's sunny and warm. I don't like sand. It's coarse and rough and irritating and it gets everywhere.",
         ),
     ]
-    print(call_all_processors(complete_conversation, qatuples_complete))
+    print(call_all_processors(complete_conversation, qatuples_complete))  #
     print("Expected True (all checks pass)")
     incomplete_conversation = """
     Charname1: How's it going?
@@ -470,5 +471,5 @@ if __name__ == "__main__":
     Foo: Bar
     Baz: Quux
     """
-    print(call_all_processors(incomplete_conversation, qatuples_complete))
+    print(call_all_processors(incomplete_conversation, qatuples_complete))  #
     print("Expected False (checks fail)")

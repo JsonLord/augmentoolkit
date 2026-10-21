@@ -64,12 +64,12 @@ headings are input as a list of dicts of {heading: str, type: str}. Type right n
 Build that."""
 
 import re
-from typing import Any
+from typing import List, Dict, Any, Union
 
 
 def extract_structured_data(
-    text: str, headings: dict[str, dict[str, Any]]
-) -> dict[str, str | list[str] | None]:
+    text: str, headings: Dict[str, Dict[str, Any]]
+) -> Dict[str, Union[str, List[str], None]]:
     """
     Extracts structured data from text with various heading formats.
 
@@ -88,7 +88,7 @@ def extract_structured_data(
     heading_configs = {
         k.lower(): {"heading": k.lower(), "type": v} for k, v in headings.items()
     }
-    heading_names = [k.lower() for k in headings]
+    heading_names = [k.lower() for k in headings.keys()]
 
     # Initialize results dictionary with None for all expected headings
     result = {heading.lower(): None for heading in headings}
@@ -314,7 +314,7 @@ Got it? Build it.
 """
 
 
-def format_structured_data(data: dict[str, any], formats: dict[str, any]) -> str:
+def format_structured_data(data: Dict[str, any], formats: Dict[str, any]) -> str:
     """
     Formats structured data into text using specified formatting styles.
 

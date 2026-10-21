@@ -1,7 +1,7 @@
+from augmentoolkit.generation_functions.format_qadicts import format_qadicts
+from augmentoolkit.generation_functions.identify_duplicates import identify_duplicates
 import sys
 import traceback
-
-from augmentoolkit.generation_functions.format_qadicts import format_qadicts
 
 
 def group_by_text(dicts_list):
@@ -22,7 +22,7 @@ def group_by_text(dicts_list):
         groups[text]["dict_list"].append(dict)
 
     # Iterate over the dictionary to create the question-answer pairs string
-    for value in groups.values():
+    for key, value in groups.items():
         try:
             # Create a list of dictionaries from the list of tuples
             dict_list = value["dict_list"]

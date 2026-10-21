@@ -1,10 +1,11 @@
-import logging
-import os
+import datasets  # Add this with other importsimport json
+import argparse
 import random
-
 import numpy as np
-import pandas as pd
 from transformers import AutoTokenizer
+import pandas as pd
+import os
+import logging
 
 # Initialize the tokenizer
 tokenizer = AutoTokenizer.from_pretrained("TheBloke/OpenHermes-2.5-Mistral-7B-GPTQ")
@@ -72,8 +73,8 @@ def create_subset(
     output_file,
     target_tokens,
     count_all_turns=False,
-    context_to_add: str | None = None,
-    context_to_add_type: str | None = None,
+    context_to_add: str = None,
+    context_to_add_type: str = None,
 ):
     logging.info(f"Creating subset from {input_file} to {output_file}")
     logging.info(f"Target tokens: {target_tokens}, count_all_turns: {count_all_turns}")
@@ -227,7 +228,7 @@ def count_tokens_glob(paths, count_all_turns: bool = False) -> int:
                     )
 
                 except Exception as e:
-                    logging.error(f"Error processing {file_path}: {e!s}")
+                    logging.error(f"Error processing {file_path}: {str(e)}")
                     continue
 
     logging.info(f"Total tokens across {len(seen_files)} files: {total_tokens:,}")
@@ -235,16 +236,18 @@ def count_tokens_glob(paths, count_all_turns: bool = False) -> int:
 
 
 #!/usr/bin/env python3
-import glob
+import argparse
 import json
-
+import glob
+import os
+from typing import List, Dict, Any
 from jinja2 import Template
 
 # Setup basic logging configuration
 logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 
 
-def apply_template(messages: list[dict[str, str]], template_str: str, **kwargs) -> str:
+def apply_template(messages: List[Dict[str, str]], template_str: str, **kwargs) -> str:
     """
     Format messages using a Jinja2 template string.
 
@@ -260,7 +263,7 @@ def apply_template(messages: list[dict[str, str]], template_str: str, **kwargs) 
     return template.render(messages=messages, **kwargs).strip()
 
 
-def process_file(input_path: str, template_str: str, **kwargs) -> list[dict[str, str]]:
+def process_file(input_path: str, template_str: str, **kwargs) -> List[Dict[str, str]]:
     """
     Process a single input file (JSON or JSONL) and convert its conversations
     into a formatted text using the specified template.
@@ -316,7 +319,7 @@ def process_file(input_path: str, template_str: str, **kwargs) -> list[dict[str,
     return processed
 
 
-def write_output(output_path: str, processed: list[dict[str, str]]) -> None:
+def write_output(output_path: str, processed: List[Dict[str, str]]) -> None:
     """
     Write the processed conversation data to an output file in JSONL format.
 
@@ -326,7 +329,8 @@ def write_output(output_path: str, processed: list[dict[str, str]]) -> None:
     """
     try:
         with open(output_path, "w", encoding="utf-8") as f_out:
-            f_out.writelines(json.dumps(entry, ensure_ascii=False) + "\n" for entry in processed)
+            for entry in processed:
+                f_out.write(json.dumps(entry, ensure_ascii=False) + "\n")
         logging.info(f"Wrote processed data to {output_path}")
     except Exception as e:
         logging.error(f"Error writing file {output_path}: {e}")
@@ -470,11 +474,11 @@ def route_template_to_preset(template_input: str, template_kwargs: dict):
 # if __name__ == '__main__':
 #     main()
 
-from datasets import DatasetDict, load_dataset
+from datasets import load_dataset, DatasetDict
 
 
 def save_hf_dataset(
-    hf_dataset_path: str, local_path: str, split: str | None = None, max_samples: int | None = None
+    hf_dataset_path: str, local_path: str, split: str = None, max_samples: int = None
 ) -> None:
     """
     Save a Hugging Face dataset to local JSONL format if it doesn't exist.

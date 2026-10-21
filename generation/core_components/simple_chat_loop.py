@@ -1,10 +1,9 @@
+import asyncio
 import logging
-import re
-
-from jinja2 import Template
-
 from augmentoolkit.generation_functions.engine_wrapper_class import EngineWrapper
 from generation.core_components.chunking import count_tokens_specific_model
+from jinja2 import Template
+import re
 
 
 def format_messages_into_string(messages, prompt_template):
@@ -117,7 +116,7 @@ async def simple_chat_loop(
 
         while total_tokens >= context_length:
             if (
-                len(shown_messages) != 1
+                not len(shown_messages) == 1
             ):  # if we are down to the system prompt and the most recent user message and are over, then we have a dire problem
                 removed_message = shown_messages.pop(
                     1
@@ -139,7 +138,7 @@ async def simple_chat_loop(
         # Add assistant prefix for generation prefilling
         prefilled_prompt = message_string + assistant_prefix
 
-        response, _timeout = await engine.submit_completion(
+        response, timeout = await engine.submit_completion(
             prompt=prefilled_prompt,
             sampling_params={
                 "temperature": 0.4,  # yes, it's not greedy. We want a good token probability distribtion for quality outputs.

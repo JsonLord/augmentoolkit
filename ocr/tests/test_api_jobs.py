@@ -90,7 +90,12 @@ async def test_worker_auth_limits_ready(png):
         assert (await c.get("/ready")).status_code == 401
         assert (await c.get("/ready", headers=H)).json()["ready"]
         assert (
-            await c.post("/internal/ocr/page", headers=H, files={"file": ("a.png", png)})
+            await c.post(
+                "/internal/ocr/page",
+                headers=H,
+                files={"file": ("a.png", png)},
+                data={"sensitivity": "D0"},
+            )
         ).status_code == 200
         assert (
             await c.post("/internal/ocr/page", headers=H, files={"file": ("a.png", b"%PDF-")})

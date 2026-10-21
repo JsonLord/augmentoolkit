@@ -1,17 +1,18 @@
 # Contains utils for truncating at random parts of sharegpt conversations, and adding a system prompt prefix, for the sake of making it ready for GRPO.
 
+from typing import List, Dict, Any
+import random
+import logging
 import hashlib
 import json
-import logging
-from typing import Any
 
 
 def process_single_dataset(  # Deterministic truncation
-    dataset: list[dict[str, Any]],
+    dataset: List[Dict[str, Any]],
     force_single_turn: bool = False,
     single_turn_ratio: float = 0.7,
     system_prompt: str = "",
-) -> list[dict[str, Any]]:
+) -> List[Dict[str, Any]]:
     """Process a single dataset with deterministic truncation points."""
     processed = []
 
@@ -69,15 +70,15 @@ def process_single_dataset(  # Deterministic truncation
             processed.append(truncated_conv)
 
         except Exception as e:
-            logging.error(f"Error processing conversation: {e!s}")
+            logging.error(f"Error processing conversation: {str(e)}")
             continue
 
     return processed
 
 
 def process_multiple_datasets(  # Deterministic sampling
-    datasets: list[list[dict[str, Any]]], percentages: list[float], total_rows: int
-) -> list[dict[str, Any]]:
+    datasets: List[List[Dict[str, Any]]], percentages: List[float], total_rows: int
+) -> List[Dict[str, Any]]:
     """Combine multiple datasets deterministically."""
     if len(datasets) != len(percentages):
         raise ValueError("Datasets and percentages must have same length")

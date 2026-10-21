@@ -1,14 +1,16 @@
+import re
 
 
 import io
+import chardet
 import os
 
 try:
-    import docx
-    import fitz  # pymupdf
-    import pytesseract
-    from pdf2image import convert_from_path
     from PIL import Image
+    from pdf2image import convert_from_path
+    import pytesseract
+    import fitz  # pymupdf
+    import docx
 
     def extract_text_from_docx(path):
         """
@@ -135,7 +137,7 @@ def sentence_chunking_algorithm(file_path, max_char_length=1900):
     char_count = 0
     source_name = os.path.basename(file_path)
 
-    if file_path.endswith((".pdf", ".docx")):
+    if file_path.endswith(".pdf") or file_path.endswith(".docx"):
         content = extract_text(file_path)
     else:
         # with open(file_path, 'rb') as raw_file:

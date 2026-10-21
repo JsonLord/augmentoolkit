@@ -1,9 +1,8 @@
 import argparse
-import json
-import os
-import sys
-
 import ijson
+import json
+import sys
+import os
 
 
 def print_first_item(file_path):

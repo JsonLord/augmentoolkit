@@ -1,8 +1,7 @@
-import argparse
-
-import torch
-from peft import PeftModel
+from peft import PeftConfig, PeftModel
 from transformers import AutoModelForCausalLM, AutoTokenizer
+import torch
+import argparse
 
 
 def merge_lora(base_model_name: str, adapter_model_name: str, save_path: str):

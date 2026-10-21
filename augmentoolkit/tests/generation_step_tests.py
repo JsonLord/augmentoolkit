@@ -1,6 +1,8 @@
-import re
 import unittest
-from unittest.mock import AsyncMock
+from unittest.mock import AsyncMock, patch
+import re
+import os
+import json
 
 from augmentoolkit.generation_functions.generation_step_class import GenerationStep
 

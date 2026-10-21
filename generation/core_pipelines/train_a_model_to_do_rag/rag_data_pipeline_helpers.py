@@ -1,8 +1,24 @@
-import json
-import os
 import random
+import itertools
+import os
+import asyncio
+import json
 import re
-
+from typing import List
+from tqdm import tqdm
+from nltk.tokenize import sent_tokenize
+from augmentoolkit.generation_functions.generation_step_class import GenerationStep
+from transformers import AutoTokenizer
+import logging
+from math import ceil
+import traceback
+from augmentoolkit.generation_functions.pipeline_step_class import PipelineStep
+import uuid
+import yaml
+import nltk
+from augmentoolkit.utils import parse_string_list
+from augmentoolkit.utils.parse_bool import parse_bool
+from pathlib import Path
 from jinja2 import Template
 
 
@@ -144,4 +160,5 @@ def save_combined_conversations(
     # Save to file
     output_path = os.path.join(output_dir, "axolotl_rag_conversations.jsonl")
     with open(output_path, "w", encoding="utf-8") as f:
-        f.writelines(json.dumps(conv) + "\n" for conv in axolotl_conversations)
+        for conv in axolotl_conversations:
+            f.write(json.dumps(conv) + "\n")

@@ -1,7 +1,7 @@
-import json  # For potentially storing structured data
-import os
-
+from typing import Union
 import redis
+import os
+import json  # For potentially storing structured data
 
 # Configuration (adjust host, port, db if needed)
 REDIS_HOST = os.environ.get("REDIS_HOST", "localhost")
@@ -10,24 +10,10 @@ REDIS_DB = int(os.environ.get("REDIS_DB", 0))
 
 # Create the Redis client instance
 # decode_responses=True is convenient for getting strings directly
-try:
-    redis_client = redis.Redis(
-        host=REDIS_HOST,
-        port=REDIS_PORT,
-        db=REDIS_DB,
-        decode_responses=True,  # Automatically decode responses from bytes to strings (usually UTF-8)
-    )
-    # Test connection
-    redis_client.ping()
-    print(f"Successfully connected to Redis at {REDIS_HOST}:{REDIS_PORT}/{REDIS_DB}")
-except redis.exceptions.ConnectionError as e:
-    print(
-        f"ERROR: Could not connect to Redis at {REDIS_HOST}:{REDIS_PORT}/{REDIS_DB} - {e}"
-    )
-    print("Progress tracking will not work.")
-    # Decide how to handle this - maybe raise an error or provide a dummy client?
-    # For now, let it proceed, but progress features will fail.
-    redis_client = None  # Or a dummy object that silently fails
+redis_client = redis.Redis(
+    host=REDIS_HOST, port=REDIS_PORT, db=REDIS_DB, decode_responses=True,
+    socket_connect_timeout=2, socket_timeout=2,
+)
 
 # Helper constants/functions (optional)
 PROGRESS_KEY_PREFIX = "pipeline_progress:"
@@ -38,7 +24,7 @@ def get_progress_key(task_id: str) -> str:
     return f"{PROGRESS_KEY_PREFIX}{task_id}"
 
 
-def set_progress(task_id: str, progress: float, message: str | None = None):
+def set_progress(task_id: str, progress: float, message: Union[str, None] = None):
     if not redis_client:
         return  # Skip if connection failed
     if not task_id:

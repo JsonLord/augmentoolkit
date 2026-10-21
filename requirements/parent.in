@@ -1,0 +1,7 @@
+# Parent HTTP/control plane. Pipeline extras remain in the original requirements.txt.
+huey==2.6.0
+redis==6.4.0
+huggingface-hub==0.36.0
+# Legacy persistence regression imports the existing engine wrapper.
+openai==1.109.1
+cohere==5.20.0

@@ -1,15 +1,18 @@
-import logging
 import os
 import shutil
-from typing import Any
+import logging
+from typing import Any, Dict, List, Optional
+from pathlib import Path
 
 from huggingface_hub import HfApi, hf_hub_download, snapshot_download
+from huggingface_hub.utils import RepositoryNotFoundError, HFValidationError
 
 logger = logging.getLogger(__name__)
 
 
 class HFHubError(Exception):
     """Raised when a Hugging Face Hub operation fails or fails verification."""
+    pass
 
 
 class HFHubManager:
@@ -17,10 +20,10 @@ class HFHubManager:
 
     def __init__(
         self,
-        token: str | None = None,
-        source_repo: str | None = None,
-        work_repo: str | None = None,
-        output_repo: str | None = None,
+        token: Optional[str] = None,
+        source_repo: Optional[str] = None,
+        work_repo: Optional[str] = None,
+        output_repo: Optional[str] = None,
     ):
         self.token = token or os.environ.get("HF_TOKEN")
         self.source_repo = source_repo or os.environ.get("HF_SOURCE_REPO", "")
@@ -29,7 +32,7 @@ class HFHubManager:
 
         self.api = HfApi(token=self.token)
 
-    def check_auth(self) -> dict[str, Any]:
+    def check_auth(self) -> Dict[str, Any]:
         """Verifies Hugging Face authentication token."""
         if not self.token:
             return {
@@ -47,7 +50,7 @@ class HFHubManager:
 
     def check_repo_access(
         self, repo_id: str, repo_type: str = "dataset"
-    ) -> dict[str, Any]:
+    ) -> Dict[str, Any]:
         """Verifies repository existence and access permissions."""
         if not repo_id:
             return {"accessible": False, "repo_id": repo_id, "error": "Repo ID is empty."}
@@ -65,7 +68,7 @@ class HFHubManager:
             logger.error(f"Repo access check failed for {repo_id}: {e}")
             return {"accessible": False, "repo_id": repo_id, "error": str(e)}
 
-    def check_all_health(self) -> dict[str, Any]:
+    def check_all_health(self) -> Dict[str, Any]:
         """Checks authentication and accessibility of source, work, and output repos."""
         auth_status = self.check_auth()
         source_status = self.check_repo_access(self.source_repo) if self.source_repo else {"accessible": False, "repo_id": "", "error": "Not configured"}
@@ -91,10 +94,10 @@ class HFHubManager:
         self,
         local_path: str,
         path_in_repo: str,
-        repo_id: str | None = None,
+        repo_id: Optional[str] = None,
         repo_type: str = "dataset",
-        revision: str | None = None,
-        commit_message: str | None = None,
+        revision: Optional[str] = None,
+        commit_message: Optional[str] = None,
     ) -> str:
         """
         Uploads a single file to Hugging Face Hub.
@@ -136,10 +139,10 @@ class HFHubManager:
         self,
         local_dir: str,
         path_in_repo: str,
-        repo_id: str | None = None,
+        repo_id: Optional[str] = None,
         repo_type: str = "dataset",
-        revision: str | None = None,
-        commit_message: str | None = None,
+        revision: Optional[str] = None,
+        commit_message: Optional[str] = None,
     ) -> str:
         """
         Uploads an entire directory to Hugging Face Hub.
@@ -176,9 +179,9 @@ class HFHubManager:
         self,
         path_in_repo: str,
         local_path: str,
-        repo_id: str | None = None,
+        repo_id: Optional[str] = None,
         repo_type: str = "dataset",
-        revision: str | None = None,
+        revision: Optional[str] = None,
     ) -> str:
         """Downloads a single file from HF Hub to local_path."""
         target_repo = repo_id or self.source_repo
@@ -206,9 +209,9 @@ class HFHubManager:
         self,
         path_in_repo: str,
         local_dir: str,
-        repo_id: str | None = None,
+        repo_id: Optional[str] = None,
         repo_type: str = "dataset",
-        revision: str | None = None,
+        revision: Optional[str] = None,
     ) -> str:
         """Downloads a subfolder from HF Hub to local_dir."""
         target_repo = repo_id or self.source_repo
@@ -246,7 +249,7 @@ class HFHubManager:
         repo_id: str,
         path_in_repo: str,
         repo_type: str = "dataset",
-        revision: str | None = None,
+        revision: Optional[str] = None,
     ) -> bool:
         """Checks if a file exists in the repository."""
         try:
@@ -260,7 +263,7 @@ class HFHubManager:
         except Exception:
             return False
 
-    def list_jobs(self, work_repo: str | None = None) -> list[str]:
+    def list_jobs(self, work_repo: Optional[str] = None) -> List[str]:
         """Lists all job IDs present in the work repository under jobs/."""
         target_repo = work_repo or self.work_repo
         if not target_repo:
@@ -275,14 +278,14 @@ class HFHubManager:
                 parts = f.split("/")
                 if len(parts) >= 2 and parts[0] == "jobs":
                     job_ids.add(parts[1])
-            return sorted(job_ids)
+            return sorted(list(job_ids))
         except Exception as e:
             logger.error(f"Error listing jobs from {target_repo}: {e}")
             return []
 
     def fetch_manifest(
-        self, job_id: str, work_repo: str | None = None
-    ) -> dict[str, Any] | None:
+        self, job_id: str, work_repo: Optional[str] = None
+    ) -> Optional[Dict[str, Any]]:
         """Fetches and parses job manifest JSON from work repository."""
         import json
         import tempfile

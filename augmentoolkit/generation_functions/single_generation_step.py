@@ -2,7 +2,6 @@ import hashlib
 import json
 import os
 import traceback
-
 from augmentoolkit.generation_functions.pipeline_step_class import PipelineStep
 
 # NOTE (performance fix) this stays as it is because it's always just one file.

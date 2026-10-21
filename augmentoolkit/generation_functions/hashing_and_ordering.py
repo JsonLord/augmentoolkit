@@ -1,11 +1,10 @@
+import hashlib
 
 
 def hash_input_list(
-    input_list=None, key_to_hash_with="text"
+    input_list=[], key_to_hash_with="text"
 ):  # turns things like sentence chunks, paragraphs processed, into wide dicts with each item -> a hashed unique key pointing at a dict with that item's original values
 
-    if input_list is None:
-        input_list = []
     if not input_list:
         return {}
 

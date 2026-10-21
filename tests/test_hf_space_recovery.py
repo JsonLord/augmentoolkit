@@ -3,14 +3,18 @@ import os
 import shutil
 import tempfile
 import unittest
-from unittest.mock import MagicMock, patch
+from unittest.mock import AsyncMock, MagicMock, patch
 
 from augmentoolkit.hf_persistence import (
     CheckpointManager,
+    CheckpointPolicy,
     HFHubError,
     HFHubManager,
     IncompatibleResumeError,
+    JobManifest,
     JobManifestManager,
+    compute_file_hash,
+    compute_hash,
 )
 
 
@@ -62,11 +66,11 @@ class TestHFSpaceRecoveryIntegration(unittest.TestCase):
 
         def mock_list_jobs(work_repo=None):
             jobs = set()
-            for k in self.remote_work_repo_files:
+            for k in self.remote_work_repo_files.keys():
                 parts = k.split("/")
                 if len(parts) >= 2 and parts[0] == "jobs":
                     jobs.add(parts[1])
-            return sorted(jobs)
+            return sorted(list(jobs))
 
         self.mock_upload_fn = mock_upload_file
         self.mock_hf_mgr.upload_file.side_effect = mock_upload_file
@@ -166,7 +170,7 @@ class TestHFSpaceRecoveryIntegration(unittest.TestCase):
 
     def test_strengthened_incompatible_resume_detection(self):
         config_orig = {"chunk_size": 1000}
-        self.ckpt_mgr.init_job_manifest(
+        manifest = self.ckpt_mgr.init_job_manifest(
             job_id="job_incompat_test",
             pipeline="example-pipeline",
             source_repo="org/source-a",
@@ -219,7 +223,7 @@ class TestHFSpaceRecoveryIntegration(unittest.TestCase):
 
         initial_prompt_hash = JobManifestManager.compute_live_prompt_hash(prompt_folder=prompt_dir)
 
-        self.ckpt_mgr.init_job_manifest(
+        manifest = self.ckpt_mgr.init_job_manifest(
             job_id="prompt_mod_test_job",
             pipeline="example-pipeline",
             prompt_config_hash=initial_prompt_hash,
@@ -259,7 +263,9 @@ class TestHFSpaceRecoveryIntegration(unittest.TestCase):
             return None
 
         def mock_redis_set(key, value, nx=False, px=None, ex=None):
-            return not (key == lock_key and nx)
+            if key == lock_key and nx:
+                return False
+            return True
 
         mock_redis.get.side_effect = mock_redis_get
         mock_redis.set.side_effect = mock_redis_set
@@ -267,7 +273,7 @@ class TestHFSpaceRecoveryIntegration(unittest.TestCase):
         task2 = MagicMock(id="task_attempt_2")
         params2 = {"job_id": durable_job_id, "task_id": "task_attempt_2"}
 
-        with patch("subprocess.Popen"):
+        with patch("subprocess.Popen") as mock_popen:
             with self.assertRaises(RuntimeError) as ctx:
                 run_pipeline_task.call_local(task=task2, node_path="example-pipeline", parameters=params2)
             self.assertIn("currently locked/executing", str(ctx.exception))
@@ -337,7 +343,7 @@ class TestHFSpaceRecoveryIntegration(unittest.TestCase):
             outputs_dir=self.outputs_dir,
         )
 
-        _recovered_manifest, _valid_shards, _restored_data = fresh_ckpt_mgr.reconcile_and_resume_job(
+        recovered_manifest, valid_shards, restored_data = fresh_ckpt_mgr.reconcile_and_resume_job(
             job_id=job_id,
             target_pipeline="example-pipeline",
             work_repo=self.mock_hf_mgr.work_repo,
@@ -383,7 +389,8 @@ class TestHFSpaceRecoveryIntegration(unittest.TestCase):
 
         large_jsonl_path = os.path.join(job_out_dir, "train.jsonl")
         with open(large_jsonl_path, "w", encoding="utf-8") as f:
-            f.writelines(json.dumps({"id": i, "content": "x" * 200}) + "\n" for i in range(25))
+            for i in range(25):
+                f.write(json.dumps({"id": i, "content": "x" * 200}) + "\n")
 
         # Finalize with max_bytes_per_shard set small (e.g. 1000 bytes) to force splitting
         commit_rev = self.ckpt_mgr.finalize_job_sharded(
@@ -410,7 +417,7 @@ class TestHFSpaceRecoveryIntegration(unittest.TestCase):
 
         self.mock_hf_mgr.upload_file.side_effect = count_output_uploads
 
-        self.ckpt_mgr.finalize_job_sharded(
+        retry_commit = self.ckpt_mgr.finalize_job_sharded(
             manifest=manifest,
             output_dir=job_out_dir,
             sync_remote=True,

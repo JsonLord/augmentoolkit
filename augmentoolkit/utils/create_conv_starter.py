@@ -1,7 +1,8 @@
-import random
-
-from augmentoolkit.generation_functions import extract_name
 from augmentoolkit.utils.extract_first_words import extract_first_words
+from augmentoolkit.generation_functions import extract_name
+
+
+import random
 
 
 def create_conv_starter(character):

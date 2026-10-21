@@ -1,22 +1,20 @@
 # import glob
 import glob
 import hashlib
-import io
 import json
 import os
-
+import io
 from tqdm import tqdm
-
 from augmentoolkit.utils.offline_chunking import OfflineTokenizer, sent_tokenize
 from ocr.schemas import SafeError
 
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 try:
-    import docx
-    import fitz  # pymupdf
-    import pytesseract
-    from pdf2image import convert_from_path
     from PIL import Image
+    from pdf2image import convert_from_path
+    import pytesseract
+    import fitz  # pymupdf
+    import docx
 
     def extract_text_from_docx(path):
         """
@@ -142,13 +140,12 @@ except ImportError as e:
 
 # Add new try-except block for audio/video processing
 try:
-    import tempfile
-
     import librosa
-    import numpy as np
     import soundfile as sf
     from moviepy.editor import VideoFileClip
     from transformers import pipeline
+    import tempfile
+    import numpy as np
 
     def extract_text_from_audio_video(path):
         """
@@ -174,7 +171,7 @@ try:
             # Save to temp file and reload with librosa
             with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as tmpfile:
                 audio.write_audiofile(tmpfile.name, fps=16000)
-                audio, _sr = librosa.load(tmpfile.name, sr=16000)
+                audio, sr = librosa.load(tmpfile.name, sr=16000)
                 os.unlink(tmpfile.name)
         else:
             raise ValueError(f"Unsupported media format: {ext}")
@@ -188,7 +185,7 @@ try:
 
         return pipe(audio.copy(), batch_size=8)["text"]
 
-except ImportError:
+except ImportError as e:
     print(
         "NOTE: Audio/video processing requires librosa, soundfile, moviepy, and transformers. If you want to use videos as input for a pipeline, please install them. Otherwise, disregard this message."
     )
@@ -231,7 +228,7 @@ def chunking_algorithm_file(
     token_count = 0
 
     # From Algorithm 1: Enhanced format handling
-    if file_path.endswith((".pdf", ".docx")):
+    if file_path.endswith(".pdf") or file_path.endswith(".docx"):
         content = extract_text(file_path)
     else:
         with open(file_path, "r", encoding="utf-8", errors="ignore") as file:
@@ -439,7 +436,7 @@ def read_jsonl_file(file_path):
 
 def read_text(
     input_dir=None,
-    extensions=None,
+    extensions=[".txt", ".md", ".pdf", ".docx", ".epub", ".html", ".jsonl"],
     output_dir=None,
 ):
     """
@@ -453,8 +450,6 @@ def read_text(
     Returns:
         list: List of dictionaries, each with 'text' and 'metadata' keys.
     """
-    if extensions is None:
-        extensions = [".txt", ".md", ".pdf", ".docx", ".epub", ".html", ".jsonl"]
     cache_path = None
     if output_dir:
         # Use absolute path for input_dir for consistent hashing
@@ -508,7 +503,7 @@ def read_text(
         if os.path.isdir(text):
             print(f"Skipping {text} as it's a directory with an extension, not a file")
             continue
-        if text.endswith((".pdf", ".docx")):
+        if text.endswith(".pdf") or text.endswith(".docx"):
             loaded = extract_text(text)
         elif text.endswith(".jsonl"):
             loaded = read_jsonl_file(text)
@@ -551,6 +546,11 @@ def write_text(output_dir, text_list):
     Returns:
         int: Number of files successfully written.
     """
+    # In hosted mode, metadata cannot redirect writes outside the approved root.
+    from pathlib import Path
+    from app_storage import confined_path, data_directory
+    if os.environ.get("ATK_DATA_ROOT"):
+        output_dir = str(confined_path(data_directory("outputs"), output_dir))
     # Ensure output directory exists
     os.makedirs(output_dir, exist_ok=True)
 
@@ -558,14 +558,14 @@ def write_text(output_dir, text_list):
 
     for item in tqdm(text_list, desc="Writing files"):
         if "text" not in item or "metadata" not in item:
-            print(f"Warning: Skipping item missing required fields: {item}")
+            print("Warning: Skipping item missing required fields (content omitted)")
             continue
 
         # Get the relative file path from metadata
         relative_path = item["metadata"]
 
         # Create the full output path
-        full_path = os.path.join(output_dir, relative_path)
+        full_path = str(confined_path(Path(output_dir), relative_path))
 
         # Create any necessary subdirectories
         file_dir = os.path.dirname(full_path)
@@ -660,7 +660,7 @@ def chunk_text_list(
 
 def read_and_chunk_text(
     input_dir="./input",
-    extensions=None,
+    extensions=[".txt", ".md", ".pdf", ".docx", ".epub", ".html", ".jsonl"],
     chunk_size=1500,
     use_subset=False,
     subset_size=1500,
@@ -676,8 +676,6 @@ def read_and_chunk_text(
     #         source_texts = source_texts + glob.glob(path, recursive=True)
 
     # Use composition of read_text and chunk_text_list
-    if extensions is None:
-        extensions = [".txt", ".md", ".pdf", ".docx", ".epub", ".html", ".jsonl"]
     text_list = read_text(input_dir, extensions, output_dir=output_dir)
     sentence_chunks = chunk_text_list(
         text_list,
@@ -836,7 +834,7 @@ def process_sharegpt_conversations(input_conversations):
 
 # Add new reading function
 def read_audio_video(
-    input_dir="./input", extensions=None
+    input_dir="./input", extensions=[".mp3", ".wav", ".mp4", ".avi", ".mov", ".flac"]
 ):
     """
     Reads audio/video files and returns transcribed text with metadata.
@@ -848,8 +846,6 @@ def read_audio_video(
     Returns:
         list: List of dictionaries with 'text' and 'metadata' keys
     """
-    if extensions is None:
-        extensions = [".mp3", ".wav", ".mp4", ".avi", ".mov", ".flac"]
     source_files = []
     for extension in extensions:
         path = f"{input_dir}/**/*{extension}"
@@ -901,7 +897,7 @@ def count_total_tokens(output_list, count_tokens_fn=None):
             return len(text.split())
 
     for item in output_list:
-        if item.get("text"):
+        if "text" in item and item["text"]:
             total_tokens += count_tokens_fn(item["text"])
 
     return total_tokens

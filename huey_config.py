@@ -1,8 +1,8 @@
+import os
 
 # Import RedisHuey and the necessary connection details from redis_config
 from huey import RedisHuey
-
-from redis_config import REDIS_DB, REDIS_HOST, REDIS_PORT
+from redis_config import REDIS_HOST, REDIS_PORT, REDIS_DB
 
 # Define the Huey instance using Redis
 # The 'name' parameter is optional but good practice, often set to the app name.
@@ -12,6 +12,8 @@ huey = RedisHuey(
     host=REDIS_HOST,
     port=REDIS_PORT,
     db=REDIS_DB,
+    socket_connect_timeout=2,
+    socket_timeout=2,
     # Add other RedisHuey parameters if needed (e.g., password, connection_pool)
 )
 

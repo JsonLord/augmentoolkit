@@ -1,20 +1,19 @@
 # the whole composition
 
-import glob
 import json
 import os
-import platform
 import random
 import shutil
-import subprocess
 import sys
+import subprocess
 import time
+import re
+import platform
+import glob
 
-from huggingface_hub import HfApi
-
-from generation.core_components.add_sysprompt_to_text import (
-    add_sysprompt_to_directory_files,
-)
+from generation.utilities.llm_server.llm_server import llm_server
+from generation.utilities.rag_server.rag_server import rag_server
+from huggingface_hub import HfApi, list_repo_files
 from generation.core_components.chunking import (
     read_jsonl_completions,
     read_text,
@@ -31,13 +30,9 @@ from generation.core_components.data_prep_operations import (
 )
 from generation.core_components.sharegpt_operations import (
     combine_single_and_multi_turn,
+    combine_single_turn_convs,
 )
 from generation.core_components.simple_chat_loop import simple_chat_loop
-from generation.core_components.write_config_files import (
-    create_completion_dataset,
-    create_input_output_dataset,
-    write_training_config,
-)
 from generation.core_pipelines.clean_and_convert_pdf.clean_and_convert_pdf import (
     pdf_clean_and_convert_pipeline,
 )
@@ -50,18 +45,30 @@ from generation.core_pipelines.factual_generation_individual.factual_generation 
 from generation.core_pipelines.generic_data_rephrase.transform_generic_data import (
     transform_generic_data_pipeline,
 )
-from generation.core_pipelines.recall_multiple_sources.multi_source_recall import (
-    generate_multi_source_dataset,
-)
 from generation.core_pipelines.representation_variation.repvar import (
     representation_variation_pipeline,
 )
 from generation.core_pipelines.train_a_model_to_do_rag.rag_data_pipeline import (
     rag_data_pipeline,
 )
-from generation.utilities.llm_server.llm_server import llm_server
-from generation.utilities.rag_server.rag_server import rag_server
+from generation.core_components.write_config_files import (
+    write_training_config,
+    create_completion_dataset,
+    create_input_output_dataset,
+)
+from generation.core_pipelines.recall_multiple_sources.multi_source_recall import (
+    generate_multi_source_dataset,
+)
+from generation.core_components.data_prep_operations import (
+    completionify_sharegpt,
+    count_tokens_glob,
+    create_subset,
+)
+from generation.core_components.add_sysprompt_to_text import (
+    add_sysprompt_to_directory_files,
+)
 from redis_config import set_progress
+
 
 # NOTE we will want the capability to add system prompts to each of the generic things we use. Specify the system prompt context to add to the starts of messages.
 
@@ -220,18 +227,14 @@ async def factual_datagen_full(  # there will be quite a few args here
     cache_dir: str,
     task_id=None,  # task ID must always be specified as a pipeline arg. And it must be a kwarg, not an arg.
     base_model=None,
-    other_pretrain_kwargs=None,
-    other_finetune_kwargs=None,
+    other_pretrain_kwargs={},
+    other_finetune_kwargs={},
     server_type="normal",  # normal | rag | none, whether to use a rag server or normal one
     do_not_use_llm_for_pdf_processing=True,
     *args,
     **kwargs,
 ):
 
-    if other_finetune_kwargs is None:
-        other_finetune_kwargs = {}
-    if other_pretrain_kwargs is None:
-        other_pretrain_kwargs = {}
     if kwargs:
         print("WARNING -- UNUSED KWARGS")
         print(json.dumps(kwargs, indent=4))
@@ -319,7 +322,7 @@ async def factual_datagen_full(  # there will be quite a few args here
 
         # next, representation variation
         print(f"Generating representation variations for {input_dir['input_dir_name']}")
-        await representation_variation_pipeline(
+        representation_variations = await representation_variation_pipeline(
             use_subset=use_subset,
             subset_size=subset_size,
             chunk_size=representation_variation_chunk_size,
@@ -362,7 +365,7 @@ async def factual_datagen_full(  # there will be quite a few args here
         )
 
         print(f"Generating inferred facts for {input_dir['input_dir_name']}")
-        await representation_variation_pipeline(  # turns out inferred facts can just be repvar but with a different prompt
+        inferred_facts = await representation_variation_pipeline(  # turns out inferred facts can just be repvar but with a different prompt
             use_subset=use_subset,
             subset_size=subset_size,
             chunk_size=representation_variation_chunk_size,
@@ -451,7 +454,8 @@ async def factual_datagen_full(  # there will be quite a few args here
         )
         print(f"Saving {len(text_chunks)} text chunks to {text_chunks_path}")
         with open(text_chunks_path, "w", encoding="utf-8") as f:
-            f.writelines(json.dumps(chunk, ensure_ascii=False) + "\n" for chunk in text_chunks)
+            for chunk in text_chunks:
+                f.write(json.dumps(chunk, ensure_ascii=False) + "\n")
         print(f"Successfully saved text chunks for {input_dir_name}")
 
     # Write the Axolotl config file
@@ -496,6 +500,8 @@ async def factual_datagen_full(  # there will be quite a few args here
     per_factual_sft_method_score = per_all_factual_sft_score / len(factual_sft.items())
 
     all_by_index = {}
+    multi_turn_by_index = {}
+    combined_chats = []
 
     for idx, prompt in enumerate(final_assistant_prompts_no_rag):
         if input_dir["final_system_prompt_additional_context"]:
@@ -513,7 +519,7 @@ async def factual_datagen_full(  # there will be quite a few args here
                 )
                 prompts = factual_sft[way]["prompts"]
                 default_prompts = factual_sft[way]["default_prompts"]
-                factual_sft[way]["single_turn"]
+                single_turn = factual_sft[way]["single_turn"]
                 skip_question_check = factual_sft[way]["skip_question_check"]
                 skip_answer_relevancy_check = factual_sft[way][
                     "skip_answer_relevancy_check"
@@ -683,7 +689,7 @@ async def factual_datagen_full(  # there will be quite a few args here
             for p in final_assistant_prompts
         ]
 
-        await rag_data_pipeline(
+        rag_data = await rag_data_pipeline(
             input_dir=input_dir["path"],
             output_dir=os.path.join(output_dir, f"rag_data_{input_dir_name}"),
             use_subset=input_dir["rag_use_subset"],
@@ -780,7 +786,7 @@ async def factual_datagen_full(  # there will be quite a few args here
     all_combined_files_info = []
     all_indices = set(all_by_index.keys())
 
-    for out_idx in sorted(all_indices):  # Sort for deterministic processing order
+    for out_idx in sorted(list(all_indices)):  # Sort for deterministic processing order
         single_pairs = all_by_index[out_idx]
 
         print(
@@ -1197,11 +1203,15 @@ async def factual_datagen_full(  # there will be quite a few args here
                 dataset_configs.append(create_completion_dataset(rel_path))
             elif "axolotl_correction_conversations" in rel_path and fname.endswith(
                 ".json"
-            ) or "axolotl_rag_conversations" in rel_path and fname.endswith(".jsonl"):
-                dataset_configs.append(create_input_output_dataset(rel_path))
-            elif "generic_sft_completion" in rel_path and fname.endswith(".jsonl") or "pretraining_subset" in rel_path and fname.endswith(
-                ".jsonl"
             ):
+                dataset_configs.append(create_input_output_dataset(rel_path))
+            elif "axolotl_rag_conversations" in rel_path and fname.endswith(".jsonl"):
+                dataset_configs.append(create_input_output_dataset(rel_path))
+            elif "generic_sft_completion" in rel_path and fname.endswith(".jsonl"):
+                dataset_configs.append(create_completion_dataset(rel_path))
+            elif "pretraining_subset" in rel_path and fname.endswith(
+                ".jsonl"
+            ):  # Add condition for pretraining subset
                 dataset_configs.append(create_completion_dataset(rel_path))
     print(dataset_configs)
     print("\nContents of SFT run directory:")
@@ -1243,7 +1253,7 @@ async def factual_datagen_full(  # there will be quite a few args here
             f"Processing RAG source data for input directory: {current_input_dir_name}"
         )
 
-        for way in factual_sft:
+        for way in factual_sft.keys():
             if (
                 "not_in_rag_data" in factual_sft[way]
                 and factual_sft[way]["not_in_rag_data"] == True
@@ -1357,7 +1367,7 @@ async def factual_datagen_full(  # there will be quite a few args here
         print("Automated training is disabled. Skipping training process.")
 
     all_texts = []
-    for v in text_chunks_dict.values():
+    for k, v in text_chunks_dict.items():
         all_texts.extend(v)
 
     # Then we download it from huggingface
@@ -1659,7 +1669,7 @@ async def _check_if_model_already_trained(repo_id: str, huggingface_token: str) 
 
         # Check if the repository exists
         try:
-            api.repo_info(repo_id=repo_id, repo_type="model")
+            repo_info = api.repo_info(repo_id=repo_id, repo_type="model")
         except Exception as e:
             print(f"Repository {repo_id} does not exist or is not accessible: {e}")
             return False
@@ -1701,7 +1711,7 @@ async def _check_if_model_already_trained(repo_id: str, huggingface_token: str) 
                     )
                     # Fall back to just checking for model files
                     print(
-                        "Falling back to simple check: model files exist, assuming training is complete."
+                        f"Falling back to simple check: model files exist, assuming training is complete."
                     )
                     return True
             else:
@@ -1713,7 +1723,7 @@ async def _check_if_model_already_trained(repo_id: str, huggingface_token: str) 
             print(f"Could not check commit history for {repo_id}: {e}")
             # Fall back to just checking for model files
             print(
-                "Falling back to simple check: model files exist, assuming training is complete."
+                f"Falling back to simple check: model files exist, assuming training is complete."
             )
             return True
 
@@ -1801,19 +1811,21 @@ async def _run_automated_training(
         )  # Will this work even though guessed H100 name?
         created_pod_id = created_pod["id"]
 
-    runpod.get_pods()
+    pods = runpod.get_pods()
 
     # Function to get pod details and extract IP and port (adapted from the script)
     def get_pod_ip_port(pid):
         data = runpod.get_pods()
         for item in data:
-            if item["id"] == pid and item["runtime"] is not None and (
-                "ports" in item["runtime"]
-                and item["runtime"]["ports"] is not None
-            ):
-                for port in item["runtime"]["ports"]:
-                    if port["type"] == "tcp" and port["isIpPublic"]:
-                        return port["ip"], port["publicPort"]
+            if item["id"] == pid:
+                if item["runtime"] is not None:
+                    if (
+                        "ports" in item["runtime"]
+                        and item["runtime"]["ports"] is not None
+                    ):
+                        for port in item["runtime"]["ports"]:
+                            if port["type"] == "tcp" and port["isIpPublic"]:
+                                return port["ip"], port["publicPort"]
 
         return None, None  # no data for the pod ports yet. It is not set up.
 
@@ -1957,7 +1969,7 @@ async def _run_automated_training(
         )
         raise
     except Exception as e:
-        error_message = f"An unexpected error occurred: {e!s}"
+        error_message = f"An unexpected error occurred: {str(e)}"
         print(error_message)
         set_progress(
             task_id=task_id,

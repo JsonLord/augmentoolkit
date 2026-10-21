@@ -3,11 +3,12 @@ import json
 import os
 import subprocess
 import time
-from typing import Any
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 
 class IncompatibleResumeError(Exception):
     """Raised when attempting to resume a job with incompatible configurations or code revisions."""
+    pass
 
 
 def compute_hash(data: Any) -> str:
@@ -79,23 +80,23 @@ class JobManifest:
         work_repo: str,
         output_repo: str,
         source_revision: str = "main",
-        source_path: str | None = None,
-        source_split: str | None = None,
+        source_path: Optional[str] = None,
+        source_split: Optional[str] = None,
         configuration_hash: str = "",
         prompt_config_hash: str = "",
-        code_revision: str | None = None,
+        code_revision: Optional[str] = None,
         output_schema_version: str = "1.0",
         current_stage: str = "initialized",
-        current_shard: str | int | None = None,
-        completed_shards: list[str | int] | None = None,
-        checkpoints_metadata: dict[str, dict[str, Any]] | None = None,
-        output_shards: list[dict[str, Any]] | None = None,
+        current_shard: Optional[Union[str, int]] = None,
+        completed_shards: Optional[List[Union[str, int]]] = None,
+        checkpoints_metadata: Optional[Dict[str, Dict[str, Any]]] = None,
+        output_shards: Optional[List[Dict[str, Any]]] = None,
         status: str = "PENDING",
-        current_task_id: str | None = None,
-        task_history: list[str] | None = None,
-        timestamps: dict[str, Any] | None = None,
-        error_retry_info: dict[str, Any] | None = None,
-        final_output_revision: str | None = None,
+        current_task_id: Optional[str] = None,
+        task_history: Optional[List[str]] = None,
+        timestamps: Optional[Dict[str, Any]] = None,
+        error_retry_info: Optional[Dict[str, Any]] = None,
+        final_output_revision: Optional[str] = None,
     ):
         self.job_id = job_id  # Durable identifier across restarts/resumes
         self.pipeline = pipeline
@@ -147,10 +148,10 @@ class JobManifest:
 
     def mark_shard_completed(
         self,
-        shard_id: str | int,
-        checksum: str | None = None,
-        size: int | None = None,
-        record_count: int | None = None,
+        shard_id: Union[str, int],
+        checksum: Optional[str] = None,
+        size: Optional[int] = None,
+        record_count: Optional[int] = None,
     ):
         shard_str = str(shard_id)
         if shard_str not in [str(s) for s in self.completed_shards]:
@@ -184,7 +185,7 @@ class JobManifest:
         self.output_shards.append(shard_record)
         self.update_timestamp()
 
-    def set_status(self, new_status: str, error_msg: str | None = None):
+    def set_status(self, new_status: str, error_msg: Optional[str] = None):
         self.status = new_status
         self.update_timestamp()
         if new_status in ("COMPLETED", "FAILED", "REVOKED"):
@@ -195,7 +196,7 @@ class JobManifest:
                 {"timestamp": time.time(), "message": error_msg}
             )
 
-    def to_dict(self) -> dict[str, Any]:
+    def to_dict(self) -> Dict[str, Any]:
         return {
             "job_id": self.job_id,
             "current_task_id": self.current_task_id,
@@ -223,7 +224,7 @@ class JobManifest:
         }
 
     @classmethod
-    def from_dict(cls, data: dict[str, Any]) -> "JobManifest":
+    def from_dict(cls, data: Dict[str, Any]) -> "JobManifest":
         return cls(
             job_id=data["job_id"],
             current_task_id=data.get("current_task_id"),
@@ -274,7 +275,7 @@ class JobManifestManager:
     }
 
     @classmethod
-    def canonical_generation_spec(cls, config_dict: dict[str, Any]) -> dict[str, Any]:
+    def canonical_generation_spec(cls, config_dict: Dict[str, Any]) -> Dict[str, Any]:
         """Strips ephemeral runtime parameters to yield a canonical immutable generation specification."""
         if not isinstance(config_dict, dict):
             return {}
@@ -289,7 +290,7 @@ class JobManifestManager:
         return spec
 
     @classmethod
-    def canonical_generation_spec_hash(cls, config_dict: dict[str, Any]) -> str:
+    def canonical_generation_spec_hash(cls, config_dict: Dict[str, Any]) -> str:
         """Computes deterministic SHA256 hash of canonical generation spec."""
         spec = cls.canonical_generation_spec(config_dict)
         return compute_hash(spec)
@@ -297,8 +298,8 @@ class JobManifestManager:
     @classmethod
     def compute_live_prompt_hash(
         cls,
-        prompt_folder: str | None = None,
-        default_prompt_folder: str | None = None,
+        prompt_folder: Optional[str] = None,
+        default_prompt_folder: Optional[str] = None,
     ) -> str:
         """Computes SHA256 hash from live prompt files on disk."""
         dir_hashes = []
@@ -314,7 +315,7 @@ class JobManifestManager:
         existing_manifest: JobManifest,
         target_manifest: JobManifest,
         strict_code_rev: bool = True,
-    ) -> tuple[bool, list[str]]:
+    ) -> Tuple[bool, List[str]]:
         """
         Refuses automatic continuation when materially relevant inputs changed:
         - source_repo / source_revision / source_path / source_split

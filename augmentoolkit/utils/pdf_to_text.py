@@ -1,9 +1,8 @@
 import os
-
-import fitz  # PyMuPDF
-import pytesseract
-from PIL import Image
 from pypdf import PdfReader
+import fitz  # PyMuPDF
+from PIL import Image
+import pytesseract
 
 
 def convert_pdf_to_text(pdf_path, output_folder):
@@ -33,7 +32,7 @@ def convert_pdf_to_text(pdf_path, output_folder):
                         except UnicodeDecodeError:
                             continue
                 except Exception as e:
-                    print(f"Error extracting text from page in {pdf_path}: {e!s}")
+                    print(f"Error extracting text from page in {pdf_path}: {str(e)}")
                     continue  # Skip this page and continue with the next
 
         if text.strip():
@@ -41,7 +40,7 @@ def convert_pdf_to_text(pdf_path, output_folder):
                 out_file.write(text)
             return output_path
     except Exception as e:
-        print(f"Error in direct text extraction for {pdf_path}: {e!s}")
+        print(f"Error in direct text extraction for {pdf_path}: {str(e)}")
         # If direct extraction fails, proceed to OCR
 
     # Use OCR for scanned PDFs
@@ -55,12 +54,12 @@ def convert_pdf_to_text(pdf_path, output_folder):
                 page_text = pytesseract.image_to_string(img)
                 text += page_text + "\n"
             except Exception as e:
-                print(f"Error processing page in {pdf_path}: {e!s}")
+                print(f"Error processing page in {pdf_path}: {str(e)}")
                 continue  # Skip this page and continue with the next
 
         with open(output_path, "w", encoding="utf-8", errors="ignore") as out_file:
             out_file.write(text)
         return output_path
     except Exception as e:
-        print(f"Error processing PDF {pdf_path}: {e!s}")
+        print(f"Error processing PDF {pdf_path}: {str(e)}")
         return None

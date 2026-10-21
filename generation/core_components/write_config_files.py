@@ -1,14 +1,15 @@
-
 import yaml
+import os
+from typing import List, Optional
 
 
 def write_training_config(
-    dataset_paths: list[dict],
+    dataset_paths: List[dict],
     base_model: str,
     output_path: str = "training_config.yaml",
     is_mistral_derived_model: bool = False,
-    wandb_project: str | None = None,
-    hub_model_id: str | None = None,
+    wandb_project: Optional[str] = None,
+    hub_model_id: Optional[str] = None,
     hub_strategy: str = "all_checkpoints",
     **kwargs
 ) -> str:
@@ -100,6 +101,12 @@ def write_training_config(
     if is_mistral_derived_model:
         # Add any Mistral-specific configurations here if needed
         pass
+
+    # Hosted generation must never write configuration/model state into source.
+    if os.environ.get("ATK_DATA_ROOT"):
+        from app_storage import confined_path, data_directory, normalize_mutable_paths
+        output_path = str(confined_path(data_directory("generation"), output_path))
+        config = normalize_mutable_paths(config)
 
     # Write configuration to file
     with open(output_path, "w", encoding="utf-8") as f:

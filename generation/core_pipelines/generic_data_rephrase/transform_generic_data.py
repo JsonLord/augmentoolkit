@@ -1,12 +1,12 @@
-import json
-import logging
-import os
+from collections import defaultdict
 import random
 import re
-
+import traceback
+from augmentoolkit.generation_functions.engine_wrapper_class import EngineWrapper
 from augmentoolkit.generation_functions.hashing_and_ordering import hash_input_list
 from augmentoolkit.generation_functions.pipeline_step_class import (
     PipelineStep,
+    filter_out_nonpresent_keys,
 )
 from augmentoolkit.utils.cost_estimation_logging import (
     calculate_pipeline_cost_efficiency,
@@ -16,28 +16,48 @@ from augmentoolkit.utils.observers import (
     create_log_observer,
     create_output_token_counter,
 )
+from augmentoolkit.utils.write_output_to_file import write_output_to_file
+import json
+import os
+from typing import Dict, List
+
 from generation.core_components.chunking import (
     count_tokens,
     count_total_tokens,
     format_conversation_history,
+    process_sharegpt_conversations,
     process_sharegpt_pairs,
+    read_sharegpt_conversations,
     read_sharegpt_pairs,
     slice_conversation_history,
+    subset_text_list,
 )
+from generation.core_components.filter_chunks import filter_out_failed_items_dict
 from generation.core_components.meta_datagen import create_meta_dataset
 from generation.core_components.setup_components import (
     make_relative_to_self,
     setup_semaphore_and_engines,
 )
+from tqdm import asyncio as tqdmasyncio
+
+
+import asyncio
+import glob
+import logging
+import os
+import sys
 
 # import time
+import yaml
+import json
+
 from redis_config import set_progress
 
 # # from datetime import datetime
 
 
 def save_dict_to_jsonl(
-    big_dict: dict[str, dict], cot_preface: str, cot_suffix: str, output_path: str
+    big_dict: Dict[str, dict], cot_preface: str, cot_suffix: str, output_path: str
 ):
     """
     Saves conversations from big_dict to JSONL files, restructuring messages
@@ -61,7 +81,7 @@ def save_dict_to_jsonl(
         if subdict["source_file"] not in source_files:
             source_files[subdict["source_file"]] = {}  # dict of conversation indices
 
-    for file in source_files:
+    for file in source_files.keys():
         # filter subdicts in the big dict to only include those of from that source file. And sort them by the conv_idx key.
         dicts_from_source_file = sorted(
             [d for i, d in big_dict.items() if d["source_file"] == file],
@@ -104,12 +124,14 @@ def save_dict_to_jsonl(
         with open(
             os.path.join(output_path, os.path.basename(file)), "w", encoding="utf-8"
         ) as f:
-            f.writelines(json.dumps(obj, ensure_ascii=False) + "\n" for obj in file_conversations_list)
+            for obj in file_conversations_list:
+                f.write(json.dumps(obj, ensure_ascii=False) + "\n")
 
     with open(
         os.path.join(output_path, "final_total_output.jsonl"), "w", encoding="utf-8"
     ) as f:
-        f.writelines(json.dumps(obj, ensure_ascii=False) + "\n" for obj in all_conversations)
+        for obj in all_conversations:
+            f.write(json.dumps(obj, ensure_ascii=False) + "\n")
 
     return all_conversations
 
@@ -171,21 +193,15 @@ async def transform_generic_data_pipeline(
     cost_per_million_small_output,
     cost_per_million_large_input,
     cost_per_million_large_output,
-    sharegpt_convs_passed_in=None,
+    sharegpt_convs_passed_in=[],
     read_files_manually=True,
     do_meta_datagen=False,
-    meta_datagen_keys=None,
-    meta_datagen_extras=None,
+    meta_datagen_keys=["thought_process_addition_details"],
+    meta_datagen_extras=[],
     task_id=None,
     seed=1048596,
     **kwargs,
 ):
-    if meta_datagen_extras is None:
-        meta_datagen_extras = []
-    if meta_datagen_keys is None:
-        meta_datagen_keys = ["thought_process_addition_details"]
-    if sharegpt_convs_passed_in is None:
-        sharegpt_convs_passed_in = []
     logging.basicConfig(
         level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
     )
@@ -219,7 +235,7 @@ async def transform_generic_data_pipeline(
         "name": "Large model",
     }
 
-    run_task_with_limit, _engine_wrapper, engine_wrapper_large, _ = (
+    run_task_with_limit, engine_wrapper, engine_wrapper_large, _ = (
         setup_semaphore_and_engines(
             concurrency_limit,
             small_model,

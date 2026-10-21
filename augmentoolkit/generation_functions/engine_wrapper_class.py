@@ -1,10 +1,10 @@
-import json
-import traceback
+import asyncio
 import uuid
-
+from openai import AsyncOpenAI
 import cohere
 from httpx import Timeout
-from openai import AsyncOpenAI
+import traceback
+import json
 
 
 def make_id():
@@ -28,17 +28,13 @@ class EngineWrapper:
         api_key=None,
         base_url=None,
         mode="api",  # can be one of api, aphrodite, llama.cpp, cohere
-        input_observers=None,
-        output_observers=None,
+        input_observers=[],
+        output_observers=[],
         timeout_total=500.0,  # Total operation timeout
         timeout_read=240.0,  # Read timeout between chunks
         timeout_api_call=600,  # Timeout for individual API calls
         **kwargs,
     ):
-        if output_observers is None:
-            output_observers = []
-        if input_observers is None:
-            input_observers = []
         self.mode = mode
         self.model = model
         self.input_observers = input_observers
@@ -115,7 +111,7 @@ class EngineWrapper:
             async for chunk in stream:
                 try:
                     completion = completion + chunk.choices[0].text
-                except Exception:
+                except Exception as e:
                     timed_out = True
 
             for output_observer in self.output_observers:
@@ -185,7 +181,7 @@ class EngineWrapper:
                     try:
                         if chunk.choices[0].delta.content:
                             completion = completion + chunk.choices[0].delta.content
-                    except Exception:
+                    except Exception as e:
                         # print("Really strange exception!")
                         # print(chunk)
                         # traceback.print_exc()
@@ -195,7 +191,7 @@ class EngineWrapper:
                     print(e)
                     traceback.print_exc()
                     timed_out = True
-                    print("\n\n-----/\\------")
+                    print("\n\n-----/\------")
 
             for output_observer in self.output_observers:
                 output_observer(messages, completion, False)
@@ -370,7 +366,7 @@ class EngineWrapper:
                             completion += text_chunk
                             # Yield chunk in SSE format
                             yield f"data: {json.dumps({'text': text_chunk, 'done': False})}\n\n"
-                    except Exception:
+                    except Exception as e:
                         pass
                 except Exception as e:
                     print("\n\n------------CAUGHT EXCEPTION DURING GENERATION")

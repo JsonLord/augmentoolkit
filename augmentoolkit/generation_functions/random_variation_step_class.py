@@ -1,17 +1,18 @@
-import asyncio
+import json
 import os
 import random
 import re
-import sys
 import traceback
-
-from tqdm import asyncio as tqdmasyncio
-
+import sys
+import asyncio
 from augmentoolkit.generation_functions.generation_step_class import GenerationStep
 from augmentoolkit.generation_functions.pipeline_step_class import (
     PipelineStep,
     filter_out_nonpresent_keys,
 )
+from augmentoolkit.utils.make_id import make_id
+from augmentoolkit.utils.write_output_to_file import write_output_to_file
+from tqdm import asyncio as tqdmasyncio
 
 
 class RandomVariationStep(
@@ -33,11 +34,9 @@ class RandomVariationStep(
         variation_generator_count=None,
         output_processor=lambda x: x,
         log_full_outputs=False,
-        method_overrides=None,
+        method_overrides={},
         details_key=None,
     ):
-        if method_overrides is None:
-            method_overrides = {}
         self.variation_generator_count = variation_generator_count
         super().__init__(
             sampling_params=sampling_params,
@@ -237,7 +236,7 @@ class RandomVariationStep(
             max_retries = self.max_retries
             while not complete and max_retries > 0:
                 try:
-                    result, _full_output, full_response, full_input = (
+                    result, full_output, full_response, full_input = (
                         await self.generate_data(
                             processed_data,
                             engine_wrapper,
@@ -292,7 +291,7 @@ class RandomVariationStep(
 
     async def execute_pipeline(
         self,
-        input_dict=None,
+        input_dict={},
         engine_wrapper=None,
         rtwl=None,
         default_prompt_folder=None,
@@ -303,8 +302,6 @@ class RandomVariationStep(
         include_details=False,
         **kwargs,
     ):
-        if input_dict is None:
-            input_dict = {}
         self.load_dataset(
             input_dict=input_dict, output_dir=output_dir
         )  # if it is at the start and end of every pipeline execution, we get the same behavior as before, past thing will load and save just fine, without constant reads/writes.
@@ -333,7 +330,7 @@ class RandomVariationStep(
                 processed_count += 1
                 try:
                     await asyncio.wait_for(future, timeout=TASK_TIMEOUT_SECONDS)
-                except TimeoutError:
+                except asyncio.TimeoutError:
                     print(
                         f"\nWARNING: Task {processed_count}/{total_tasks} for step '{self.output_file}' timed out after {TASK_TIMEOUT_SECONDS} seconds.",
                         file=sys.stderr,
@@ -349,7 +346,7 @@ class RandomVariationStep(
         except Exception as e:
             print(f"Exception occurred during task execution: {e}")
             # traceback.print_exc()
-            raise
+            raise e
         finally:
             # Robust save with interrupt handling
             self.save_dataset(input_dict=input_dict, output_dir=output_dir)

@@ -5,36 +5,42 @@ Adapted from Colab notebook to standalone Python script.
 WARNING: THIS PIPELINE REQUIRES A MACHINE CAPABLE OF TRAINING LLMs. I.E., YOU WILL WANT A GPU.
 """
 
+from difflib import SequenceMatcher
 import hashlib
 import os
 import sys
+import re
 import traceback
+import torch
 
 os.environ["VLLM_USE_V1"] = "0"  # Add this before importing vllm/Unsloth
-from datasets import Dataset, concatenate_datasets
-from unsloth import FastLanguageModel, PatchFastRL, is_bfloat16_supported
-
+from datasets import load_dataset, Dataset, concatenate_datasets
+from augmentoolkit.generation_functions.engine_wrapper_class import EngineWrapper
 from generation.core_pipelines.do_grpo_rl_with_a_prompt.post_processors import (
     get_combination_function_from_name,
     get_scaling_function_from_name,
 )
 from generation.core_pipelines.do_grpo_rl_with_a_prompt.reward_functions import (
     get_func_for_str,
+    get_funcs_for_str_list,
 )
+from unsloth import FastLanguageModel, PatchFastRL, is_bfloat16_supported
+from vllm import SamplingParams
 
 PatchFastRL("GRPO", FastLanguageModel)
-import asyncio
-import json
-import logging
-import threading
-from datetime import datetime
-
-import wandb
 from trl import GRPOConfig
-
 from generation.core_pipelines.do_grpo_rl_with_a_prompt.grpo_trainer_subclass import (
     GRPOTrainerStopSequences,
 )
+import json
+from typing import Optional, List, Dict, Any
+from dataclasses import dataclass
+from pathlib import Path
+import asyncio
+import logging
+from datetime import datetime
+import wandb
+import threading
 
 # Listen, here's what's required of you with this one:
 # 1. take the existing code
@@ -465,7 +471,7 @@ def save_high_score_response(
         print(f"Saved high-scoring response to {high_scoring_save_path}")
 
     except Exception as e:
-        print(f"Error saving high-score response: {e!s}")
+        print(f"Error saving high-score response: {str(e)}")
 
 
 # all below here stays in the file. It won't all stay the same since we're changing how reward functions are classed and passed in and selected and work, and also the bits about the config will have to change too. However, the core logic will be there. Things like the base model etc. will get passed into the main function and drilled down typical ATK style.
@@ -499,11 +505,9 @@ def setup_trainer(
     lock=None,
     high_scoring_save_path=None,
     score_save_threshold=None,
-    model_stop_sequences=None,
+    model_stop_sequences=["**Finished.**", "Human:"],
 ):  # reward scaling function takes a list of numbers and returns a list of numbers which may or may not be different/modified. reward combination function takes a list of numbers and combines them into a single one.
     """Configure and return the GRPO trainer."""
-    if model_stop_sequences is None:
-        model_stop_sequences = ["**Finished.**", "Human:"]
     training_args = GRPOConfig(
         use_vllm=True,
         # vllm_device="cuda:1", # NOTE this is SO THAT we DO GPU INFERENCE FOR THE REWARD GENERATION
@@ -599,7 +603,7 @@ def setup_trainer(
                 except Exception as e:
                     print("Error in sync reward function!")
                     traceback.print_exc()
-                    raise Exception(f"Error in reward function {f.__name__}: {e!s}")
+                    raise Exception(f"Error in reward function {f.__name__}: {str(e)}")
 
             # Temporarily store sync rewards; async rewards will be added later
             all_rewards[output_idx] = specific_rewards
@@ -696,7 +700,7 @@ def setup_trainer(
                 formatted = tokenizer.apply_chat_template(example["prompt"])
                 print(f"Format successful: {len(formatted) > 0}")
             except Exception as e:
-                print(f"Format failed: {e!s}")
+                print(f"Format failed: {str(e)}")
 
         if "answer" in example:
             print(f"Answer type: {type(example['answer'])}")

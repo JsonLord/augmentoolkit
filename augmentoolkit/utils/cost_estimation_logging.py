@@ -1,10 +1,12 @@
+import logging
+from typing import Dict, List, Union, Optional
 from tabulate import tabulate
 
 
 def calculate_pipeline_cost_efficiency(
     total_input_tokens: int,
-    token_counters: list[dict[str, int | float | str]],
-) -> dict[str, float | int | dict]:
+    token_counters: List[Dict[str, Union[int, float, str]]],
+) -> Dict[str, Union[float, int, Dict]]:
     """
     Calculates the cost efficiency metrics for a pipeline based on token usage.
 

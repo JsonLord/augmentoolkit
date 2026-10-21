@@ -1,3 +1,4 @@
+from contextlib import asynccontextmanager
 from enum import Enum
 import json
 import logging
@@ -15,6 +16,8 @@ import subprocess
 
 from fastapi import (
     FastAPI,
+    APIRouter,
+    Depends,
     HTTPException,
     UploadFile,
     File,
@@ -30,11 +33,18 @@ from typing import List, Optional, Dict, Any
 from pydantic import BaseModel, Field
 from fastapi.middleware.cors import CORSMiddleware
 
+from app_auth import verify_token
+from app_storage import confined_path, data_directory, StorageViolation, normalize_mutable_paths
+from queue_readiness import QUEUE_ERRORS, require_queue_ready, require_job_execution
+from ocr.worker_api import create_app as create_ocr_app
+from ocr.config import Settings as OCRSettings
+
 from huey_config import huey
 from tasks import (
     run_pipeline_task,
     set_final_status,
     resolve_job_output_dir,
+    resolve_authorized_config,
 )
 from huey.exceptions import (
     HueyException,
@@ -87,21 +97,15 @@ except FileNotFoundError:
 except yaml.YAMLError as e:
     print(f"ERROR: Error parsing super config file {SUPER_CONFIG_PATH}: {e}")
 
-ATK_DATA_ROOT = PyPath(os.environ.get("ATK_DATA_ROOT", "/tmp/augmentoolkit")).resolve()
-ATK_DATA_ROOT.mkdir(parents=True, exist_ok=True)
-
-INPUTS_DIR = (ATK_DATA_ROOT / "inputs").resolve()
-OUTPUTS_DIR = (ATK_DATA_ROOT / "outputs").resolve()
-GENERATION_DIR = PyPath("./generation").resolve()
-CONFIGS_DIR = (ATK_DATA_ROOT / "external_configs").resolve()
-LOGS_DIR = (ATK_DATA_ROOT / "logs").resolve()
+os.umask(0o077)
+SOURCE_ROOT = PyPath(__file__).resolve().parent
+ATK_DATA_ROOT = data_directory()
+INPUTS_DIR = data_directory("inputs")
+OUTPUTS_DIR = data_directory("outputs")
+GENERATION_DIR = data_directory("generation")
+CONFIGS_DIR = data_directory("external_configs")
+LOGS_DIR = data_directory("logs")
 MAX_FILE_SIZE = 1024 * 1024 * 1000
-
-for d in (INPUTS_DIR, OUTPUTS_DIR, CONFIGS_DIR, LOGS_DIR):
-    d.mkdir(parents=True, exist_ok=True)
-GENERATION_DIR.mkdir(exist_ok=True)
-CONFIGS_DIR.mkdir(exist_ok=True)
-LOGS_DIR.mkdir(exist_ok=True)
 
 
 class PipelineRunRequest(BaseModel):
@@ -151,10 +155,27 @@ class TaskParametersResponse(BaseModel):
     parameters: Dict[str, Any]
 
 
+# The child lifespan must be entered explicitly: Starlette mounts do not do so.
+ocr_settings = OCRSettings.from_env()
+ocr_settings.worker_token = os.environ.get("WORKER_TOKEN", "")
+ocr_app = create_ocr_app(ocr_settings)
+
+
+@asynccontextmanager
+async def combined_lifespan(parent):
+    async with ocr_app.router.lifespan_context(ocr_app):
+        # Recovery is opt-in and cannot execute jobs unless separately enabled.
+        if os.environ.get("ATK_HF_RECOVERY_ENABLED", "false").lower() == "true":
+            await startup_event()
+        yield
+
+
+router = APIRouter(dependencies=[Depends(verify_token)])
 app = FastAPI(
     title="Augmentoolkit Resumable Dataset Factory API",
     description="API for managing and running Augmentoolkit dataset pipelines with Hugging Face Hub remote persistence.",
     version="2.0",
+    lifespan=combined_lifespan,
 )
 
 origins = [
@@ -174,7 +195,6 @@ app.add_middleware(
 )
 
 
-@app.on_event("startup")
 async def startup_event():
     """At startup, reconnects to HF_WORK_REPO, discovers incomplete jobs, reconciles state, and auto-resumes if enabled."""
     logger.info("Augmentoolkit API starting up...")
@@ -186,6 +206,7 @@ async def startup_event():
             logger.info(f"Discovered {len(incomplete_jobs)} incomplete job(s) in HF_WORK_REPO '{work_repo}'.")
             auto_resume = os.environ.get("HF_AUTO_RESUME", "false").lower() in ("true", "1", "yes")
             if auto_resume:
+                require_job_execution()
                 for manifest in incomplete_jobs:
                     logger.info(f"Auto-resuming durable job {manifest.job_id}...")
                     run_pipeline_task(
@@ -208,7 +229,7 @@ async def health_check():
     return {"status": "ok", "message": "Augmentoolkit API is running."}
 
 
-@app.get("/readiness", summary="Readiness Check")
+@router.get("/readiness", summary="Readiness Check")
 async def readiness_check():
     """
     Comprehensive readiness check reporting Redis/Huey connection, Hugging Face authentication,
@@ -219,15 +240,15 @@ async def readiness_check():
     try:
         redis_client.ping()
         redis_ok = True
-    except Exception as e:
-        redis_error = str(e)
+    except QUEUE_ERRORS:
+        redis_error = "unavailable"
 
     hf_mgr = HFHubManager()
     hf_health = hf_mgr.check_all_health()
 
     worker_ok = False
     try:
-        huey.pending()
+        require_queue_ready()
         worker_ok = True
     except Exception:
         pass
@@ -237,7 +258,7 @@ async def readiness_check():
     return {
         "status": "ready" if overall_ready else "degraded",
         "redis": {"status": "ok" if redis_ok else "error", "error": redis_error},
-        "huey_queue": {"status": "ok" if worker_ok else "error"},
+        "huey_queue": {"status": "ok" if worker_ok else "error", "consumer_verified": False},
         "huggingface": hf_health,
     }
 
@@ -247,13 +268,17 @@ async def api_docs_redirect():
     return RedirectResponse(url="/docs")
 
 
-@app.post(
+@router.post(
     "/pipelines/run",
     response_model=PipelineRunResponse,
     status_code=202,
     summary="Queue a dataset generation pipeline for execution.",
 )
 def queue_pipeline_run(request: PipelineRunRequest):
+    request.parameters = normalize_mutable_paths(request.parameters or {})
+    if request.config_path:
+        resolve_authorized_config(request.config_path)
+    require_job_execution()
     try:
         task = run_pipeline_task(
             node_path=request.node_path,
@@ -264,17 +289,17 @@ def queue_pipeline_run(request: PipelineRunRequest):
             pipeline_id=task.id,
             message="Pipeline run queued successfully.",
         )
+    except QUEUE_ERRORS:
+        raise HTTPException(503, "Huey/Redis unavailable") from None
     except Exception as e:
-        logger.error(f"ERROR during pipeline queueing: {e}", exc_info=True)
-        if getattr(e, "__class__", None).__name__ in ("ConnectionError", "RedisError", "TimeoutError") or "111" in str(e):
-             raise HTTPException(status_code=503, detail="Job functionality disabled: Huey/Redis unavailable.")
+        logger.error("Pipeline queueing failed (%s)", type(e).__name__)
         raise HTTPException(
             status_code=500,
-            detail=f"Failed to enqueue pipeline task: {e}",
+            detail="Failed to enqueue pipeline task",
         )
 
 
-@app.get("/jobs", summary="List jobs from HF_WORK_REPO")
+@router.get("/jobs", summary="List jobs from HF_WORK_REPO")
 def list_jobs(work_repo: Optional[str] = Query(None)):
     target_repo = work_repo or os.environ.get("HF_WORK_REPO", "")
     if not target_repo:
@@ -284,7 +309,7 @@ def list_jobs(work_repo: Optional[str] = Query(None)):
     return {"work_repo": target_repo, "jobs": hf_jobs}
 
 
-@app.get("/jobs/{job_id}/manifest", summary="Inspect job manifest")
+@router.get("/jobs/{job_id}/manifest", summary="Inspect job manifest")
 def inspect_job_manifest(job_id: str, work_repo: Optional[str] = Query(None)):
     target_repo = work_repo or os.environ.get("HF_WORK_REPO", "")
     hf_mgr = HFHubManager()
@@ -294,7 +319,7 @@ def inspect_job_manifest(job_id: str, work_repo: Optional[str] = Query(None)):
     return manifest
 
 
-@app.get("/jobs/{job_id}/checkpoints", summary="Inspect job checkpoints")
+@router.get("/jobs/{job_id}/checkpoints", summary="Inspect job checkpoints")
 def inspect_job_checkpoints(job_id: str, work_repo: Optional[str] = Query(None)):
     target_repo = work_repo or os.environ.get("HF_WORK_REPO", "")
     if not target_repo:
@@ -304,11 +329,13 @@ def inspect_job_checkpoints(job_id: str, work_repo: Optional[str] = Query(None))
         files = hf_mgr.api.list_repo_files(repo_id=target_repo, repo_type="dataset", token=hf_mgr.token)
         ckpts = [f for f in files if f.startswith(f"jobs/{job_id}/checkpoints/")]
         return {"job_id": job_id, "checkpoints": ckpts}
+    except QUEUE_ERRORS:
+        raise HTTPException(503, "Huey/Redis unavailable") from None
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error checking checkpoints: {e}")
 
 
-@app.get("/jobs/{job_id}/outputs", summary="Inspect job output references")
+@router.get("/jobs/{job_id}/outputs", summary="Inspect job output references")
 def inspect_job_outputs(job_id: str, output_repo: Optional[str] = Query(None)):
     target_repo = output_repo or os.environ.get("HF_OUTPUT_REPO", "")
     if not target_repo:
@@ -318,12 +345,15 @@ def inspect_job_outputs(job_id: str, output_repo: Optional[str] = Query(None)):
         files = hf_mgr.api.list_repo_files(repo_id=target_repo, repo_type="dataset", token=hf_mgr.token)
         outputs = [f for f in files if f.startswith(f"datasets/{job_id}/")]
         return {"job_id": job_id, "output_repo": target_repo, "outputs": outputs}
+    except QUEUE_ERRORS:
+        raise HTTPException(503, "Huey/Redis unavailable") from None
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error checking outputs: {e}")
 
 
-@app.post("/jobs/{job_id}/resume", summary="Explicitly resume a job from remote state")
+@router.post("/jobs/{job_id}/resume", summary="Explicitly resume a job from remote state")
 def resume_job(job_id: str, parameters: Optional[Dict[str, Any]] = Body(None)):
+    require_job_execution()
     work_repo = os.environ.get("HF_WORK_REPO", "")
     ckpt_mgr = CheckpointManager()
     manifest = ckpt_mgr.load_remote_manifest(job_id=job_id, work_repo=work_repo)
@@ -358,9 +388,9 @@ def resume_job(job_id: str, parameters: Optional[Dict[str, Any]] = Body(None)):
         )
     except IncompatibleResumeError as e:
         raise HTTPException(status_code=400, detail=str(e))
+    except QUEUE_ERRORS:
+        raise HTTPException(503, "Huey/Redis unavailable") from None
     except Exception as e:
-        if getattr(e, "__class__", None).__name__ in ("ConnectionError", "RedisError", "TimeoutError") or "111" in str(e):
-             raise HTTPException(status_code=503, detail="Job functionality disabled: Huey/Redis unavailable.")
         raise HTTPException(status_code=500, detail=f"Failed to reconcile job state: {e}")
 
     run_params = parameters or {}
@@ -376,7 +406,7 @@ def resume_job(job_id: str, parameters: Optional[Dict[str, Any]] = Body(None)):
 
     task = run_pipeline_task(
         node_path=manifest.pipeline,
-        parameters=run_params,
+        parameters=normalize_mutable_paths(run_params),
     )
     return {
         "job_id": job_id,
@@ -387,12 +417,13 @@ def resume_job(job_id: str, parameters: Optional[Dict[str, Any]] = Body(None)):
     }
 
 
-@app.post("/jobs/{job_id}/fork", summary="Fork an existing job run into a new durable job")
+@router.post("/jobs/{job_id}/fork", summary="Fork an existing job run into a new durable job")
 def fork_job(
     job_id: str,
     new_job_id: Optional[str] = Query(None),
     parameters: Optional[Dict[str, Any]] = Body(None),
 ):
+    require_job_execution()
     work_repo = os.environ.get("HF_WORK_REPO", "")
     ckpt_mgr = CheckpointManager()
     parent_manifest = ckpt_mgr.load_remote_manifest(job_id=job_id, work_repo=work_repo)
@@ -413,10 +444,11 @@ def fork_job(
         "source_split": fork_params.get("source_split", parent_manifest.source_split),
     }
     run_params.update(fork_params)
+    run_params = normalize_mutable_paths(run_params)
 
     task = run_pipeline_task(
         node_path=parent_manifest.pipeline,
-        parameters=run_params,
+        parameters=normalize_mutable_paths(run_params),
     )
 
     return {
@@ -427,7 +459,7 @@ def fork_job(
     }
 
 
-@app.get(
+@router.get(
     "/pipelines/available",
     response_model=List[str],
     summary="Get available pipeline aliases from super_config.yaml.",
@@ -451,11 +483,13 @@ def get_available_pipelines():
 
         return sorted(available_pipelines)
 
+    except QUEUE_ERRORS:
+        raise HTTPException(503, "Huey/Redis unavailable") from None
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error parsing super config: {e}")
 
 
-@app.get(
+@router.get(
     "/configs/aliases",
     response_model=List[str],
     summary="Get available config file aliases from super_config.yaml.",
@@ -479,16 +513,19 @@ def get_available_config_aliases():
 
         return sorted(config_aliases)
 
+    except QUEUE_ERRORS:
+        raise HTTPException(503, "Huey/Redis unavailable") from None
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error parsing super config: {e}")
 
 
-@app.get(
+@router.get(
     "/tasks/queue",
     response_model=QueueStatusResponse,
     summary="Get lists of pending and scheduled tasks.",
-, dependencies=[Depends(verify_token)])
+)
 def get_queue_status():
+    require_queue_ready()
     try:
         pending_tasks = [task.id for task in huey.pending()]
         scheduled_tasks = [task.id for task in huey.scheduled()]
@@ -497,16 +534,19 @@ def get_queue_status():
             scheduled_tasks=scheduled_tasks,
             message=f"Found {len(pending_tasks)} pending and {len(scheduled_tasks)} scheduled tasks.",
         )
+    except QUEUE_ERRORS:
+        raise HTTPException(503, "Huey/Redis unavailable") from None
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to retrieve queue status: {e}")
 
 
-@app.get(
+@router.get(
     "/tasks/{task_id}/status",
     response_model=PipelineStatusResponse,
     summary="Get the status of a pipeline run.",
-, dependencies=[Depends(verify_token)])
+)
 def get_pipeline_status(task_id: str):
+    require_queue_ready()
     redis_status_key = f"status_for_task:{task_id}"
     try:
         final_status_json = redis_client.get(redis_status_key)
@@ -557,16 +597,19 @@ def get_pipeline_status(task_id: str):
         raise HTTPException(status_code=404, detail=f"Task with ID '{task_id}' not found.")
     except HTTPException:
         raise
+    except QUEUE_ERRORS:
+        raise HTTPException(503, "Huey/Redis unavailable") from None
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error retrieving status: {e}")
 
 
-@app.get(
+@router.get(
     "/tasks/{task_id}/parameters",
     response_model=TaskParametersResponse,
     summary="Get the parameters a task was executed with.",
-, dependencies=[Depends(verify_token)])
+)
 def get_task_parameters(task_id: str):
+    require_queue_ready()
     redis_key = f"parameters_for_task:{task_id}"
     try:
         params_json = redis_client.get(redis_key)
@@ -576,6 +619,8 @@ def get_task_parameters(task_id: str):
         return TaskParametersResponse(task_id=task_id, parameters=parameters)
     except HTTPException:
         raise
+    except QUEUE_ERRORS:
+        raise HTTPException(503, "Huey/Redis unavailable") from None
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error retrieving parameters: {e}")
 
@@ -599,12 +644,13 @@ def _find_and_kill_run_augmentoolkit_process() -> Optional[Dict[str, Any]]:
         return None
 
 
-@app.post(
+@router.post(
     "/tasks/{task_id}/interrupt",
     status_code=200,
     summary="Interrupt a running pipeline task subprocess or revoke a pending task.",
 )
 def interrupt_or_revoke_task(task_id: str):
+    require_queue_ready()
     redis_pid_key = f"worker_pid_for_task:{task_id}"
     redis_status_key = f"status_for_task:{task_id}"
 
@@ -643,13 +689,15 @@ def interrupt_or_revoke_task(task_id: str):
         raise HTTPException(status_code=404, detail=f"Task {task_id} not running or not found.")
     except HTTPException:
         raise
+    except QUEUE_ERRORS:
+        raise HTTPException(503, "Huey/Redis unavailable") from None
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error interrupting task: {e}")
 
 
-@app.get("/tasks/{task_id}/logs", summary="Get logs for a specific task.", dependencies=[Depends(verify_token)])
+@router.get("/tasks/{task_id}/logs", summary="Get logs for a specific task.")
 def get_task_logs(task_id: str, tail: Optional[int] = Query(None, ge=1)):
-    log_file_path = LOGS_DIR / f"{task_id}.log"
+    log_file_path = get_safe_path(LOGS_DIR, f"{task_id}.log")
     if not log_file_path.exists():
         raise HTTPException(status_code=404, detail=f"Log file for task {task_id} not found.")
 
@@ -658,11 +706,13 @@ def get_task_logs(task_id: str, tail: Optional[int] = Query(None, ge=1)):
             lines = f.readlines()
         log_content = "".join(lines[-tail:]) if tail else "".join(lines)
         return JSONResponse(content={"task_id": task_id, "logs": log_content})
+    except QUEUE_ERRORS:
+        raise HTTPException(503, "Huey/Redis unavailable") from None
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to read log file: {e}")
 
 
-@app.delete("/logs", status_code=200, summary="Clear all task log files.", dependencies=[Depends(verify_token)])
+@router.delete("/logs", status_code=200, summary="Clear all task log files.")
 def clear_all_logs():
     deleted_count = 0
     try:
@@ -671,34 +721,46 @@ def clear_all_logs():
                 item.unlink()
                 deleted_count += 1
         return {"message": f"Successfully deleted {deleted_count} log file(s)."}
+    except QUEUE_ERRORS:
+        raise HTTPException(503, "Huey/Redis unavailable") from None
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to clear logs: {e}")
 
 
-@app.get(
+@router.get(
     "/tasks/{task_id}/outputs/download", summary="Download output directory for a task."
-, dependencies=[Depends(verify_token)])
+)
 def download_task_output(task_id: str):
+    require_queue_ready()
     redis_key = f"output_dir_for_task:{task_id}"
     output_dir_str = redis_client.get(redis_key)
     if not output_dir_str:
         raise HTTPException(status_code=404, detail=f"Output directory not found for task {task_id}.")
 
-    task_output_dir = PyPath(output_dir_str).resolve()
+    task_output_dir = get_safe_path(OUTPUTS_DIR, output_dir_str)
     if not task_output_dir.is_dir():
         raise HTTPException(status_code=404, detail="Output directory does not exist.")
 
     zip_filename = f"task_{task_id}_output.zip"
-    temp_zip_path = PyPath(tempfile.gettempdir()) / zip_filename
-    zip_directory(task_output_dir, temp_zip_path)
-    return FileResponse(temp_zip_path, media_type="application/zip", filename=zip_filename)
+    fd, temp_name = tempfile.mkstemp(suffix=".zip", dir=data_directory("downloads"))
+    os.close(fd)
+    temp_zip_path = PyPath(temp_name)
+    try:
+        zip_directory(task_output_dir, temp_zip_path)
+    except Exception:
+        temp_zip_path.unlink(missing_ok=True)
+        raise
+    from starlette.background import BackgroundTask
+    return FileResponse(temp_zip_path, media_type="application/zip", filename=zip_filename,
+                        background=BackgroundTask(temp_zip_path.unlink, missing_ok=True))
 
 
-@app.get(
+@router.get(
     "/outputs/structure/{relative_path:path}",
     response_model=List[FileStructure],
     summary="Get structure of a path within the outputs directory.",
-, dependencies=[Depends(verify_token)])
+)
+@router.get("/outputs/structure/", include_in_schema=False)
 def get_output_structure(relative_path: str = "."):
     try:
         resolved_path = (OUTPUTS_DIR / relative_path).resolve()
@@ -709,11 +771,12 @@ def get_output_structure(relative_path: str = "."):
     return handle_get_structure(OUTPUTS_DIR, relative_path)
 
 
-@app.get(
+@router.get(
     "/inputs/structure/{relative_path:path}",
     response_model=List[FileStructure],
     summary="Get structure of a path within the inputs directory.",
-, dependencies=[Depends(verify_token)])
+)
+@router.get("/inputs/structure/", include_in_schema=False)
 def get_input_structure(relative_path: str = "."):
     try:
         resolved_path = (INPUTS_DIR / relative_path).resolve()
@@ -724,11 +787,12 @@ def get_input_structure(relative_path: str = "."):
     return handle_get_structure(INPUTS_DIR, relative_path)
 
 
-@app.get(
+@router.get(
     "/configs/structure/{relative_path:path}",
     response_model=List[FileStructure],
     summary="Get structure of a path within the configs directory.",
-, dependencies=[Depends(verify_token)])
+)
+@router.get("/configs/structure/", include_in_schema=False)
 def get_config_structure(relative_path: str = "."):
     try:
         resolved_path = (CONFIGS_DIR / relative_path).resolve()
@@ -739,15 +803,36 @@ def get_config_structure(relative_path: str = "."):
     return handle_get_structure(CONFIGS_DIR, relative_path)
 
 
-FRONTEND_DIST_DIR = PyPath("atk-interface/dist")
+# Register protected routes before the mount and SPA catch-all.
+app.include_router(router)
+app.mount("/ocr", ocr_app)
+
+
+@app.exception_handler(StorageViolation)
+async def storage_error(request, exc):
+    return JSONResponse({"detail": "Path outside authorized storage"}, status_code=400)
+
+
+async def queue_error(request, exc):
+    return JSONResponse({"detail": "Huey/Redis unavailable"}, status_code=503)
+
+
+for error_type in QUEUE_ERRORS:
+    app.add_exception_handler(error_type, queue_error)
+
+
+FRONTEND_DIST_DIR = SOURCE_ROOT / "atk-interface/dist"
 
 @app.get("/{full_path:path}", include_in_schema=False)
 async def serve_frontend(full_path: str):
-    file_path = FRONTEND_DIST_DIR / full_path
+    # API typos must not masquerade as successful HTML responses.
+    if full_path.split("/", 1)[0] in {"pipelines", "tasks", "jobs", "inputs", "outputs", "configs", "logs", "llm"}:
+        raise HTTPException(404, "Not found")
+    file_path = get_safe_path(FRONTEND_DIST_DIR, full_path)
     if file_path.is_file():
         return FileResponse(file_path)
 
-    assets_path = FRONTEND_DIST_DIR / "assets" / full_path
+    assets_path = get_safe_path(FRONTEND_DIST_DIR, "assets/" + full_path)
     if assets_path.is_file():
         return FileResponse(assets_path)
 

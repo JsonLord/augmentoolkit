@@ -1,0 +1,38 @@
+name: Parent application and combined image
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  application:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: atk-interface/package-lock.json
+      - run: python -m pip install --require-hashes -r ocr/requirements.lock -r requirements/parent.lock
+      - run: python -m pip install -r ocr/requirements-dev.txt playwright==1.55.0
+      - run: python -m playwright install --with-deps chromium
+      - run: python -m py_compile api.py tasks.py
+      - run: python -c "from api import app; print('API_IMPORT_OK')"
+      - run: ruff check app_auth.py app_storage.py queue_readiness.py tests/parent
+      - run: python -m pytest -c pytest-ocr.ini tests/parent
+      - run: python -m pytest -c pytest-ocr.ini tests/test_hf_space_recovery.py
+        env:
+          # This existing test uses only mock Redis/HF/Popen. No worker runs.
+          ATK_JOB_EXECUTION_ENABLED: 'true'
+      - run: npm --prefix atk-interface ci
+      - run: npm --prefix atk-interface run build
+      - run: docker build --build-arg OCR_SOURCE_REVISION=${{ github.sha }} -t augmentoolkit-gate04 .
+      - run: python tests/parent/container_smoke.py --evidence /tmp/gate04-container-results.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: combined-container-synthetic-evidence
+          path: /tmp/gate04-container-results.json

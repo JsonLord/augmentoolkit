@@ -1,8 +1,7 @@
 import asyncio
-import inspect
-import os
-
 from augmentoolkit.generation_functions.engine_wrapper_class import EngineWrapper
+import os
+import inspect
 
 
 def setup_semaphore_and_engines(
@@ -15,26 +14,18 @@ def setup_semaphore_and_engines(
     large_api_key: str,
     large_base_url: str,
     large_mode: str,
-    engine_input_observers=None,
-    engine_output_observers=None,
-    large_engine_input_observers=None,
-    large_engine_output_observers=None,
+    engine_input_observers=[],
+    engine_output_observers=[],
+    large_engine_input_observers=[],
+    large_engine_output_observers=[],
 ):
-    if large_engine_output_observers is None:
-        large_engine_output_observers = []
-    if large_engine_input_observers is None:
-        large_engine_input_observers = []
-    if engine_output_observers is None:
-        engine_output_observers = []
-    if engine_input_observers is None:
-        engine_input_observers = []
     semaphore = asyncio.Semaphore(concurrency_limit)
 
     async def run_task_with_limit(task, timeout=60):
         async with semaphore:
             try:
                 return await asyncio.wait_for(task, timeout=timeout)
-            except TimeoutError:
+            except asyncio.TimeoutError:
                 print("[Timeout] A task exceeded the timeout limit.")
                 return None
             except Exception as e:

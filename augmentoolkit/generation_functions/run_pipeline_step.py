@@ -1,17 +1,16 @@
 from tqdm import asyncio as tqdmasyncio
 
-from augmentoolkit.generation_functions.depth_first_pipeline_step_class import (
-    DepthFirstPipelineStep,
-)
+from augmentoolkit.generation_functions.pipeline_step_class import PipelineStep
 from augmentoolkit.generation_functions.random_variation_step_class import (
     RandomVariationStep,
 )
+from augmentoolkit.generation_functions.depth_first_pipeline_step_class import (
+    DepthFirstPipelineStep,
+)
 
 
-def create_random_variation_step_function(pipeline_kwargs=None):
+def create_random_variation_step_function(pipeline_kwargs={}):
     # Extract special parameters first
-    if pipeline_kwargs is None:
-        pipeline_kwargs = {}
     method_overrides = pipeline_kwargs.pop("method_overrides", {})
 
     # Create pipeline step with remaining kwargs
@@ -82,10 +81,8 @@ def create_random_variation_step_function(pipeline_kwargs=None):
     return execute_variation_pipeline
 
 
-def create_depth_first_step_function(pipeline_kwargs=None):
+def create_depth_first_step_function(pipeline_kwargs={}):
     # Extract method overrides first
-    if pipeline_kwargs is None:
-        pipeline_kwargs = {}
     method_overrides = pipeline_kwargs.pop("method_overrides", {})
 
     # Create pipeline step with remaining kwargs
