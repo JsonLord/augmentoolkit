@@ -1,11 +1,7 @@
-import json
-import random
-import yaml
-from pathlib import Path
-from typing import List, Dict, Any
-import random
-import json
 import hashlib
+import json
+import random
+from typing import Any
 
 # NOTE: deepseek r1 is the best "surgical changes" LLM, love the whale
 
@@ -101,7 +97,7 @@ def combine_single_turn_convs(
 ### NEW CODE
 
 
-def read_jsonl(file_path: str) -> List[Dict[str, Any]]:
+def read_jsonl(file_path: str) -> list[dict[str, Any]]:
     # print("Reading JSONL file:", file_path) # Reduce verbosity
     with open(file_path, "r", encoding="utf-8") as f:
         lines = f.readlines()
@@ -109,7 +105,7 @@ def read_jsonl(file_path: str) -> List[Dict[str, Any]]:
     return [json.loads(line) for line in lines if line.strip()]
 
 
-def write_jsonl(data: List[Dict[str, Any]], file_path: str):
+def write_jsonl(data: list[dict[str, Any]], file_path: str):
     # print("Writing", len(data), "conversations to", file_path) # Reduce verbosity
     with open(file_path, "w", encoding="utf-8") as f:
         for item in data:
@@ -120,11 +116,11 @@ def write_jsonl(data: List[Dict[str, Any]], file_path: str):
 def combine_single_and_multi_turn(
     # single_qa_pairs: List[List[Dict[str, str]]],
     # multi_turn_convs: List[Dict[str, Any]],
-    convs: List[Dict[str, Any]],
+    convs: list[dict[str, Any]],
     min_pairs: int,
     max_pairs: int,
     dataset_context: str,
-) -> List[Dict[str, Any]]:
+) -> list[dict[str, Any]]:
     """
     Combines extracted single QA pairs and multi-turn conversations into longer conversations.
 
@@ -193,15 +189,14 @@ def combine_single_and_multi_turn(
             multi_system_message = conv[0] if conv[0].get("from") == "system" else None
             start_offset = 1 if multi_system_message else 0
 
-            if multi_system_message:
-                if not current_system_message:
-                    current_system_message = multi_system_message.copy()
-                    # Apply context replacements to the newly set system message
-                    for var, replacement in context_vars.items():
-                        current_system_message["value"] = current_system_message[
-                            "value"
-                        ].replace(var, replacement)
-                    messages.append(current_system_message)
+            if multi_system_message and not current_system_message:
+                current_system_message = multi_system_message.copy()
+                # Apply context replacements to the newly set system message
+                for var, replacement in context_vars.items():
+                    current_system_message["value"] = current_system_message[
+                        "value"
+                    ].replace(var, replacement)
+                messages.append(current_system_message)
                 # else: print("Multi-turn system message ignored, already have one.") # Reduce verbosity
 
             messages.extend(msg.copy() for msg in conv[start_offset:])  # Add copies
@@ -219,7 +214,7 @@ def combine_single_and_multi_turn(
     return all_conversations
 
 
-def load_conversations_from_files(files: List[str]) -> List[Dict[str, Any]]:
+def load_conversations_from_files(files: list[str]) -> list[dict[str, Any]]:
     """Loads conversations from a list of JSONL file paths."""
     all_convs = []
     for file_path in files:

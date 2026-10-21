@@ -1,41 +1,16 @@
-import os
-import textwrap
-import warnings
-from collections import defaultdict
-from typing import Any, Callable, Optional, Union
-from unittest.mock import patch
-
-import torch
-import torch.utils.data
-import transformers
-from accelerate.utils import broadcast_object_list, gather_object
-from accelerate.utils.other import is_compiled_module
-from datasets import Dataset, IterableDataset
-from packaging import version
-from torch import nn
-from transformers import (
-    AutoModelForCausalLM,
-    AutoModelForSequenceClassification,
-    AutoTokenizer,
-    GenerationConfig,
-    PreTrainedModel,
-    PreTrainedTokenizerBase,
-    Trainer,
-    TrainerCallback,
-    is_wandb_available,
-)
-from transformers.integrations.deepspeed import is_deepspeed_zero3_enabled
-from transformers.utils import is_peft_available
-
+from collections.abc import Callable
 from typing import Union
-from unsloth import FastLanguageModel, PatchFastRL, is_bfloat16_supported
-from trl import GRPOConfig, GRPOTrainer
+
+from transformers import (
+    PreTrainedModel,
+)
 from transformers.utils.import_utils import _is_package_available
+from trl import GRPOConfig, GRPOTrainer
 
 _vllm_available = _is_package_available("vllm")
 
 if _vllm_available:
-    from vllm import LLM, SamplingParams
+    from vllm import SamplingParams
 
 
 RewardFunc = Union[str, PreTrainedModel, Callable[[list, list], list[float]]]
@@ -44,13 +19,15 @@ RewardFunc = Union[str, PreTrainedModel, Callable[[list, list], list[float]]]
 class GRPOTrainerStopSequences(GRPOTrainer):
     def __init__(
         self,
-        model: Union[str, PreTrainedModel],
-        reward_funcs: Union[RewardFunc, list[RewardFunc]],
+        model: str | PreTrainedModel,
+        reward_funcs: RewardFunc | list[RewardFunc],
         args: GRPOConfig = None,
         *otherargs,
-        stop=["**Finished.**", "Human:"],
+        stop=None,
         **kwargs,
     ):
+        if stop is None:
+            stop = ["**Finished.**", "Human:"]
         super().__init__(model, reward_funcs, args, *otherargs, **kwargs)
         self.stop = stop
         # overwrite self sampling params

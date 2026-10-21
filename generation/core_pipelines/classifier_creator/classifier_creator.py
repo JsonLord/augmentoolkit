@@ -1,4 +1,3 @@
-import asyncio
 import glob
 import hashlib
 import json
@@ -6,26 +5,23 @@ import os
 import re
 import sys
 import traceback
+
 from datasets import load_dataset
+from sklearn.metrics import accuracy_score, precision_recall_fscore_support
 from tqdm import tqdm
 from transformers import (
-    AutoTokenizer,
     AutoModelForSequenceClassification,
-    TrainingArguments,
+    AutoTokenizer,
     Trainer,
+    TrainingArguments,
 )
-from sklearn.metrics import accuracy_score, precision_recall_fscore_support
-from augmentoolkit.generation_functions import engine_wrapper_class
+
 from augmentoolkit.generation_functions.hashing_and_ordering import hash_input_list
 from augmentoolkit.generation_functions.pipeline_step_class import PipelineStep
 from augmentoolkit.generation_functions.single_generation_step import (
     SingleGenerationStep,
 )
-from augmentoolkit.utils import parse_string_list
 from augmentoolkit.utils.head_tail_truncate import head_tail_truncate
-from augmentoolkit.utils.make_id import make_id
-from augmentoolkit.utils.parse_bool import parse_bool
-import augmentoolkit.utils.sentence_chunking_algorithm
 from generation.core_components.chunking import read_all_text
 from generation.core_components.filter_chunks import filter_out_failed_items_dict
 from generation.core_components.meta_datagen import create_meta_dataset
@@ -180,12 +176,14 @@ async def classifier_creator(
     meta_datagen_keys: list[str],
     meta_datagen_extras: list[str],
     read_files_manually: bool = True,
-    dataset_passed_in: list[dict[str, str]] = [],
+    dataset_passed_in: list[dict[str, str]] | None = None,
     task_id=None,
     *args,
     **kwargs,
 ):
 
+    if dataset_passed_in is None:
+        dataset_passed_in = []
     def parse_labels(classification):
         try:
             predicted_label = get_last_final_label(classification)
@@ -227,8 +225,8 @@ async def classifier_creator(
             pass
 
         raise Exception(
-            f"\n-----\/----\nNo proper label found! Generated {classification}\n\nExtracted {predicted_label}\n\nAnd tried to match with{classes}"
-        )  #
+            f"\n-----\\/----\nNo proper label found! Generated {classification}\n\nExtracted {predicted_label}\n\nAnd tried to match with{classes}"
+        )
 
     label_creator = PipelineStep(
         prompt_path="create_labels_for_chunk",
@@ -255,7 +253,7 @@ async def classifier_creator(
             output_dir, "datasets", f"dataset_{classifier_counter}.jsonl"
         )
         with open(path_to_dataset, "w", encoding="utf-8") as f:
-            for key, value in text_label_dicts.items():
+            for value in text_label_dicts.values():
                 json_obj = {"text": value["text"], "label": value["label"]}
                 f.write(json.dumps(json_obj, ensure_ascii=False) + "\n")
 
@@ -566,7 +564,7 @@ async def classifier_creator(
             set_progress(
                 task_id,
                 progress=0.95,
-                message=f"Predicting on whole set at the end using the classifier (excludes the training and test sets so far)... depending on total set size, this might take a while...",
+                message="Predicting on whole set at the end using the classifier (excludes the training and test sets so far)... depending on total set size, this might take a while...",
             )
             print(
                 "Predicting on entire remaining set (excludes the training and test sets so far)..."

@@ -1,5 +1,6 @@
-from augmentoolkit.generation_functions.pipeline_step_class import PipelineStep
 import re
+
+from augmentoolkit.generation_functions.pipeline_step_class import PipelineStep
 
 
 def custom_process_input_data(self, input_data):

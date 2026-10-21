@@ -1,5 +1,5 @@
-import os
 import json
+import os
 
 
 def iterate_over_items(output_dir, output_file_name, func):

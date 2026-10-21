@@ -1,11 +1,12 @@
 import argparse
-import pyarrow.parquet as pq
-import json
 import glob
-from transformers import AutoTokenizer
-from tqdm import tqdm
-import ijson
+import json
 import os
+
+import ijson
+import pyarrow.parquet as pq
+from tqdm import tqdm
+from transformers import AutoTokenizer
 
 tokenizer = AutoTokenizer.from_pretrained("TheBloke/OpenHermes-2.5-Mistral-7B-GPTQ")
 
@@ -19,23 +20,22 @@ def process_jsonl(file_path, count_all_turns):
     total_tokens = 0
     file_size = os.path.getsize(file_path)
 
-    with open(file_path, "r", encoding="utf-8") as file:
-        with tqdm(
-            total=file_size,
-            desc=f"Processing {os.path.basename(file_path)}",
-            unit="B",
-            unit_scale=True,
-        ) as pbar:
-            for line in file:
-                obj = json.loads(line)
-                if "conversations" in obj:
-                    for conversation in obj["conversations"]:
-                        if count_all_turns or conversation["from"] == "gpt":
-                            total_tokens += count_tokens(conversation["value"])
-                elif "text" in obj:
-                    total_tokens += count_tokens(obj["text"])
+    with open(file_path, "r", encoding="utf-8") as file, tqdm(
+        total=file_size,
+        desc=f"Processing {os.path.basename(file_path)}",
+        unit="B",
+        unit_scale=True,
+    ) as pbar:
+        for line in file:
+            obj = json.loads(line)
+            if "conversations" in obj:
+                for conversation in obj["conversations"]:
+                    if count_all_turns or conversation["from"] == "gpt":
+                        total_tokens += count_tokens(conversation["value"])
+            elif "text" in obj:
+                total_tokens += count_tokens(obj["text"])
 
-                pbar.update(len(line.encode("utf-8")))
+            pbar.update(len(line.encode("utf-8")))
 
     return total_tokens
 
@@ -45,30 +45,29 @@ def process_json(file_path, count_all_turns):
     total_tokens = 0
     file_size = os.path.getsize(file_path)
 
-    with open(file_path, "rb") as file:
-        with tqdm(
-            total=file_size,
-            desc=f"Processing {os.path.basename(file_path)}",
-            unit="B",
-            unit_scale=True,
-        ) as pbar:
-            prev_position = file.tell()
-            for obj in ijson.items(file, "item"):  # Stream each top-level array item
-                # Process the object like in JSONL
-                if "conversations" in obj:
-                    for conversation in obj["conversations"]:
-                        if count_all_turns or conversation.get("from") == "gpt":
-                            total_tokens += count_tokens(conversation["value"])
-                if "full_input" in obj:
-                    for item in obj["full_input"]:
-                        total_tokens += count_tokens(item["content"])
-                elif "text" in obj:
-                    total_tokens += count_tokens(obj["text"])
+    with open(file_path, "rb") as file, tqdm(
+        total=file_size,
+        desc=f"Processing {os.path.basename(file_path)}",
+        unit="B",
+        unit_scale=True,
+    ) as pbar:
+        prev_position = file.tell()
+        for obj in ijson.items(file, "item"):  # Stream each top-level array item
+            # Process the object like in JSONL
+            if "conversations" in obj:
+                for conversation in obj["conversations"]:
+                    if count_all_turns or conversation.get("from") == "gpt":
+                        total_tokens += count_tokens(conversation["value"])
+            if "full_input" in obj:
+                for item in obj["full_input"]:
+                    total_tokens += count_tokens(item["content"])
+            elif "text" in obj:
+                total_tokens += count_tokens(obj["text"])
 
-                # Estimate progress by file position (may not be perfectly accurate)
-                current_position = file.tell()
-                pbar.update(current_position - prev_position)
-                prev_position = current_position
+            # Estimate progress by file position (may not be perfectly accurate)
+            current_position = file.tell()
+            pbar.update(current_position - prev_position)
+            prev_position = current_position
 
     return total_tokens
 

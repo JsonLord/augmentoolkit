@@ -1,5 +1,5 @@
 import nltk
-from nltk import word_tokenize, pos_tag, ne_chunk
+from nltk import ne_chunk, pos_tag, word_tokenize
 from nltk.tree import Tree
 
 # Try to import Presidio

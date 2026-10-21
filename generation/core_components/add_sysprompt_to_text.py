@@ -1,8 +1,7 @@
-import json
 import copy
-import os
-from typing import List, Dict, Any, Union
 import glob
+import json
+import os
 
 # Function requirements:
 # version that takes a list of lists of dicts as well as a string (the instruction) as arguments;
@@ -14,8 +13,8 @@ import glob
 
 
 def _add_sysprompt_to_conversation(
-    conversation: List[Dict[str, str]], instruction: str
-) -> List[Dict[str, str]]:
+    conversation: list[dict[str, str]], instruction: str
+) -> list[dict[str, str]]:
     """Adds or prepends a system instruction to a single conversation."""
     # Create a deep copy to avoid modifying the original list elements
     mod_conversation = copy.deepcopy(conversation)
@@ -36,8 +35,8 @@ def _add_sysprompt_to_conversation(
 
 
 def add_sysprompt_to_conversations_list(
-    conversations_list: List[List[Dict[str, str]]], instruction: str
-) -> List[List[Dict[str, str]]]:
+    conversations_list: list[list[dict[str, str]]], instruction: str
+) -> list[list[dict[str, str]]]:
     """
     Adds a system prompt instruction to each conversation in a list of conversations.
 
@@ -61,8 +60,8 @@ def add_sysprompt_to_conversations_list(
 
 
 def add_sysprompt_to_files(
-    file_paths: List[str], instruction: str
-) -> List[List[Dict[str, str]]]:
+    file_paths: list[str], instruction: str
+) -> list[list[dict[str, str]]]:
     """
     Reads conversations from JSON or JSONL files, adds a system prompt instruction,
     and returns the modified conversations.
@@ -82,7 +81,7 @@ def add_sysprompt_to_files(
         FileNotFoundError: If a specified file path does not exist.
         ValueError: If a file is not valid JSON/JSONL or lacks the expected structure.
     """
-    all_extracted_conversations: List[List[Dict[str, str]]] = []
+    all_extracted_conversations: list[list[dict[str, str]]] = []
 
     for file_path in file_paths:
         if not os.path.exists(file_path):

@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 
+import argparse
 import os
 import random
-import argparse
-from pathlib import Path
 import sys
+from pathlib import Path
 
 
 def get_size_readable(size_bytes):
@@ -34,7 +34,7 @@ def prune_folder(folder_path, file_ext=".jsonl", fraction=1 / 3):
     num_to_delete = int(len(files) * fraction)
 
     if num_to_delete == 0:
-        print(f"No files to delete (too few files in folder)")
+        print("No files to delete (too few files in folder)")
         return
 
     # Randomly select files to delete

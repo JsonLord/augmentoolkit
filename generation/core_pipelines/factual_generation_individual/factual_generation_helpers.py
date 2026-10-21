@@ -1,40 +1,18 @@
-import random
-from bs4 import BeautifulSoup
-from logging import INFO
-import os
-import json
-import re
-import sys
-import requests
-from tqdm import asyncio as tqdmasyncio
-from augmentoolkit.generation_functions.engine_wrapper_class import EngineWrapper
-from augmentoolkit.generation_functions.pipeline_step_class import PipelineStep
-from augmentoolkit.utils.make_id import make_id
-from augmentoolkit.utils.write_output_to_file import write_output_to_file
-from augmentoolkit.generation_functions.safe_formatter import safe_format
-from nltk.tokenize import sent_tokenize
-import matplotlib.pyplot as plt
-from collections import Counter
-import logging
-from math import ceil
-import traceback
-import glob
-import yaml
-from datasets import load_dataset
 import hashlib
+import json
+import os
+import random
+import re
 
-
-from augmentoolkit.utils.create_conv_starter import create_conv_starter
-from augmentoolkit.utils.extract_steps import extract_steps
-from augmentoolkit.utils.escape_unescaped_quotes import escape_unescaped_quotes
+import requests
+from bs4 import BeautifulSoup
+from datasets import load_dataset
 
 from augmentoolkit.generation_functions import (
     extract_question_answer,
     process_multiturn_functions,
 )
-
-from augmentoolkit.generation_functions.generation_step_class import GenerationStep
-from augmentoolkit.generation_functions.special_instructions import special_instructions
+from augmentoolkit.generation_functions.pipeline_step_class import PipelineStep
 
 
 def parse_bool(value):
@@ -62,7 +40,6 @@ def extract_qa_tuples(text):
     ]
 
 
-import os
 
 
 def extract_reasoning_from_context_check(
@@ -228,7 +205,7 @@ def judge_paragraph_processor(
 multi_turn_conversation_prompt_path = "multi_turn_assistant_conversation"
 
 conversation_regex = re.compile(
-    f"Conversation that answers the provided question \(be sure that you do not change the questions or answers themselves; AI Assistant will answer the questions, not ask them; the questions and answers provided should be copied word for word, and surrounded by compelling conversation\):\n(.+)",
+    "Conversation that answers the provided question \\(be sure that you do not change the questions or answers themselves; AI Assistant will answer the questions, not ask them; the questions and answers provided should be copied word for word, and surrounded by compelling conversation\\):\n(.+)",
     re.IGNORECASE | re.DOTALL,
 )
 
@@ -284,10 +261,6 @@ class ConversationGenerator(PipelineStep):
 conversation_generator_step = ConversationGenerator()
 
 
-import os
-import json
-import random
-from datasets import load_dataset
 
 
 def save_conversations(
@@ -364,16 +337,14 @@ def save_conversations(
         output_dir, "simplified_conversation_list.jsonl"
     )
     with open(simplified_write_norag, "w", encoding="utf-8") as f:
-        for item in simplified_conversation_list:
-            f.write(json.dumps(item, ensure_ascii=False) + "\n")
+        f.writelines(json.dumps(item, ensure_ascii=False) + "\n" for item in simplified_conversation_list)
 
     # Write simplified conversation RAG JSONL
     simplified_write_rag = os.path.join(
         output_dir, "simplified_conversation_rag_list.jsonl"
     )
     with open(simplified_write_rag, "w", encoding="utf-8") as f:
-        for item in simplified_conversation_rag_list:
-            f.write(json.dumps(item, ensure_ascii=False) + "\n")
+        f.writelines(json.dumps(item, ensure_ascii=False) + "\n" for item in simplified_conversation_rag_list)
 
     # Optional push to Hugging Face Hub
     if push_to_hub:
@@ -557,13 +528,11 @@ def save_plain_qatuples(
 
     write_plain = os.path.join(output_dir, "plain_qa_list.jsonl")
     with open(write_plain, "w", encoding="utf-8") as file:
-        for item in plain_qa_list:
-            file.write(json.dumps(item, ensure_ascii=False) + "\n")
+        file.writelines(json.dumps(item, ensure_ascii=False) + "\n" for item in plain_qa_list)
 
     write_rag = os.path.join(output_dir, "simplified_data_rag.jsonl")
     with open(write_rag, "w", encoding="utf-8") as file:
-        for item in simplified_rag_list:
-            file.write(json.dumps(item, ensure_ascii=False) + "\n")
+        file.writelines(json.dumps(item, ensure_ascii=False) + "\n" for item in simplified_rag_list)
 
     if push_to_hub:
         # Push plain QA data to hub

@@ -1,11 +1,12 @@
-import os
 import json
+import os
 import re
+import traceback
+from collections import defaultdict, deque
+
 from augmentoolkit.generation_functions.depth_first_pipeline_step_class import (
     DepthFirstPipelineStep,
 )
-from collections import defaultdict, deque
-import traceback
 from augmentoolkit.generation_functions.generalized_parsing_and_writing_formats import (
     extract_structured_data,
 )
@@ -110,10 +111,7 @@ def validate_repetition_callback(
 
 def validate_not_none(input):
     # print(input)
-    if input == None:
-        return False
-    else:
-        return True
+    return input != None
 
 
 def fix_text(
@@ -233,7 +231,7 @@ def manage_character_consistency_from_file(data_object, bible_path):
         return data_object
 
     except Exception as e:
-        print(f"\n--- UNHANDLED EXCEPTION IN manage_character_consistency_from_file ---")
+        print("\n--- UNHANDLED EXCEPTION IN manage_character_consistency_from_file ---")
         print(f"Error: {e}")
         traceback.print_exc()
         return None
@@ -251,18 +249,17 @@ def parse_scene_card_to_dict(scene_card_text):
 
     if user_block_start_index != -1:
         main_content = scene_card_text[:user_block_start_index].strip()
-        user_info_raw = scene_card_text[user_block_start_index:].strip()
+        scene_card_text[user_block_start_index:].strip()
     else:
         # If we can't find the {user} block, check if the whole block is just a user.
         # This prevents a user-only card from being parsed as a main character.
         if re.search(r'Name:\s*{user}', scene_card_text, re.IGNORECASE):
              print("Warning: Card contains ONLY a {user} block. Treating as empty main character.")
              main_content = ""
-             user_info_raw = scene_card_text.strip()
+             scene_card_text.strip()
         else:
              print("Warning: Could not find 'Name: {user}' block. Assuming entire card is main character.")
              main_content = scene_card_text.strip()
-             user_info_raw = ""
 
     canonical_headings = [
         "Scene", "Name", "Age", "Occupation/Role", "Personality", 
@@ -544,7 +541,7 @@ def parse_string_to_dict(string, headings):
         result[current_heading] = current_list
 
     # Verify required headings are present (case-insensitive)
-    available_headings = {h.lower(): h for h in result.keys()}
+    available_headings = {h.lower(): h for h in result}
     missing = []
     for h in headings:
         if h.lower() not in available_headings:
@@ -619,8 +616,8 @@ def get_character_name(scene_text, user_placeholder="{user}"):
     Returns:
     - The name of the character that occurs most frequently, other than the user, based on the specified conditions.
     """
-    from collections import Counter
     import math
+    from collections import Counter
 
     # Split the text into lines and initialize variables
     lines = scene_text.split("\n")
@@ -671,9 +668,7 @@ def parse_chatlog(chatlog, charname):
 
     for line in chatlog.split("\n"):
         if (
-            line.startswith(charname + ":")
-            or line.startswith("{user}:")
-            or line.startswith("{narrator}:")
+            line.startswith((charname + ":", "{user}:", "{narrator}:"))
         ):
             if current_owner and current_content:
                 messages.append(
@@ -835,7 +830,7 @@ def parse_story_messages(large_mode):
         # print(chatlog_list)
         threshold_message_index = find_message_exceeding_threshold(chatlog_list, 650)
         if threshold_message_index:
-            print("\n\TOO LONG MESSAGES DETECTED -- TRUNCATING STORY")
+            print("\n\\TOO LONG MESSAGES DETECTED -- TRUNCATING STORY")
             chatlog_list = chatlog_list[:threshold_message_index]
             truncated = True
 
@@ -906,10 +901,7 @@ def validate_narrator_replacement(story: str, charname: str) -> bool:
     )
 
     # If narrator lines exist but character name is invalid, return False
-    if has_narrator_lines and len(charname) == 0:
-        return False
-
-    return True
+    return not (has_narrator_lines and len(charname) == 0)
 
 
 def create_generate_story_pipeline_step(include_chunk_in_prompt, use_min_p, large_mode):
@@ -1060,7 +1052,7 @@ def extract_charname(scene_card):
     if not scene_card:
         return None
 
-    user_block_start = scene_card.find(f"Name: {{user}}")
+    user_block_start = scene_card.find("Name: {user}")
     main_char_block = scene_card[:user_block_start] if user_block_start != -1 else scene_card
 
     # Use a more powerful regex to find the name heading and capture the text
@@ -1203,12 +1195,4 @@ def write_final_dataset_files(
 
 
 ## some helpers
-import re
-import random
 
-import time
-import json
-import os
-import argparse
-from concurrent.futures import ThreadPoolExecutor, as_completed
-from functools import partial

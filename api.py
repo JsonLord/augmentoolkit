@@ -487,7 +487,7 @@ def get_available_config_aliases():
     "/tasks/queue",
     response_model=QueueStatusResponse,
     summary="Get lists of pending and scheduled tasks.",
-)
+, dependencies=[Depends(verify_token)])
 def get_queue_status():
     try:
         pending_tasks = [task.id for task in huey.pending()]
@@ -505,7 +505,7 @@ def get_queue_status():
     "/tasks/{task_id}/status",
     response_model=PipelineStatusResponse,
     summary="Get the status of a pipeline run.",
-)
+, dependencies=[Depends(verify_token)])
 def get_pipeline_status(task_id: str):
     redis_status_key = f"status_for_task:{task_id}"
     try:
@@ -565,7 +565,7 @@ def get_pipeline_status(task_id: str):
     "/tasks/{task_id}/parameters",
     response_model=TaskParametersResponse,
     summary="Get the parameters a task was executed with.",
-)
+, dependencies=[Depends(verify_token)])
 def get_task_parameters(task_id: str):
     redis_key = f"parameters_for_task:{task_id}"
     try:
@@ -647,7 +647,7 @@ def interrupt_or_revoke_task(task_id: str):
         raise HTTPException(status_code=500, detail=f"Error interrupting task: {e}")
 
 
-@app.get("/tasks/{task_id}/logs", summary="Get logs for a specific task.")
+@app.get("/tasks/{task_id}/logs", summary="Get logs for a specific task.", dependencies=[Depends(verify_token)])
 def get_task_logs(task_id: str, tail: Optional[int] = Query(None, ge=1)):
     log_file_path = LOGS_DIR / f"{task_id}.log"
     if not log_file_path.exists():
@@ -662,7 +662,7 @@ def get_task_logs(task_id: str, tail: Optional[int] = Query(None, ge=1)):
         raise HTTPException(status_code=500, detail=f"Failed to read log file: {e}")
 
 
-@app.delete("/logs", status_code=200, summary="Clear all task log files.")
+@app.delete("/logs", status_code=200, summary="Clear all task log files.", dependencies=[Depends(verify_token)])
 def clear_all_logs():
     deleted_count = 0
     try:
@@ -677,7 +677,7 @@ def clear_all_logs():
 
 @app.get(
     "/tasks/{task_id}/outputs/download", summary="Download output directory for a task."
-)
+, dependencies=[Depends(verify_token)])
 def download_task_output(task_id: str):
     redis_key = f"output_dir_for_task:{task_id}"
     output_dir_str = redis_client.get(redis_key)
@@ -698,8 +698,14 @@ def download_task_output(task_id: str):
     "/outputs/structure/{relative_path:path}",
     response_model=List[FileStructure],
     summary="Get structure of a path within the outputs directory.",
-)
+, dependencies=[Depends(verify_token)])
 def get_output_structure(relative_path: str = "."):
+    try:
+        resolved_path = (OUTPUTS_DIR / relative_path).resolve()
+        resolved_path.relative_to(OUTPUTS_DIR)
+    except ValueError:
+        raise HTTPException(status_code=403, detail="Path traversal detected")
+
     return handle_get_structure(OUTPUTS_DIR, relative_path)
 
 
@@ -707,8 +713,14 @@ def get_output_structure(relative_path: str = "."):
     "/inputs/structure/{relative_path:path}",
     response_model=List[FileStructure],
     summary="Get structure of a path within the inputs directory.",
-)
+, dependencies=[Depends(verify_token)])
 def get_input_structure(relative_path: str = "."):
+    try:
+        resolved_path = (INPUTS_DIR / relative_path).resolve()
+        resolved_path.relative_to(INPUTS_DIR)
+    except ValueError:
+        raise HTTPException(status_code=403, detail="Path traversal detected")
+
     return handle_get_structure(INPUTS_DIR, relative_path)
 
 
@@ -716,8 +728,14 @@ def get_input_structure(relative_path: str = "."):
     "/configs/structure/{relative_path:path}",
     response_model=List[FileStructure],
     summary="Get structure of a path within the configs directory.",
-)
+, dependencies=[Depends(verify_token)])
 def get_config_structure(relative_path: str = "."):
+    try:
+        resolved_path = (CONFIGS_DIR / relative_path).resolve()
+        resolved_path.relative_to(CONFIGS_DIR)
+    except ValueError:
+        raise HTTPException(status_code=403, detail="Path traversal detected")
+
     return handle_get_structure(CONFIGS_DIR, relative_path)
 
 

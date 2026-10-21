@@ -1,15 +1,14 @@
 ###################### NOTE -- META HELPERS #######################################
 # will contain all reward functions
 import asyncio
-from difflib import SequenceMatcher
 import re
+from difflib import SequenceMatcher
 
 import yaml
 
 from augmentoolkit.generation_functions.engine_wrapper_class import EngineWrapper
 from augmentoolkit.generation_functions.safe_formatter import safe_format
 from generation.core_components.setup_components import make_relative_to_self
-
 
 REWARD_FUNCTIONS_DICT = {
     # "key": func
@@ -119,10 +118,7 @@ def validate_cot_format(
         return False
 
     # Check for forbidden Thought Process headers
-    if cot_start in solution_str:
-        return False
-
-    return True
+    return cot_start not in solution_str
 
 
 def extract_cot_answer(response, cot_end="Answer:", cot_start="Thought Process:"):
@@ -310,7 +306,7 @@ def llm_reward_func(
                     },
                 )
             except Exception as e:
-                print(f"Error in LLM evaluation: {str(e)}")
+                print(f"Error in LLM evaluation: {e!s}")
                 # Exponential backoff delay between retries
                 if attempt < max_retries:  # Don't sleep on last attempt
                     delay = 2**attempt  # 1, 2, 4, 8, etc seconds
@@ -354,13 +350,13 @@ def llm_reward_func(
                     # "score" is default, just return ans
 
                 final_score = 0
-                for key, value in scores.items():
+                for value in scores.values():
                     final_score += value
 
                 return final_score
 
             except Exception as e:
-                print(f"Error in LLM reward function: {str(e)}")
+                print(f"Error in LLM reward function: {e!s}")
                 return format_score
         return format_score
 

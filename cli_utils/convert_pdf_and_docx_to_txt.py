@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
-import os
 import argparse
 import io
+import os
 
 # Necessary imports for PDF and DOCX processing, wrapped in a try-except block
 try:
-    from PIL import Image
-    import pytesseract
-    import fitz  # PyMuPDF
     import docx
+    import fitz  # PyMuPDF
+    import pytesseract
+    from PIL import Image
 except ImportError:
     print("--------------------------------------------------------------------")
     print("ERROR: Required libraries for PDF/DOCX processing are not installed.")
@@ -213,7 +213,7 @@ def process_files(input_dir, output_dir):
                             output_file_path + ".error.txt", "w", encoding="utf-8"
                         ) as f:
                             f.write(
-                                f"Error processing original file {input_file_path}:\n{str(e)}"
+                                f"Error processing original file {input_file_path}:\n{e!s}"
                             )
                         print(
                             f"  -> Error details saved to: {output_file_path}.error.txt"
@@ -245,7 +245,7 @@ def main():
         try:
             # Attempt a call that would fail if libs are missing, to trigger the ImportError from the dummy
             extract_text("dummy.pdf")
-        except ImportError as e:
+        except ImportError:
             # The error message is already printed by the try-except block at the top.
             # No need to print args.input_dir or args.output_dir here as they might not be used.
             print(

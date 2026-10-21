@@ -1,15 +1,14 @@
+
 import yaml
-import os
-from typing import List, Optional
 
 
 def write_training_config(
-    dataset_paths: List[dict],
+    dataset_paths: list[dict],
     base_model: str,
     output_path: str = "training_config.yaml",
     is_mistral_derived_model: bool = False,
-    wandb_project: Optional[str] = None,
-    hub_model_id: Optional[str] = None,
+    wandb_project: str | None = None,
+    hub_model_id: str | None = None,
     hub_strategy: str = "all_checkpoints",
     **kwargs
 ) -> str:

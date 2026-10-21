@@ -1,31 +1,28 @@
 # tasks.py
-import os
-import sys
-import time
-import random
-import logging
-import subprocess
-import json
-import signal
-import threading
-from typing import Optional, Dict, Any, TYPE_CHECKING, IO, Union
-import traceback
 import io
-import yaml
+import json
+import logging
+import os
+import subprocess
+import sys
+import threading
+import time
+import traceback
 from pathlib import Path
+from typing import TYPE_CHECKING, Any
 
+import yaml
+
+from augmentoolkit.hf_persistence import (
+    CheckpointManager,
+    HFHubError,
+    JobManifest,
+    JobManifestManager,
+)
 from huey_config import huey
 from redis_config import redis_client, set_progress
 from resolve_path import resolve_path
 from run_augmentoolkit import flatten_config
-
-from augmentoolkit.hf_persistence import (
-    HFHubManager,
-    CheckpointManager,
-    JobManifest,
-    JobManifestManager,
-    HFHubError,
-)
 
 if TYPE_CHECKING:
     from huey.api import Task
@@ -58,8 +55,8 @@ end
 
 
 def find_first_output_dir(
-    data: Union[Dict, list], key_name: str = "output_dir"
-) -> Optional[str]:
+    data: dict | list, key_name: str = "output_dir"
+) -> str | None:
     """Recursively searches dict/list for the first value associated with key_name."""
     if isinstance(data, dict):
         for key, value in data.items():
@@ -81,9 +78,9 @@ def find_first_output_dir(
 
 def resolve_job_output_dir(
     node_path: str,
-    config_path: Optional[str] = None,
-    parameters: Optional[Dict[str, Any]] = None,
-    durable_job_id: Optional[str] = None,
+    config_path: str | None = None,
+    parameters: dict[str, Any] | None = None,
+    durable_job_id: str | None = None,
 ) -> str:
     """Resolves the exact absolute output_dir for a job based on parameters or pipeline config."""
     params = parameters or {}
@@ -118,7 +115,7 @@ def resolve_job_output_dir(
 
 
 def set_final_status(
-    task_id: str, status: str, message: str, details: Optional[Dict] = None
+    task_id: str, status: str, message: str, details: dict | None = None
 ):
     """Sets the final status of a task in Redis."""
     redis_key = f"status_for_task:{task_id}"
@@ -156,7 +153,7 @@ class JobLockHeartbeat:
         self.lease_ms = lease_seconds * 1000
         self.interval_seconds = interval_seconds
         self._running = False
-        self._thread: Optional[threading.Thread] = None
+        self._thread: threading.Thread | None = None
 
     def start(self):
         self._running = True
@@ -188,8 +185,8 @@ class JobLockHeartbeat:
 def run_pipeline_task(
     task: "Task",
     node_path: str,
-    config_path: Optional[str] = None,
-    parameters: Optional[Dict[str, Any]] = None,
+    config_path: str | None = None,
+    parameters: dict[str, Any] | None = None,
 ):
     """
     Executes a pipeline via a subprocess with explicit subprocess environment context,
@@ -223,7 +220,7 @@ def run_pipeline_task(
     heartbeat.start()
 
     process = None
-    log_file: Optional[io.TextIOWrapper] = None
+    log_file: io.TextIOWrapper | None = None
     log_file_path = ""
     final_status_set = False
 
@@ -315,13 +312,13 @@ def run_pipeline_task(
             raise HFHubError(msg) from src_e
 
     # Initialize/Recover remote JobManifest and hydrate remote checkpoints into output_dir!
-    manifest: Optional[JobManifest] = None
+    manifest: JobManifest | None = None
     if hf_work_repo:
         try:
             existing_manifest = ckpt_mgr.load_remote_manifest(job_id=durable_job_id, work_repo=hf_work_repo)
             if existing_manifest:
                 # Reconcile and hydrate checkpoints into local resolved_output_dir
-                reconciled_manifest, valid_shards, restored_data = ckpt_mgr.reconcile_and_resume_job(
+                reconciled_manifest, _valid_shards, _restored_data = ckpt_mgr.reconcile_and_resume_job(
                     job_id=durable_job_id,
                     target_pipeline=node_path,
                     target_config_dict=parameters_flat,
@@ -402,7 +399,7 @@ def run_pipeline_task(
         log_file_path = os.path.join(LOGS_DIR, f"{task_id}.log")
         try:
             log_file = open(log_file_path, "w", encoding="utf-8")
-        except IOError:
+        except OSError:
             log_file = None
 
         if log_file:
@@ -470,7 +467,6 @@ def run_pipeline_task(
                 except Exception:
                     pass
 
-            error_message = f"Job {durable_job_id} (task {task_id}): Subprocess failed with exit code {exit_code}."
             if not final_status_set:
                 set_final_status(
                     task_id,

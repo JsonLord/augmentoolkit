@@ -1,5 +1,4 @@
-from typing import List, Tuple
-from .process_multiturn_functions import has_sequential_chars
+
 
 # If you want to check for matching substrings anywhere, not just at start, use this code (untested)
 # def identify_duplicates(tuples: List[Tuple[str, str, str, str]]) -> List[Tuple[str, str, str, str]]:
@@ -25,8 +24,8 @@ from .process_multiturn_functions import has_sequential_chars
 
 
 def identify_duplicates(
-    tuples: List[Tuple[str, str, str, str]],
-) -> List[Tuple[str, str, str, str]]:
+    tuples: list[tuple[str, str, str, str]],
+) -> list[tuple[str, str, str, str]]:
     # Create a dictionary to hold questions with the same first N characters
     question_dict = {}
 

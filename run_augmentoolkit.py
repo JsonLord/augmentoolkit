@@ -1,15 +1,15 @@
 # Imports the function named by the config file, and runs it with the arguments inside the config specified
 
-import importlib
+import argparse
 import asyncio
+import importlib
+import io
+import json
 import sys
 import traceback
-import yaml
-import argparse
 from pathlib import Path
-import json
-import io
 
+import yaml
 
 # ==============================================================================
 # FORCE UTF-8 FOR ALL I/O
@@ -67,7 +67,7 @@ try:
     )  # Get aliases, default to empty dict if not present
 
 except FileNotFoundError:
-    print(f"Error: Super config file not found at super_config.yaml")
+    print("Error: Super config file not found at super_config.yaml")
     sys.exit(1)
 # Load super config
 except yaml.YAMLError as e:
@@ -75,8 +75,10 @@ except yaml.YAMLError as e:
     sys.exit(1)
 
 
-def run_pipeline(node, config, override_fields={}):
+def run_pipeline(node, config, override_fields=None):
     # Resolve node and config paths using aliases
+    if override_fields is None:
+        override_fields = {}
     resolved_node_path = resolve_path(node, path_aliases)
     # print(f"DEBUG: Resolved node path: {resolved_node_path}")
 
@@ -127,13 +129,15 @@ def run_pipeline(node, config, override_fields={}):
 
 
 def run_pipeline_config(
-    config, resolved_node_path, override_fields={}
+    config, resolved_node_path, override_fields=None
 ):  # the second half of run_pipeline, extracted so that it is easier to use in isolation as an api.
     # Merge pipeline config from super_config with loaded config file parameters
     # Parameters defined directly in the pipeline entry override those in the loaded config file.
     # Parameters passed in as overrides override those in either.
 
     # Flatten the nested configuration
+    if override_fields is None:
+        override_fields = {}
     no_flatten_keys = config.get(
         "no_flatten", []
     )  # Get no_flatten from loaded/merged config
@@ -145,7 +149,7 @@ def run_pipeline_config(
         function = load_function_from_path(resolved_node_path)
     except (ImportError, AttributeError, ValueError) as e:
         print(f"Error loading function from node path '{resolved_node_path}': {e}")
-        print(f"Skipping pipeline: resolved_node_path")  # Use name if available
+        print("Skipping pipeline: resolved_node_path")  # Use name if available
         return  # Skip this pipeline if function cannot be loaded
 
     if asyncio.iscoroutinefunction(function):
@@ -211,7 +215,7 @@ def main():
 
     # Decide execution path based on provided arguments
     if args.node:
-        print(f"Running single pipeline specified via command line arguments:")
+        print("Running single pipeline specified via command line arguments:")
         print(f"  Node: {args.node}")
         print(f"  Config: {args.config}")
         print(f"  Overrides: {override_params}")
@@ -241,7 +245,7 @@ def main():
             # If CLI overrides should *globally* apply even to super_config runs, update pipeline_params:
             # pipeline_params.update(override_params) # Uncomment this if CLI overrides should apply globally
 
-            print(f"Running pipeline from super_config:")
+            print("Running pipeline from super_config:")
             print(f"  Node: {pipeline['node']}")
             print(f"  Config: {pipeline.get('config')}")  # Use .get for optional config
             print(f"  Parameters: {pipeline_params}")

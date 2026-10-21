@@ -1,12 +1,11 @@
 # tentative helpers file, to be imported by api.py
+import logging
 import os
 import shutil
 import zipfile
 from pathlib import Path as PyPath
-from typing import Optional, List
-import logging
 
-from fastapi import HTTPException, BackgroundTasks
+from fastapi import BackgroundTasks, HTTPException
 from fastapi.responses import FileResponse
 from pydantic import BaseModel, Field
 
@@ -17,7 +16,7 @@ logger = logging.getLogger(__name__)
 class FileStructure(BaseModel):
     path: str
     is_dir: bool
-    children: Optional[List["FileStructure"]] = None
+    children: list["FileStructure"] | None = None
 
 
 # --- Pydantic Model (for move operation) ---
@@ -89,8 +88,8 @@ def zip_directory(folder_path: PyPath, zip_path: PyPath):
 
 
 def get_dir_structure(
-    dir_path: PyPath, base_path_for_relative: Optional[PyPath] = None
-) -> List[FileStructure]:
+    dir_path: PyPath, base_path_for_relative: PyPath | None = None
+) -> list[FileStructure]:
     """Recursively gets the directory structure relative to a base path."""
     # print(f"DEBUG [get_dir_structure]: Called with dir_path='{dir_path}', base_path_for_relative='{base_path_for_relative}'")
     structure = []
@@ -147,7 +146,7 @@ def get_dir_structure(
 # --- Refactored Generic Handlers ---
 
 
-def handle_get_structure(base_dir: PyPath, relative_path: str) -> List[FileStructure]:
+def handle_get_structure(base_dir: PyPath, relative_path: str) -> list[FileStructure]:
     """Handles the logic for getting directory structure safely."""
     # --- FIX: Resolve base_dir to absolute path early ---
     try:

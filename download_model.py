@@ -1,6 +1,8 @@
 import os
 import sys
+
 from huggingface_hub import hf_hub_download
+
 
 def main():
     # Only download model if explicitly requested via environment variable or CLI flag

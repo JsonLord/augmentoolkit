@@ -2,22 +2,14 @@
 # Runs the model to power a specified discord bot
 # It must still be added to the server by the user of course.
 
-import re
 import asyncio
-import subprocess
-import sys
-import os
-from base64 import b64encode
-from dataclasses import dataclass, field
-from datetime import datetime as dt
 import logging
-from typing import Literal, Optional
+import re
+from dataclasses import dataclass, field
+from typing import Literal
 
-from augmentoolkit.generation_functions.engine_wrapper_class import EngineWrapper
 import discord
 import httpx
-from openai import AsyncOpenAI
-import yaml
 
 # Import the server functions
 from generation.utilities.llm_server.llm_server import llm_server
@@ -32,13 +24,13 @@ logging.basicConfig(
 
 @dataclass
 class MsgNode:
-    text: Optional[str] = None
+    text: str | None = None
     images: list = field(default_factory=list)
 
     role: Literal["user", "assistant"] = "assistant"
-    user_id: Optional[int] = None
+    user_id: int | None = None
 
-    next_msg: Optional[discord.Message] = None
+    next_msg: discord.Message | None = None
 
     has_bad_attachments: bool = False
     fetch_next_failed: bool = False
@@ -114,13 +106,12 @@ async def discord_inference(
     inference_server="normal",
     port=8003,
     max_message_nodes=100,
-    status_message: str = None,
+    status_message: str | None = None,
     task_id="11037",
     **kwargs,
 ):
 
     # Start the inference server with subprocess if needed
-    server_process = None
     server_task = None
 
     if inference_server == "normal":
@@ -272,7 +263,6 @@ async def discord_inference(
             accept_usernames = False  # NOTE will be an arg
 
             # use_plain_responses = cfg["use_plain_responses"] # We will need an option to remove the thought process part of the AI's response.
-            max_message_length = 2000  # if use_plain_responses else (4096 - len(STREAMING_INDICATOR)) # TODO we need a nicer way to format past the 2k character limit, format the splits. But not urgent.
 
             # Build message chain and set user warnings
             messages = []
@@ -392,7 +382,7 @@ async def discord_inference(
                     )  # [:max_text] TODO do we really need to truncate here?
 
                     if content != "":
-                        message = dict(content=content, role=curr_node.role)
+                        message = {"content": content, "role": curr_node.role}
                         if accept_usernames and curr_node.user_id != None:
                             message["name"] = str(curr_node.user_id)
 
@@ -423,8 +413,6 @@ async def discord_inference(
             # Generate and send response message(s) (can be multiple if response is long)
             response_msgs = []
             response_contents = []
-            prev_chunk = None
-            edit_task = None
 
             embed = discord.Embed()
             for warning in sorted(user_warnings):

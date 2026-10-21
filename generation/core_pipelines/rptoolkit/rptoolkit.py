@@ -1,6 +1,11 @@
-import random
-import traceback
 import asyncio
+import os
+import random
+import sys
+import traceback
+
+from tqdm import asyncio as tqdmasyncio
+
 from augmentoolkit.generation_functions.depth_first_pipeline_step_class import (
     DepthFirstPipelineStep,
     create_depth_first_executor,
@@ -10,12 +15,10 @@ from augmentoolkit.generation_functions.generalized_parsing_and_writing_formats 
     extract_structured_data,
 )
 from augmentoolkit.generation_functions.hashing_and_ordering import hash_input_list
-from augmentoolkit.generation_functions.run_pipeline_step import (
-    create_depth_first_step_function,
-)
 from augmentoolkit.utils.cost_estimation_logging import (
     calculate_pipeline_cost_efficiency,
 )
+from augmentoolkit.utils.observers import *
 from generation.core_components.chunking import count_total_tokens, read_and_chunk_text
 from generation.core_components.meta_datagen import create_meta_dataset
 from generation.core_components.setup_components import (
@@ -24,32 +27,19 @@ from generation.core_components.setup_components import (
 )
 from generation.core_pipelines.rptoolkit.rptoolkit_helpers import (
     count_tokens,
+    create_archetype_step,
     create_generate_constrained_emotion_step,
     create_generate_story_pipeline_step,
     dict_to_string,
     extract_charname,
+    generate_emotion_pipeline_step,
     generate_scene_card,
     is_story_awesome,
     is_story_ok,
-    parse_string_to_dict,
-    write_final_dataset_files,
-    generate_emotion_pipeline_step,
-    rate_story_step,
-    create_archetype_step,
     manage_character_consistency_from_file,
-    validate_emotion_key_contained,
-    stringify_emotion_list,
+    rate_story_step,
+    write_final_dataset_files,
 )
-from tqdm import tqdm
-from augmentoolkit.utils.observers import *
-
-import nltk
-from tqdm import asyncio as tqdmasyncio
-import os
-import sys
-import time
-import yaml
-
 from redis_config import set_progress
 
 
@@ -74,10 +64,12 @@ async def generate_data(
     bible_lock,
     include_details=False,
     generate_archetype=False,
-    archetypes=[""],
+    archetypes=None,
     extract_features_pipeline_step=None,
     output_path="",
 ):
+    if archetypes is None:
+        archetypes = [""]
     final_result = None   
     # This is a PRIME example of a node. This'll let us test the node and composition plan for this whole thing.
     # NOTE Generate emotions, or pick
@@ -257,10 +249,12 @@ async def rptoolkit_inner_function(
     use_min_p,
     large_mode,
     include_details=False,
-    archetypes=[""],
+    archetypes=None,
     generate_archetype=False,
     extract_features_pipeline_step=None,
 ):
+    if archetypes is None:
+        archetypes = [""]
     stories = []
     data_generations_tasks = [
         generate_data(

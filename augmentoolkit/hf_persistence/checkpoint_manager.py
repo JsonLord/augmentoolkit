@@ -1,10 +1,9 @@
 import json
 import logging
 import os
-import shutil
 import tempfile
 import time
-from typing import Any, Dict, List, Optional, Set, Tuple, Union
+from typing import Any
 
 from .hf_manager import HFHubError, HFHubManager
 from .job_manifest import (
@@ -12,7 +11,6 @@ from .job_manifest import (
     JobManifest,
     JobManifestManager,
     compute_file_hash,
-    compute_hash,
 )
 
 logger = logging.getLogger(__name__)
@@ -47,7 +45,7 @@ def split_large_jsonl(
     fpath: str,
     max_bytes_per_shard: int = 50 * 1024 * 1024,
     max_records_per_shard: int = 5000,
-) -> List[str]:
+) -> list[str]:
     """
     Streams a large .jsonl file line-by-line and splits it into deterministic bounded shard files
     if size or record count exceeds limits. Deletes original file and returns list of created part file paths.
@@ -101,10 +99,10 @@ class CheckpointManager:
 
     def __init__(
         self,
-        hf_manager: Optional[HFHubManager] = None,
+        hf_manager: HFHubManager | None = None,
         checkpoint_dir: str = "checkpoints",
         outputs_dir: str = "outputs",
-        policy: Optional[CheckpointPolicy] = None,
+        policy: CheckpointPolicy | None = None,
     ):
         self.hf_manager = hf_manager or HFHubManager()
         self.checkpoint_dir = checkpoint_dir
@@ -117,13 +115,13 @@ class CheckpointManager:
         self,
         job_id: str,
         pipeline: str,
-        source_repo: Optional[str] = None,
+        source_repo: str | None = None,
         source_revision: str = "main",
-        source_path: Optional[str] = None,
-        source_split: Optional[str] = None,
-        work_repo: Optional[str] = None,
-        output_repo: Optional[str] = None,
-        config_dict: Optional[Dict[str, Any]] = None,
+        source_path: str | None = None,
+        source_split: str | None = None,
+        work_repo: str | None = None,
+        output_repo: str | None = None,
+        config_dict: dict[str, Any] | None = None,
         prompt_config_hash: str = "",
         output_schema_version: str = "1.0",
         sync_remote: bool = True,
@@ -185,12 +183,12 @@ class CheckpointManager:
     def save_checkpoint(
         self,
         manifest: JobManifest,
-        shard_id: Union[str, int],
-        checkpoint_data: Dict[str, Any],
+        shard_id: str | int,
+        checkpoint_data: dict[str, Any],
         stage: str = "generation",
         sync_remote: bool = True,
-        log_file_path: Optional[str] = None,
-        output_dir: Optional[str] = None,
+        log_file_path: str | None = None,
+        output_dir: str | None = None,
     ) -> str:
         """
         Remote-first checkpoint save with checksum calculation and strict fail-closed verification:
@@ -305,8 +303,8 @@ class CheckpointManager:
                 os.remove(tmp_path)
 
     def load_remote_manifest(
-        self, job_id: str, work_repo: Optional[str] = None
-    ) -> Optional[JobManifest]:
+        self, job_id: str, work_repo: str | None = None
+    ) -> JobManifest | None:
         manifest_dict = self.hf_manager.fetch_manifest(job_id=job_id, work_repo=work_repo)
         if manifest_dict:
             return JobManifest.from_dict(manifest_dict)
@@ -316,16 +314,16 @@ class CheckpointManager:
         self,
         job_id: str,
         target_pipeline: str,
-        target_config_dict: Optional[Dict[str, Any]] = None,
+        target_config_dict: dict[str, Any] | None = None,
         target_prompt_hash: str = "",
-        target_source_repo: Optional[str] = None,
+        target_source_repo: str | None = None,
         target_source_revision: str = "main",
-        target_source_path: Optional[str] = None,
-        target_source_split: Optional[str] = None,
+        target_source_path: str | None = None,
+        target_source_split: str | None = None,
         target_output_schema_version: str = "1.0",
-        work_repo: Optional[str] = None,
-        output_dir: Optional[str] = None,
-    ) -> Tuple[JobManifest, Set[Union[str, int]], Dict[str, Any]]:
+        work_repo: str | None = None,
+        output_dir: str | None = None,
+    ) -> tuple[JobManifest, set[str | int], dict[str, Any]]:
         """
         Startup/Resume reconciliation with strict corruption safeguards and local stage output hydration:
         1. Fetches remote manifest.
@@ -363,8 +361,8 @@ class CheckpointManager:
             logger.error(msg)
             raise IncompatibleResumeError(msg)
 
-        valid_completed_shards: Set[Union[str, int]] = set()
-        restored_data: Dict[str, Any] = {}
+        valid_completed_shards: set[str | int] = set()
+        restored_data: dict[str, Any] = {}
 
         job_local_dir = os.path.join(self.checkpoint_dir, job_id)
         os.makedirs(job_local_dir, exist_ok=True)
@@ -419,7 +417,7 @@ class CheckpointManager:
 
         return existing_manifest, valid_completed_shards, restored_data
 
-    def discover_incomplete_jobs(self, work_repo: Optional[str] = None) -> List[JobManifest]:
+    def discover_incomplete_jobs(self, work_repo: str | None = None) -> list[JobManifest]:
         job_ids = self.hf_manager.list_jobs(work_repo=work_repo)
         incomplete_manifests = []
 
@@ -436,7 +434,7 @@ class CheckpointManager:
         output_dir: str,
         format_type: str = "jsonl",
         sync_remote: bool = True,
-        log_file_path: Optional[str] = None,
+        log_file_path: str | None = None,
         max_bytes_per_shard: int = 50 * 1024 * 1024,  # 50MB max shard size
         max_records_per_shard: int = 5000,
     ) -> str:

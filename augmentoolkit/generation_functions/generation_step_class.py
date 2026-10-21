@@ -1,8 +1,10 @@
-import re
-import os
-import traceback
 import logging
+import os
+import re
+import traceback
+
 import yaml
+
 from augmentoolkit.generation_functions.safe_formatter import safe_format
 
 
@@ -19,26 +21,7 @@ class GenerationStep:
         self,
         prompt_path="",  # relative to the Inputs directory
         regex=re.compile(r".*", re.DOTALL),  # take whole completion
-        sampling_params={
-            "temperature": 1,
-            "top_p": 1,
-            "max_tokens": 3000,
-            "stop": [
-                "### Response",
-                "\n\n\n\n\n",
-                "</s>",
-                "# Input:",
-                "[INST]",
-                "### Instruction",
-                "### Information",
-                "## Information",
-                "## Instruction",
-                "Name:",
-                "<|eot_id|>",
-                "<|start_header_id|>",
-                "<|end_header_id|>",
-            ],
-        },
+        sampling_params=None,
         completion_mode=True,  # Chat vs completion mode
         retries=0,
         engine_wrapper=None,
@@ -50,12 +33,13 @@ class GenerationStep:
         use_stop=True,
         messages=None,
     ):
+        if sampling_params is None:
+            sampling_params = {"temperature": 1, "top_p": 1, "max_tokens": 3000, "stop": ["### Response", "\n\n\n\n\n", "</s>", "# Input:", "[INST]", "### Instruction", "### Information", "## Information", "## Instruction", "Name:", "<|eot_id|>", "<|start_header_id|>", "<|end_header_id|>"]}
         self.prompt_path = prompt_path
         self.regex = regex
         self.sampling_params = sampling_params
-        if not use_stop:
-            if "stop" in self.sampling_params:
-                del self.sampling_params["stop"]
+        if not use_stop and "stop" in self.sampling_params:
+            del self.sampling_params["stop"]
         self.completion_mode = completion_mode
         self.retries = retries
         self.logging_level = logging_level
@@ -118,16 +102,15 @@ class GenerationStep:
                             prompt_formatted,
                         )
                     return ret, timeout
-                except Exception as e:
+                except Exception:
                     # logging.error(f"Error in Generation Step: {e}")
                     try:
-                        if not self.engine_wrapper.mode == "llamacpp":
+                        if self.engine_wrapper.mode != "llamacpp":
                             print("Response:")
                             print(response)
                     except Exception as e:
                         print(f"Error {e}")
                         traceback.print_exc()
-                        pass
                     traceback.print_exc()
                     times_tried += 1
             raise Exception("Generation step failed -- too many retries!")
@@ -145,7 +128,7 @@ class GenerationStep:
                             "content": safe_format(message["content"], **kwargs),
                         }
                     )
-                except Exception as e:
+                except Exception:
                     new_messages.append(
                         {"role": message["role"], "content": message["content"]}
                     )
@@ -215,7 +198,6 @@ class GenerationStep:
                         print(response)
                     except UnboundLocalError:
                         print("No response to print")
-                        pass
                     # if prompt_formatted:
                     #     print(prompt_formatted)
                     logging.error(

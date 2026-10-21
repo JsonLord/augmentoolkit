@@ -1,5 +1,5 @@
-from itertools import product
 import random
+from itertools import product
 
 
 def combine_traits(personality_matrix):  # GPT-generated
@@ -72,11 +72,11 @@ The character should be very kind, but too gentle and too much of a pushover for
         """The character should be an awful person, and enjoying every second of it.
 The character should be intellectually brilliant.
 The character should be condescending and rude.""",
-        """The character should be a young adult.
+        ("""The character should be a young adult.
 The character should be antisocial and coarse.
 The character should be a smoker."""
         """The character should be middle-aged.
-The character should be narcissistic.""",
+The character should be narcissistic."""),
         # """The character should be edgy and nihilistic."""
     ]
 

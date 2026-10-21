@@ -1,9 +1,9 @@
-import os
-import yaml
-import uuid
 import json
-import asyncio
-from typing import Callable, Dict, List, Any, Union
+import os
+import uuid
+from collections.abc import Callable
+
+import yaml
 
 
 def create_log_observer(
@@ -23,7 +23,7 @@ def create_log_observer(
     full_output_path = os.path.join(log_dir, "debug_outputs")
 
     def log_observer(
-        input_data: Union[str, List[Dict[str, str]]],
+        input_data: str | list[dict[str, str]],
         output: str,
         completion_mode: bool,
         *args,
@@ -50,7 +50,7 @@ def create_log_observer(
                 prefix = input_data[0]["content"][:25].lower().replace(" ", "_")
 
         # Create log ID with prefix
-        log_id = f"{prefix}_{str(uuid.uuid4())}"
+        log_id = f"{prefix}_{uuid.uuid4()!s}"
 
         os.makedirs(full_output_path, exist_ok=True)
         if completion_mode:
@@ -77,10 +77,10 @@ def create_log_observer(
 
 
 def create_input_token_counter(
-    counter: Dict[str, float],
+    counter: dict[str, float],
     cost_per_million: float,
     count_tokens_fn: Callable,
-    persistence_path: str = None,
+    persistence_path: str | None = None,
 ) -> Callable:
     """
     Creates an input observer that counts tokens and calculates cost.
@@ -113,7 +113,7 @@ def create_input_token_counter(
                 pass
 
     def input_token_counter(
-        input_data: Union[str, List[Dict[str, str]]],
+        input_data: str | list[dict[str, str]],
         completion_mode: bool,
         *args,
         **kwargs,
@@ -152,10 +152,10 @@ def create_input_token_counter(
 
 
 def create_output_token_counter(
-    counter: Dict[str, float],
+    counter: dict[str, float],
     cost_per_million: float,
     count_tokens_fn: Callable,
-    persistence_path: str = None,
+    persistence_path: str | None = None,
 ) -> Callable:
     """
     Creates an output observer that counts tokens and calculates cost.
@@ -188,7 +188,7 @@ def create_output_token_counter(
                 pass
 
     def output_token_counter(
-        input_data: Union[str, List[Dict[str, str]]],
+        input_data: str | list[dict[str, str]],
         output: str,
         completion_mode: bool,
         *args,

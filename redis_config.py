@@ -1,7 +1,7 @@
-from typing import Union
-import redis
-import os
 import json  # For potentially storing structured data
+import os
+
+import redis
 
 # Configuration (adjust host, port, db if needed)
 REDIS_HOST = os.environ.get("REDIS_HOST", "localhost")
@@ -38,7 +38,7 @@ def get_progress_key(task_id: str) -> str:
     return f"{PROGRESS_KEY_PREFIX}{task_id}"
 
 
-def set_progress(task_id: str, progress: float, message: Union[str, None] = None):
+def set_progress(task_id: str, progress: float, message: str | None = None):
     if not redis_client:
         return  # Skip if connection failed
     if not task_id:

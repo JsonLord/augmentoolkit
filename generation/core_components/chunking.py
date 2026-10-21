@@ -1,20 +1,22 @@
 # import glob
 import glob
 import hashlib
+import io
 import json
 import os
-import io
+
 from tqdm import tqdm
+
 from augmentoolkit.utils.offline_chunking import OfflineTokenizer, sent_tokenize
 from ocr.schemas import SafeError
 
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 try:
-    from PIL import Image
-    from pdf2image import convert_from_path
-    import pytesseract
-    import fitz  # pymupdf
     import docx
+    import fitz  # pymupdf
+    import pytesseract
+    from pdf2image import convert_from_path
+    from PIL import Image
 
     def extract_text_from_docx(path):
         """
@@ -140,12 +142,13 @@ except ImportError as e:
 
 # Add new try-except block for audio/video processing
 try:
+    import tempfile
+
     import librosa
+    import numpy as np
     import soundfile as sf
     from moviepy.editor import VideoFileClip
     from transformers import pipeline
-    import tempfile
-    import numpy as np
 
     def extract_text_from_audio_video(path):
         """
@@ -171,7 +174,7 @@ try:
             # Save to temp file and reload with librosa
             with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as tmpfile:
                 audio.write_audiofile(tmpfile.name, fps=16000)
-                audio, sr = librosa.load(tmpfile.name, sr=16000)
+                audio, _sr = librosa.load(tmpfile.name, sr=16000)
                 os.unlink(tmpfile.name)
         else:
             raise ValueError(f"Unsupported media format: {ext}")
@@ -185,7 +188,7 @@ try:
 
         return pipe(audio.copy(), batch_size=8)["text"]
 
-except ImportError as e:
+except ImportError:
     print(
         "NOTE: Audio/video processing requires librosa, soundfile, moviepy, and transformers. If you want to use videos as input for a pipeline, please install them. Otherwise, disregard this message."
     )
@@ -228,7 +231,7 @@ def chunking_algorithm_file(
     token_count = 0
 
     # From Algorithm 1: Enhanced format handling
-    if file_path.endswith(".pdf") or file_path.endswith(".docx"):
+    if file_path.endswith((".pdf", ".docx")):
         content = extract_text(file_path)
     else:
         with open(file_path, "r", encoding="utf-8", errors="ignore") as file:
@@ -436,7 +439,7 @@ def read_jsonl_file(file_path):
 
 def read_text(
     input_dir=None,
-    extensions=[".txt", ".md", ".pdf", ".docx", ".epub", ".html", ".jsonl"],
+    extensions=None,
     output_dir=None,
 ):
     """
@@ -450,6 +453,8 @@ def read_text(
     Returns:
         list: List of dictionaries, each with 'text' and 'metadata' keys.
     """
+    if extensions is None:
+        extensions = [".txt", ".md", ".pdf", ".docx", ".epub", ".html", ".jsonl"]
     cache_path = None
     if output_dir:
         # Use absolute path for input_dir for consistent hashing
@@ -503,7 +508,7 @@ def read_text(
         if os.path.isdir(text):
             print(f"Skipping {text} as it's a directory with an extension, not a file")
             continue
-        if text.endswith(".pdf") or text.endswith(".docx"):
+        if text.endswith((".pdf", ".docx")):
             loaded = extract_text(text)
         elif text.endswith(".jsonl"):
             loaded = read_jsonl_file(text)
@@ -655,7 +660,7 @@ def chunk_text_list(
 
 def read_and_chunk_text(
     input_dir="./input",
-    extensions=[".txt", ".md", ".pdf", ".docx", ".epub", ".html", ".jsonl"],
+    extensions=None,
     chunk_size=1500,
     use_subset=False,
     subset_size=1500,
@@ -671,6 +676,8 @@ def read_and_chunk_text(
     #         source_texts = source_texts + glob.glob(path, recursive=True)
 
     # Use composition of read_text and chunk_text_list
+    if extensions is None:
+        extensions = [".txt", ".md", ".pdf", ".docx", ".epub", ".html", ".jsonl"]
     text_list = read_text(input_dir, extensions, output_dir=output_dir)
     sentence_chunks = chunk_text_list(
         text_list,
@@ -829,7 +836,7 @@ def process_sharegpt_conversations(input_conversations):
 
 # Add new reading function
 def read_audio_video(
-    input_dir="./input", extensions=[".mp3", ".wav", ".mp4", ".avi", ".mov", ".flac"]
+    input_dir="./input", extensions=None
 ):
     """
     Reads audio/video files and returns transcribed text with metadata.
@@ -841,6 +848,8 @@ def read_audio_video(
     Returns:
         list: List of dictionaries with 'text' and 'metadata' keys
     """
+    if extensions is None:
+        extensions = [".mp3", ".wav", ".mp4", ".avi", ".mov", ".flac"]
     source_files = []
     for extension in extensions:
         path = f"{input_dir}/**/*{extension}"
@@ -892,7 +901,7 @@ def count_total_tokens(output_list, count_tokens_fn=None):
             return len(text.split())
 
     for item in output_list:
-        if "text" in item and item["text"]:
+        if item.get("text"):
             total_tokens += count_tokens_fn(item["text"])
 
     return total_tokens

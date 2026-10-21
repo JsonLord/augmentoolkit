@@ -1,16 +1,15 @@
+import asyncio  # Add asyncio import
 import hashlib
 import json
-import traceback
-from tqdm import asyncio as tqdmasyncio
 import os
 import signal
 import sys
-import logging
 import time  # Added for timestamping logs
-import asyncio  # Add asyncio import
+import traceback
+
+from tqdm import asyncio as tqdmasyncio
 
 from augmentoolkit.generation_functions.pipeline_step_class import PipelineStep
-from filelock import FileLock
 
 # Try importing pyfiglet for banners, provide fallback
 try:
@@ -97,7 +96,7 @@ class OneToManyStep(
         # print(f"[DEBUG {time.time():.2f}] read_previous_output: Checking for key '{key}' or prefix '{key}-' in output_dict (size {len(output_dict)}).") # DEBUG
         # Check if any keys start with this key followed by separator in the in-memory dict
         key_prefix = str(key) + "-"
-        matching_entries = [k for k in output_dict.keys() if k.startswith(key_prefix)]
+        matching_entries = [k for k in output_dict if k.startswith(key_prefix)]
         if matching_entries:
             # print(f"[DEBUG {time.time():.2f}] read_previous_output: Found {len(matching_entries)} existing entries for key prefix '{key}-'. Skipping generation.") # DEBUG
             # No need to load from file, data should already be in output_dict if loaded
@@ -162,7 +161,7 @@ class OneToManyStep(
             # print(f"Subitem: {str(subitem)[:100]}...")
 
             # Hash the idx and subitem using hashlib
-            hash_input = f"{str(subitem)}"
+            hash_input = f"{subitem!s}"
             item_hash = hashlib.sha256(hash_input.encode()).hexdigest()
             item_key = f"{key}-{idx}-{item_hash}"
             # print(f"[DEBUG {time.time():.2f}] save: Generated item_key: {item_key}") # DEBUG
@@ -193,9 +192,6 @@ class OneToManyStep(
         # print(f"[DEBUG {time.time():.2f}] save: Finished processing {len(result)} items for key '{key}'. output_dict size now {len(output_dict)}.") # DEBUG
         # print("\n=== save() function completed (In-Memory Update) ===\n")
         # Save now returns None as it modifies output_dict in place
-        return (
-            None  # Or return result if needed elsewhere, but primary effect is mutation
-        )
 
     def load_dataset(self, output_dict, output_dir):
         output_path = self.make_output_path(output_dir)
@@ -400,7 +396,7 @@ class OneToManyStep(
             # print(f"[DEBUG {time.time():.2f}] run: Attempting generation for key '{key}'. Retries left: {retries_left}.") # DEBUG
             try:
                 # print(f"[DEBUG {time.time():.2f}] run: Calling generate_data for key '{key}'.") # DEBUG
-                start_time = time.time()  # DEBUG TIME
+                time.time()  # DEBUG TIME
                 result, full_output, full_response, full_input = (
                     await self.generate_data(
                         processed_data=processed_data,
@@ -415,7 +411,7 @@ class OneToManyStep(
                         **additional_kwargs,
                     )
                 )
-                end_time = time.time()  # DEBUG TIME
+                time.time()  # DEBUG TIME
                 # print(f"[DEBUG {end_time:.2f}] run: generate_data call for key '{key}' completed in {end_time - start_time:.2f} seconds.") # DEBUG
                 # Ensure result is a list for OneToMany validation
                 if not isinstance(result, list):
@@ -468,7 +464,7 @@ class OneToManyStep(
 
     async def execute_pipeline(
         self,
-        input_dict={},
+        input_dict=None,
         engine_wrapper=None,
         rtwl=None,
         default_prompt_folder=None,
@@ -480,6 +476,8 @@ class OneToManyStep(
         **kwargs,
     ):
         # print(f"[DEBUG {time.time():.2f}] execute_pipeline: Starting execution for step '{self.output_file}'. Input dict size: {len(input_dict)}.") # DEBUG
+        if input_dict is None:
+            input_dict = {}
         output_dict = {}  # Initialize the dictionary for this step's results
         # print(f"[DEBUG {time.time():.2f}] execute_pipeline: Loading dataset for '{self.output_file}'.") # DEBUG
         self.load_dataset(output_dict, output_dir)  # Load existing data at the start
@@ -541,7 +539,7 @@ class OneToManyStep(
                     # Wrap the await future with a timeout
                     await asyncio.wait_for(future, timeout=TASK_TIMEOUT_SECONDS)
                     # print(f"[DEBUG {time.time():.2f}] execute_pipeline: Future {processed_count}/{len(coroutines)} completed successfully.") # DEBUG
-                except asyncio.TimeoutError:
+                except TimeoutError:
                     print(
                         f"\nWARNING: Task {processed_count}/{total_tasks} for step '{self.output_file}' timed out after {TASK_TIMEOUT_SECONDS} seconds.",
                         file=sys.stderr,
@@ -570,7 +568,7 @@ class OneToManyStep(
             )
             traceback.print_exc()
             # The finally block will still attempt to save. Re-raise if pipeline should stop.
-            raise e
+            raise
         finally:
             final_count = len(output_dict)
             # print(f"[DEBUG {time.time():.2f}] execute_pipeline: FINALLY block reached. Final item count: {final_count}. Saving dataset.") # DEBUG

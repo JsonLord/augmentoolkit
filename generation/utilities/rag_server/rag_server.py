@@ -6,10 +6,12 @@
 
 # Configure onnxruntime for SLURM environments before any other imports that might use it
 import os
+
 if "SLURM_JOB_ID" in os.environ:    
     try:
-        import onnxruntime as ort
         import multiprocessing
+
+        import onnxruntime as ort
 
         _original_session = ort.InferenceSession
 
@@ -56,47 +58,38 @@ if "SLURM_JOB_ID" in os.environ:
         # onnxruntime not available, which is fine
         pass
 
+import asyncio
 import copy
+import json
+import logging
 import pickle
 import platform
+import string
+import subprocess
 import time
-from fastapi import FastAPI, HTTPException, Depends, status
-from fastapi.middleware.cors import CORSMiddleware
-from sys import argv
-from fastapi.security import HTTPBasic, HTTPBasicCredentials
-from pydantic import BaseModel, conlist, constr, StringConstraints, Field
-import asyncio
-from nltk.tokenize import sent_tokenize
-from typing import Annotated, List, Dict
-import logging
-import chromadb
-from chromadb.utils import embedding_functions
-import textwrap
 import traceback
 
+import chromadb
+import nltk
 import uvicorn
-from augmentoolkit.generation_functions.engine_wrapper_class import EngineWrapper
+from chromadb.utils import embedding_functions
+from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from nltk.tokenize import word_tokenize
+from pydantic import BaseModel
+from rank_bm25 import BM25Okapi
 from tqdm import tqdm  # Import tqdm for progress bars
-import secrets
-from transformers import AutoTokenizer
-import string
-import re
-import json
+
+from augmentoolkit.generation_functions.engine_wrapper_class import EngineWrapper
 from generation.core_components.chunking import (
-    count_tokens_specific_model,
     chunking_algorithm_str,
+    count_tokens_specific_model,
 )
 from generation.core_components.simple_chat_loop import (
     format_messages_into_string,
     get_assistant_prefix,
     get_stop_tokens,
 )
-from rank_bm25 import BM25Okapi
-from nltk.tokenize import word_tokenize
-import nltk
-import subprocess
-import shutil
-
 from redis_config import set_progress  # For rmtree
 
 # Configure logging
@@ -107,7 +100,7 @@ logger = logging.getLogger(__name__)
 
 
 class ChatRequest(BaseModel):
-    messages: List[Dict[str, str]]
+    messages: list[dict[str, str]]
 
 
 try:
@@ -400,7 +393,7 @@ def vectorize_documents(
                                 ids_for_embedding = []
                 except Exception as e:
                     print(
-                        f"FATAL: Error processing JSONL entry index {json_line_idx}, Q: '{item.get('question', 'N/A')[:50]}...'. Error: {str(e)}"
+                        f"FATAL: Error processing JSONL entry index {json_line_idx}, Q: '{item.get('question', 'N/A')[:50]}...'. Error: {e!s}"
                     )
                     if not isinstance(
                         e, (FileNotFoundError, ValueError, json.JSONDecodeError)
@@ -725,10 +718,7 @@ async def rag_server(
         title="Augmentoolkit Custom Model RAG-Enabled API Server", version="0.1.0"
     )
 
-    chroma_client = None
     collection = None
-    bm25_index = None
-    bm25_corpus_data = []
 
     # BM25 Persistence paths
     BM25_CACHE_DIR = os.path.join(cache_dir, "bm25_cache")
@@ -736,7 +726,7 @@ async def rag_server(
     BM25_CORPUS_DATA_PATH = os.path.join(BM25_CACHE_DIR, "bm25_corpus_data.json")
 
     logger.info("Application startup: Initializing RAG system (ChromaDB & BM25)...")
-    chroma_client, collection = vectorize_documents(
+    _chroma_client, collection = vectorize_documents(
         bm25_cache_dir=BM25_CACHE_DIR,
         bm25_corpus_data_path=BM25_CORPUS_DATA_PATH,
         bm25_index_path=BM25_INDEX_PATH,
@@ -994,7 +984,7 @@ async def rag_server(
 
             while total_tokens >= context_length:
                 if (
-                    not len(shown_messages) == 1
+                    len(shown_messages) != 1
                 ):  # if we are down to the system prompt and the most recent user message and are over, then we have a dire problem
                     removed_message = shown_messages.pop(
                         1
@@ -1016,7 +1006,7 @@ async def rag_server(
             # Add assistant prefix for generation prefilling
             prefilled_prompt = message_string + assistant_prefix
 
-            response, timeout = await engine.submit_completion(
+            response, _timeout = await engine.submit_completion(
                 prompt=prefilled_prompt,
                 sampling_params={
                     "temperature": 0.4,  # yes, it's not greedy. We want a good token probability distribtion for quality outputs.
@@ -1037,7 +1027,7 @@ async def rag_server(
 
         # Check if we're already in an event loop
         try:
-            loop = asyncio.get_running_loop()
+            asyncio.get_running_loop()
             # We're in an async context, use Server API
             config = uvicorn.Config(app=app, port=port, host="0.0.0.0")
             server = uvicorn.Server(config)

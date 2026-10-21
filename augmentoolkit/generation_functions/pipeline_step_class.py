@@ -1,15 +1,15 @@
-from tqdm import asyncio as tqdmasyncio
+import asyncio
 import json
 import logging
 import os
 import re
 import signal
 import sys
-import time
 import traceback
-import asyncio
-from augmentoolkit.generation_functions.generation_step_class import GenerationStep
 
+from tqdm import asyncio as tqdmasyncio
+
+from augmentoolkit.generation_functions.generation_step_class import GenerationStep
 from augmentoolkit.utils.random import noop
 
 try:
@@ -133,7 +133,7 @@ def save_dataset(input_dict, output_path):
         traceback.print_exc()
         # The finally block below will still run to restore the handler.
         # Re-raise the exception if you want the pipeline execution to fail clearly
-        raise e
+        raise
     finally:
         # ALWAYS restore the original handler
         signal.signal(signal.SIGINT, original_sigint_handler)
@@ -323,7 +323,7 @@ class PipelineStep:
         max_retries = self.max_retries
         while not complete and max_retries > 0:
             try:
-                result, full_output, full_response, full_input = (
+                result, _full_output, full_response, full_input = (
                     await self.generate_data(
                         processed_data,
                         engine_wrapper,
@@ -377,7 +377,9 @@ class PipelineStep:
         work_repo = os.environ.get("HF_WORK_REPO")
         if job_id and work_repo:
             try:
-                from augmentoolkit.hf_persistence.checkpoint_manager import CheckpointManager
+                from augmentoolkit.hf_persistence.checkpoint_manager import (
+                    CheckpointManager,
+                )
                 ckpt_mgr = CheckpointManager()
                 manifest = ckpt_mgr.load_remote_manifest(job_id=job_id, work_repo=work_repo)
                 if manifest:
@@ -391,11 +393,11 @@ class PipelineStep:
                     )
             except Exception as e:
                 print(f"ERROR: Fail-closed remote checkpoint sync failed for step {getattr(self, 'output_file', '')}: {e}")
-                raise e
+                raise
 
     async def execute_pipeline(
         self,
-        input_dict={},
+        input_dict=None,
         engine_wrapper=None,
         rtwl=None,
         default_prompt_folder=None,
@@ -407,6 +409,8 @@ class PipelineStep:
         loop_callback=noop,
         **kwargs,
     ):
+        if input_dict is None:
+            input_dict = {}
         self.load_dataset(
             input_dict=input_dict, output_dir=output_dir
         )  # if it is at the start and end of every pipeline execution, we get the same behavior as before, past thing will load and save just fine, without constant reads/writes.
@@ -437,7 +441,7 @@ class PipelineStep:
                 loop_callback(input_dict=input_dict, **kwargs)
                 try:
                     await asyncio.wait_for(future, timeout=TASK_TIMEOUT_SECONDS)
-                except asyncio.TimeoutError:
+                except TimeoutError:
                     print(
                         f"\nWARNING: Task {processed_count}/{total_tasks} timed out after {TASK_TIMEOUT_SECONDS} seconds.",
                         file=sys.stderr,
@@ -452,7 +456,7 @@ class PipelineStep:
         except Exception as e:
             print(f"Exception occurred during task execution: {e}")
             traceback.print_exc()
-            raise e
+            raise
         finally:
             # Robust save with interrupt handling
             if task_completed_successfully:

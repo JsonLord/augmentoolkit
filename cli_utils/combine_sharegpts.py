@@ -1,18 +1,18 @@
-import json
-import sys
 import glob
+import json
 import random
+import sys
 from pathlib import Path
-from typing import List, Dict, Any
+from typing import Any
 
 
-def read_jsonl(file_path: str) -> List[Dict[str, Any]]:
+def read_jsonl(file_path: str) -> list[dict[str, Any]]:
     """Read a jsonl file and return list of JSON objects."""
     with open(file_path, "r", encoding="utf-8") as f:
         return [json.loads(line) for line in f if line.strip()]
 
 
-def write_jsonl(data: List[Dict[str, Any]], file_path: str):
+def write_jsonl(data: list[dict[str, Any]], file_path: str):
     """Write list of JSON objects to a jsonl file."""
     with open(file_path, "w", encoding="utf-8") as f:
         for item in data:
@@ -20,7 +20,7 @@ def write_jsonl(data: List[Dict[str, Any]], file_path: str):
             f.write("\n")
 
 
-def extract_qa_pairs(conversations: List[Dict[str, Any]]) -> List[List[Dict[str, str]]]:
+def extract_qa_pairs(conversations: list[dict[str, Any]]) -> list[list[dict[str, str]]]:
     """Extract all Q/A pairs from conversations."""
     qa_pairs = []
 

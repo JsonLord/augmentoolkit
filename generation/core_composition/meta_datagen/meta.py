@@ -1,27 +1,16 @@
 # the whole composition
 
+import glob  # Added import
 import json
 import os
 import random
-import shutil
 import traceback
 import tracemalloc  # Added import
-import gc  # Added import
+
 import yaml  # Added import
-import glob  # Added import
-from generation.core_components.chunking import read_jsonl_completions, read_text
-from generation.core_components.data_prep_operations import (
-    completionify_sharegpt,
-    count_tokens_glob,
-    create_subset,
-    route_template_to_preset,
-    save_hf_dataset,
-)
+from transformers import AutoTokenizer
+
 from generation.core_components.setup_components import make_relative_to_self
-from generation.core_components.sharegpt_operations import combine_single_turn_convs
-from generation.core_pipelines.clean_and_convert_pdf.clean_and_convert_pdf import (
-    pdf_clean_and_convert_pipeline,
-)
 from generation.core_pipelines.correction_pipeline.corrections import (
     correction_pipeline,
 )
@@ -34,20 +23,9 @@ from generation.core_pipelines.generic_data_rephrase.transform_generic_data impo
 from generation.core_pipelines.recall_multiple_sources.multi_source_recall import (
     generate_multi_source_dataset,
 )
-from generation.core_pipelines.representation_variation.repvar import (
-    representation_variation_pipeline,
-)
-from generation.core_pipelines.rptoolkit.rptoolkit import rptoolkit_pipeline
 from generation.core_pipelines.train_a_model_to_do_rag.rag_data_pipeline import (
     rag_data_pipeline,
 )
-from generation.core_components.write_config_files import (
-    write_training_config,
-    create_completion_dataset,
-    create_input_output_dataset,
-)
-from transformers import AutoTokenizer
-from generation.core_components.chunking import read_jsonl_completions, read_text
 from redis_config import set_progress
 
 
@@ -114,11 +92,11 @@ def create_meta_segment_convs(obj, tokenizer):
     try:
         import json
 
-        obj_repr = json.dumps(
+        json.dumps(
             truncate_obj_repr(obj), default=str
         )  # Use default=str for non-serializable
     except:  # Fallback if json fails
-        obj_repr = truncate_str(str(obj), 500)
+        truncate_str(str(obj), 500)
     # print(f"Input obj: {obj_repr}")
 
     # print(f"Tokenizer type: {type(tokenizer)}")
@@ -158,9 +136,8 @@ def create_meta_segment_convs(obj, tokenizer):
         # Use helper for potentially long strings
         # print(f"Initial last_rendered: '{truncate_str(last_rendered)}'")
 
-        has_system = False
         if full_conversation and full_conversation[0]["role"] == "system":
-            has_system = True
+            pass
         # print(f"Conversation has system message: {has_system}")
 
         for i, message in enumerate(full_conversation):
@@ -179,7 +156,7 @@ def create_meta_segment_convs(obj, tokenizer):
                 )
                 # Use helper for potentially long strings
                 # print(f"Rendered template output (type={type(current_rendered)}): '{truncate_str(current_rendered)}'")
-            except Exception as e:
+            except Exception:
                 # print(f">>> Error applying chat template at step {i}. Error type: {type(e).__name__}, Error: {e}")
                 # import traceback # Removed
                 # print("Traceback for template application error:")
@@ -197,12 +174,7 @@ def create_meta_segment_convs(obj, tokenizer):
                 i == 0
                 and not bos_segment
                 and current_rendered.startswith(last_rendered)
-            ):
-                # Calculate with *untruncated* strings
-                segment_text = current_rendered[len(last_rendered) :]
-                # Use helper for potentially long strings
-                # print(f"Segment text calculation (case 1): '{truncate_str(segment_text)}'")
-            elif current_rendered.startswith(last_rendered):
+            ) or current_rendered.startswith(last_rendered):
                 # Calculate with *untruncated* strings
                 segment_text = current_rendered[len(last_rendered) :]
                 # Use helper for potentially long strings
@@ -258,7 +230,7 @@ def create_meta_segment_convs(obj, tokenizer):
         # print(f"Final segments: {truncate_str(str(truncate_obj_repr(segments)), 500)}")
         return {"segments": segments}
 
-    except Exception as e:
+    except Exception:
         # print(f">>> Error creating meta segments (outer catch block). Error type: {type(e).__name__}, Error: {e}")
         # import traceback # Removed
         # print("Traceback for outer error:")
@@ -503,7 +475,7 @@ async def meta_datagen_compositionpipeline(
 
         # Extract values from sampled dicts
         generate_archetype = cfg["generate_archetype"]
-        archetypes = cfg["archetypes"]
+        cfg["archetypes"]
         prompts_path = cfg["prompts"]
         small_model = model_config["small_model"]
         small_api_key = model_config["small_api_key"]
@@ -562,7 +534,7 @@ async def meta_datagen_compositionpipeline(
 
         # TODO: Implement the roleplaying pipeline call here
         print(f"RP Run {i}: Taking snapshot before pipeline call...")
-        snap_before_rp = tracemalloc.take_snapshot()
+        tracemalloc.take_snapshot()
         # try:
         #     _ = await rptoolkit_pipeline(
         #         input_dir=rp_input,
@@ -748,7 +720,7 @@ async def meta_datagen_compositionpipeline(
         print("=" * 80 + "\n")
 
         print(f"PDF Run {i}: Taking snapshot before pipeline call...")
-        snap_before_pdf = tracemalloc.take_snapshot()
+        tracemalloc.take_snapshot()
         # try:
         #     _ = await pdf_clean_and_convert_pipeline(
         #         use_subset=use_subset,
@@ -857,7 +829,7 @@ async def meta_datagen_compositionpipeline(
 
         # Extract values
         input_path = input_path_group["path"]
-        context = input_path_group["additional_context"]
+        input_path_group["additional_context"]
         completion_mode = completion_mode_use_stop["completion_mode"]
         use_stop = completion_mode_use_stop["use_stop"]
         small_model = model_config["small_model"]
@@ -917,7 +889,7 @@ async def meta_datagen_compositionpipeline(
         print("=" * 80 + "\n")
 
         print(f"RepVar Run {i}: Taking snapshot before pipeline call...")
-        snap_before_repvar = tracemalloc.take_snapshot()
+        tracemalloc.take_snapshot()
         # try:
         #     _ = await representation_variation_pipeline(
         #         input_dir=input_path,
@@ -1101,7 +1073,7 @@ async def meta_datagen_compositionpipeline(
         # TODO might be a good idea to replace read_files_manually with something like checking if text chunks passed in is truthy and if so using them, else reading. That way we have one option instead of two.
 
         try:
-            facts, _ = await generate_factual_qa_dataset(
+            _facts, _ = await generate_factual_qa_dataset(
                 input_dir=input_path,
                 output_dir=this_run_output_dir,
                 completion_mode=completion_mode,
@@ -1290,7 +1262,7 @@ async def meta_datagen_compositionpipeline(
         # TODO might be a good idea to replace read_files_manually with something like checking if text chunks passed in is truthy and if so using them, else reading. That way we have one option instead of two.
 
         try:
-            multi_source_facts, _ = await generate_multi_source_dataset(
+            _multi_source_facts, _ = await generate_multi_source_dataset(
                 input_dir=input_path,
                 output_dir=this_run_output_dir,
                 completion_mode=completion_mode,
@@ -1973,7 +1945,7 @@ async def meta_datagen_compositionpipeline(
 
                 try:
                     with open(file_path, "r", encoding="utf-8") as f:
-                        print(f"File opened successfully, determining format...")
+                        print("File opened successfully, determining format...")
 
                         chats = []
                         if file_path.endswith(".jsonl"):
@@ -1986,7 +1958,7 @@ async def meta_datagen_compositionpipeline(
                                         chats.append(chat_item)
                                     except json.JSONDecodeError as je:
                                         print(
-                                            f"ERROR: JSON parsing failed for line {line_num + 1} in {file_path}: {str(je)}"
+                                            f"ERROR: JSON parsing failed for line {line_num + 1} in {file_path}: {je!s}"
                                         )
                                         print(
                                             f"Line content: {line[:100]}..."
@@ -2030,12 +2002,12 @@ async def meta_datagen_compositionpipeline(
                     print(f"Successfully loaded {len(chats)} chats from {file_path}")
 
                 except json.JSONDecodeError as je:
-                    print(f"ERROR: JSON parsing failed for {file_path}: {str(je)}")
+                    print(f"ERROR: JSON parsing failed for {file_path}: {je!s}")
                     print(
                         f"First 100 characters of file: {open(file_path, 'r').read(100)}"
                     )
                 except Exception as e:
-                    print(f"ERROR loading {file_path}: {str(e)}")
+                    print(f"ERROR loading {file_path}: {e!s}")
                     print(f"Exception type: {type(e).__name__}")
                     import traceback
 
@@ -2073,7 +2045,7 @@ async def meta_datagen_compositionpipeline(
                 # Pretty print the first chat with indentation for readability
                 print(json.dumps(chats[0]))
             except Exception as e:
-                print(f"Error displaying chat: {str(e)}")
+                print(f"Error displaying chat: {e!s}")
                 print(f"Raw data: {chats[0]}")
         else:
             print(f"\n{pipeline_name}: No chats available")

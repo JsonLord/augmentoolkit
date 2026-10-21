@@ -1,4 +1,3 @@
-import chardet
 
 import json
 import os

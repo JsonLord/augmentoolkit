@@ -14,33 +14,31 @@
 # it basically wraps the ismple chat interface thing + the code that starts the llama.cpp server but as a fastapi thingthat routes any non- chat/completions request to the llama.cpp server
 
 
-from asyncio import Timeout
 import asyncio
 import os
 import platform
 import subprocess
 import time
+
+import nltk
+import uvicorn
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
-from openai import AsyncOpenAI
-import uvicorn
 from pydantic import BaseModel
-from typing import List, Dict
-from nltk.tokenize import word_tokenize
-import nltk
+
 from augmentoolkit.generation_functions.engine_wrapper_class import EngineWrapper
 from generation.core_components.chunking import count_tokens_specific_model
 from generation.core_components.simple_chat_loop import (
     format_messages_into_string,
-    get_stop_tokens,
     get_assistant_prefix,
+    get_stop_tokens,
 )
 from redis_config import set_progress
 
 
 class ChatRequest(BaseModel):
-    messages: List[Dict[str, str]]
+    messages: list[dict[str, str]]
 
 
 try:
@@ -217,7 +215,7 @@ async def llm_server(
 
             while total_tokens >= context_length:
                 if (
-                    not len(shown_messages) == 1
+                    len(shown_messages) != 1
                 ):  # if we are down to the system prompt and the most recent user message and are over, then we have a dire problem
                     removed_message = shown_messages.pop(
                         1
@@ -239,7 +237,7 @@ async def llm_server(
             # Add assistant prefix for generation prefilling
             prefilled_prompt = message_string + assistant_prefix
 
-            response, timeout = await engine.submit_completion(
+            response, _timeout = await engine.submit_completion(
                 prompt=prefilled_prompt,
                 sampling_params={
                     "temperature": 0.4,  # yes, it's not greedy. We want a good token probability distribtion for quality outputs.
@@ -281,7 +279,7 @@ async def llm_server(
 
             while total_tokens >= context_length:
                 if (
-                    not len(shown_messages) == 1
+                    len(shown_messages) != 1
                 ):  # if we are down to the system prompt and the most recent user message and are over, then we have a dire problem
                     removed_message = shown_messages.pop(
                         1
@@ -319,7 +317,7 @@ async def llm_server(
                         yield chunk
                 except Exception as e:
                     # Send error as final chunk
-                    yield f'data: {{"error": "{str(e)}", "done": true}}\n\n'
+                    yield f'data: {{"error": "{e!s}", "done": true}}\n\n'
 
             return StreamingResponse(
                 generate_stream(),
@@ -339,7 +337,7 @@ async def llm_server(
 
         # Check if we're already in an event loop
         try:
-            loop = asyncio.get_running_loop()
+            asyncio.get_running_loop()
             # We're in an async context, use Server API
             config = uvicorn.Config(app=app, port=port, host="0.0.0.0")
             server = uvicorn.Server(config)

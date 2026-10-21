@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 
-import sys
-import yaml
-from pathlib import Path
 import re
+import sys
+from pathlib import Path
+
+import yaml
 
 
 def process_yaml_directory(source_dir_path_str: str):
@@ -156,7 +157,7 @@ def process_yaml_directory(source_dir_path_str: str):
             )
             skipped_count += 1
 
-    print(f"\nProcessing complete.")
+    print("\nProcessing complete.")
     print(f"  Processed files: {processed_count}")
     print(f"  Skipped files: {skipped_count}")
     print(f"  Output directory: '{dest_dir}'")

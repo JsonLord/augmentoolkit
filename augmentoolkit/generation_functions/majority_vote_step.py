@@ -1,13 +1,10 @@
-import hashlib
-import json
-import random
-import traceback
-from tqdm import asyncio as tqdmasyncio
-import os
-import sys  # Add sys import
 import asyncio  # Add asyncio import
+import json
+import sys  # Add sys import
+import traceback
 
-from augmentoolkit.generation_functions.generation_step_class import GenerationStep
+from tqdm import asyncio as tqdmasyncio
+
 from augmentoolkit.generation_functions.pipeline_step_class import (
     PipelineStep,
     filter_out_nonpresent_keys,
@@ -149,7 +146,7 @@ class MajorityVoteStep(
         if include_details:
             # print(f"[DEBUG MajorityVoteStep evaluate_final_count_and_save] Filtering details for key='{key}' based on judgement ({judgement}).")
             # print("INCLUDING DETAILS -- MAJORITY VOTE")
-            original_details_count = len(entry.get(self.details_key, []))
+            len(entry.get(self.details_key, []))
             filtered_details = [
                 detail
                 for detail in entry.get(self.details_key, [])
@@ -220,7 +217,7 @@ class MajorityVoteStep(
                         self.result_key, []
                     )
                     # print(f"[DEBUG MajorityVoteStep run] Loaded {len(existing_variations)} existing variations from file for key='{key}'.")
-            except (FileNotFoundError, json.JSONDecodeError) as e:
+            except (FileNotFoundError, json.JSONDecodeError):
                 # print(f"[DEBUG MajorityVoteStep run] File '{output_path}' not found or JSON error for key='{key}': {e}. Starting with 0 existing variations.")
                 pass  # No existing data is fine
         except Exception as e:
@@ -230,7 +227,7 @@ class MajorityVoteStep(
             # Decide if we should continue or raise
 
         # Generate remaining variations (it is in a loop we generate like random variations does)
-        needed_generations = self.vote_count_needed - len(existing_variations)
+        self.vote_count_needed - len(existing_variations)
         # print(f"[DEBUG MajorityVoteStep run] Need to generate {needed_generations} more votes for key='{key}' (Have {len(existing_variations)}, Need {self.vote_count_needed}).")
         for i in range(len(existing_variations), self.vote_count_needed):
             # print(f"[DEBUG MajorityVoteStep run] Starting generation loop iteration {i+1}/{self.vote_count_needed} for key='{key}'.")
@@ -242,7 +239,7 @@ class MajorityVoteStep(
                 attempt += 1
                 # print(f"[DEBUG MajorityVoteStep run] Generation attempt {attempt}/{current_max_retries} for key='{key}', iteration {i+1}.")
                 try:
-                    result, full_output, full_response, full_input = (
+                    result, _full_output, full_response, full_input = (
                         await self.generate_data(
                             processed_data,
                             engine_wrapper,
@@ -264,7 +261,7 @@ class MajorityVoteStep(
                     else:
                         # print(f"[DEBUG MajorityVoteStep run] Validation function failed for key='{key}'.")
                         error_message = validation_result["message"]
-                        pass  # Explicitly do nothing if validation fails
+                        # Explicitly do nothing if validation fails
                 except Exception as e:
                     # print(f"[DEBUG MajorityVoteStep run] Exception during generate_data for key='{key}', attempt {attempt}: {e}")
                     error_message = str(e)
@@ -318,11 +315,13 @@ class MajorityVoteStep(
         completion_mode,
         use_stop,
         include_details,
-        input_dict={},
+        input_dict=None,
         **kwargs,
     ):
         # print(f"[DEBUG MajorityVoteStep execute_pipeline] Starting execute_pipeline. Output dir: '{output_dir}'. Initial input_dict size: {len(input_dict)}.")
         # print(f"[DEBUG MajorityVoteStep execute_pipeline] Loading dataset...")
+        if input_dict is None:
+            input_dict = {}
         self.load_dataset(input_dict=input_dict, output_dir=output_dir)
         # print(f"[DEBUG MajorityVoteStep execute_pipeline] Dataset loaded. input_dict size: {len(input_dict)}.")
         num_tasks = len(input_dict)
@@ -357,19 +356,19 @@ class MajorityVoteStep(
                     completed_tasks += 1
                     # if completed_tasks % 100 == 0 or completed_tasks == num_tasks: # Print every 100 tasks or on the last task
                     #      print(f"[DEBUG MajorityVoteStep execute_pipeline] Completed {completed_tasks}/{num_tasks} tasks.")
-                except asyncio.TimeoutError:
+                except TimeoutError:
                     # completed_tasks might not be perfectly accurate here if timeout happens before increment
                     print(
                         f"\nWARNING: Task (approx {completed_tasks+1}/{num_tasks}) for step '{self.output_file}' timed out after {TASK_TIMEOUT_SECONDS} seconds.",
                         file=sys.stderr,
                     )
                     # Task is cancelled by wait_for, loop continues
-                except Exception as task_exception:
+                except Exception:
                     # print(f"[DEBUG MajorityVoteStep execute_pipeline] Exception occurred in awaited task: {task_exception}")
                     traceback.print_exc()  # Print traceback for individual task failure
 
             # print(f"[DEBUG MajorityVoteStep execute_pipeline] All tasks completed.")
-        except Exception as e:
+        except Exception:
             # print(f"[DEBUG MajorityVoteStep execute_pipeline] Exception occurred during task execution loop: {e}")
             traceback.print_exc()
             # raise e # Decide if outer exception should halt everything
