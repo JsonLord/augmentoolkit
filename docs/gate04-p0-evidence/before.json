@@ -1,0 +1,118 @@
+{
+  "image": "augmentoolkit-gate04-baseline:e009700",
+  "baseline": true,
+  "synthetic_only": true,
+  "passed": true,
+  "http": [
+    {
+      "method": "GET",
+      "path": "/",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "seconds": 0.0325,
+      "phase": "direct_refresh"
+    },
+    {
+      "method": "GET",
+      "path": "/inputs",
+      "status": 404,
+      "content_type": "application/json",
+      "seconds": 0.0016,
+      "phase": "direct_refresh"
+    },
+    {
+      "method": "GET",
+      "path": "/outputs",
+      "status": 404,
+      "content_type": "application/json",
+      "seconds": 0.0014,
+      "phase": "direct_refresh"
+    },
+    {
+      "method": "GET",
+      "path": "/configs",
+      "status": 404,
+      "content_type": "application/json",
+      "seconds": 0.0016,
+      "phase": "direct_refresh"
+    },
+    {
+      "method": "GET",
+      "path": "/monitor",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "seconds": 0.0019,
+      "phase": "direct_refresh"
+    },
+    {
+      "method": "GET",
+      "path": "/logs",
+      "status": 404,
+      "content_type": "application/json",
+      "seconds": 0.002,
+      "phase": "direct_refresh"
+    },
+    {
+      "method": "GET",
+      "path": "/chat",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "seconds": 0.0025,
+      "phase": "direct_refresh"
+    },
+    {
+      "method": "GET",
+      "path": "/configs/example",
+      "status": 404,
+      "content_type": "application/json",
+      "seconds": 0.0011,
+      "phase": "direct_refresh"
+    },
+    {
+      "method": "GET",
+      "path": "/logs/example",
+      "status": 404,
+      "content_type": "application/json",
+      "seconds": 0.0009,
+      "phase": "direct_refresh"
+    },
+    {
+      "method": "GET",
+      "path": "/health",
+      "status": 503,
+      "content_type": "text/plain; charset=utf-8",
+      "seconds": 0.0023,
+      "phase": "idle_connection_admission"
+    }
+  ],
+  "resources": [
+    {
+      "VmRSS": 316981248,
+      "VmHWM": 500015104,
+      "cpu_usage_usec": 3612923,
+      "observed_at_monotonic": 58570.634005133
+    }
+  ],
+  "image_id": "sha256:5cabaf4b25f02e7a6c82d3a5c83a7799c9b1b81eae7e33d7f0181a47bad99e6e",
+  "command": [
+    "uvicorn",
+    "api:app",
+    "--host",
+    "0.0.0.0",
+    "--port",
+    "7860",
+    "--workers",
+    "1",
+    "--no-access-log",
+    "--limit-concurrency",
+    "8"
+  ],
+  "eight_idle_connections_status": 503,
+  "old_failures_reproduced": true,
+  "sanitized_server_logs": {
+    "concurrency_limit_warnings": 1,
+    "server_process_starts": 1,
+    "startup_complete": 1,
+    "tracebacks": 0
+  }
+}

@@ -1,0 +1,2352 @@
+{
+  "image": "augmentoolkit-gate04-hotfix",
+  "baseline": false,
+  "synthetic_only": true,
+  "passed": true,
+  "http": [
+    {
+      "method": "GET",
+      "path": "/",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "seconds": 0.024,
+      "started_monotonic": 58882.275536903,
+      "completed_monotonic": 58882.299555013,
+      "phase": "direct_refresh"
+    },
+    {
+      "method": "GET",
+      "path": "/inputs",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "seconds": 0.0019,
+      "started_monotonic": 58882.299570767,
+      "completed_monotonic": 58882.301515349,
+      "phase": "direct_refresh"
+    },
+    {
+      "method": "GET",
+      "path": "/outputs",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "seconds": 0.0014,
+      "started_monotonic": 58882.301527497,
+      "completed_monotonic": 58882.302957833,
+      "phase": "direct_refresh"
+    },
+    {
+      "method": "GET",
+      "path": "/configs",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "seconds": 0.0015,
+      "started_monotonic": 58882.30297927599,
+      "completed_monotonic": 58882.304453498,
+      "phase": "direct_refresh"
+    },
+    {
+      "method": "GET",
+      "path": "/monitor",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "seconds": 0.0011,
+      "started_monotonic": 58882.304462551,
+      "completed_monotonic": 58882.305560282,
+      "phase": "direct_refresh"
+    },
+    {
+      "method": "GET",
+      "path": "/logs",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "seconds": 0.0017,
+      "started_monotonic": 58882.305569606004,
+      "completed_monotonic": 58882.307281211,
+      "phase": "direct_refresh"
+    },
+    {
+      "method": "GET",
+      "path": "/chat",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "seconds": 0.0011,
+      "started_monotonic": 58882.307289504,
+      "completed_monotonic": 58882.308391725,
+      "phase": "direct_refresh"
+    },
+    {
+      "method": "GET",
+      "path": "/configs/example",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "seconds": 0.0014,
+      "started_monotonic": 58882.308404434996,
+      "completed_monotonic": 58882.309754905,
+      "phase": "direct_refresh"
+    },
+    {
+      "method": "GET",
+      "path": "/logs/example",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "seconds": 0.0014,
+      "started_monotonic": 58882.309765992,
+      "completed_monotonic": 58882.311132697,
+      "phase": "direct_refresh"
+    },
+    {
+      "method": "GET",
+      "path": "/health",
+      "status": 200,
+      "content_type": "application/json",
+      "seconds": 0.0021,
+      "started_monotonic": 58882.413487179,
+      "completed_monotonic": 58882.415575769,
+      "phase": "idle_connection_admission"
+    },
+    {
+      "method": "GET",
+      "path": "/ocr/health",
+      "status": 200,
+      "content_type": "application/json",
+      "seconds": 0.0018,
+      "started_monotonic": 58882.415714327006,
+      "completed_monotonic": 58882.417476825,
+      "phase": "boundary"
+    },
+    {
+      "method": "GET",
+      "path": "/ocr/ready",
+      "status": 200,
+      "content_type": "application/json",
+      "seconds": 0.0015,
+      "started_monotonic": 58882.41748616799,
+      "completed_monotonic": 58882.418944147,
+      "phase": "boundary"
+    },
+    {
+      "method": "GET",
+      "path": "/inputs/structure/",
+      "status": 401,
+      "content_type": "application/json",
+      "seconds": 0.0018,
+      "started_monotonic": 58882.418977616995,
+      "completed_monotonic": 58882.420826184,
+      "phase": "boundary"
+    },
+    {
+      "method": "GET",
+      "path": "/tasks/queue",
+      "status": 401,
+      "content_type": "application/json",
+      "seconds": 0.0022,
+      "started_monotonic": 58882.420834977,
+      "completed_monotonic": 58882.423003536,
+      "phase": "boundary"
+    },
+    {
+      "method": "GET",
+      "path": "/jobs",
+      "status": 401,
+      "content_type": "application/json",
+      "seconds": 0.0015,
+      "started_monotonic": 58882.423011528,
+      "completed_monotonic": 58882.42450889,
+      "phase": "boundary"
+    },
+    {
+      "method": "GET",
+      "path": "/ocr/ready",
+      "status": 401,
+      "content_type": "application/json",
+      "seconds": 0.0012,
+      "started_monotonic": 58882.424515661005,
+      "completed_monotonic": 58882.425677958,
+      "phase": "boundary"
+    },
+    {
+      "method": "GET",
+      "path": "/inputs/structure/",
+      "status": 401,
+      "content_type": "application/json",
+      "seconds": 0.0015,
+      "started_monotonic": 58882.425684819005,
+      "completed_monotonic": 58882.427222792,
+      "phase": "boundary"
+    },
+    {
+      "method": "GET",
+      "path": "/tasks/queue",
+      "status": 401,
+      "content_type": "application/json",
+      "seconds": 0.0012,
+      "started_monotonic": 58882.427228961,
+      "completed_monotonic": 58882.428415385,
+      "phase": "boundary"
+    },
+    {
+      "method": "GET",
+      "path": "/jobs",
+      "status": 401,
+      "content_type": "application/json",
+      "seconds": 0.0014,
+      "started_monotonic": 58882.428422155004,
+      "completed_monotonic": 58882.429840683,
+      "phase": "boundary"
+    },
+    {
+      "method": "GET",
+      "path": "/ocr/ready",
+      "status": 401,
+      "content_type": "application/json",
+      "seconds": 0.0012,
+      "started_monotonic": 58882.429846633,
+      "completed_monotonic": 58882.43100579,
+      "phase": "boundary"
+    },
+    {
+      "method": "GET",
+      "path": "/tasks/unknown",
+      "status": 404,
+      "content_type": "application/json",
+      "seconds": 0.0009,
+      "started_monotonic": 58882.43101243,
+      "completed_monotonic": 58882.431930654,
+      "phase": "boundary"
+    },
+    {
+      "method": "GET",
+      "path": "/api/unknown",
+      "status": 404,
+      "content_type": "application/json",
+      "seconds": 0.0011,
+      "started_monotonic": 58882.431939568,
+      "completed_monotonic": 58882.433053577,
+      "phase": "boundary"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/missing.js",
+      "status": 404,
+      "content_type": "application/json",
+      "seconds": 0.0011,
+      "started_monotonic": 58882.433060487005,
+      "completed_monotonic": 58882.43421002,
+      "phase": "boundary"
+    },
+    {
+      "method": "GET",
+      "path": "/tasks/queue",
+      "status": 503,
+      "content_type": "application/json",
+      "seconds": 0.003,
+      "started_monotonic": 58882.43421801201,
+      "completed_monotonic": 58882.437227965,
+      "phase": "intentional_queue_503"
+    },
+    {
+      "method": "POST",
+      "path": "/pipelines/run",
+      "status": 503,
+      "content_type": "application/json",
+      "seconds": 0.0025,
+      "started_monotonic": 58882.437235497,
+      "completed_monotonic": 58882.439718259,
+      "phase": "intentional_queue_503"
+    },
+    {
+      "method": "POST",
+      "path": "/ocr/internal/ocr/page",
+      "status": 422,
+      "content_type": "application/json",
+      "seconds": 0.0067,
+      "started_monotonic": 58882.453010458,
+      "completed_monotonic": 58882.45974096,
+      "phase": "boundary"
+    },
+    {
+      "method": "POST",
+      "path": "/ocr/v1/ocr/page",
+      "status": 422,
+      "content_type": "application/json",
+      "seconds": 0.0026,
+      "started_monotonic": 58882.459752507,
+      "completed_monotonic": 58882.462327734,
+      "phase": "boundary"
+    },
+    {
+      "method": "POST",
+      "path": "/ocr/v1/chat/completions",
+      "status": 422,
+      "content_type": "application/json",
+      "seconds": 0.0024,
+      "started_monotonic": 58882.462367505,
+      "completed_monotonic": 58882.464776646,
+      "phase": "boundary"
+    },
+    {
+      "method": "POST",
+      "path": "/ocr/internal/ocr/page",
+      "status": 422,
+      "content_type": "application/json",
+      "seconds": 0.0021,
+      "started_monotonic": 58882.46478541,
+      "completed_monotonic": 58882.466924349,
+      "phase": "boundary"
+    },
+    {
+      "method": "POST",
+      "path": "/ocr/v1/ocr/page",
+      "status": 422,
+      "content_type": "application/json",
+      "seconds": 0.0015,
+      "started_monotonic": 58882.46694174499,
+      "completed_monotonic": 58882.468429759,
+      "phase": "boundary"
+    },
+    {
+      "method": "POST",
+      "path": "/ocr/v1/chat/completions",
+      "status": 422,
+      "content_type": "application/json",
+      "seconds": 0.0015,
+      "started_monotonic": 58882.468455187,
+      "completed_monotonic": 58882.469923571,
+      "phase": "boundary"
+    },
+    {
+      "method": "POST",
+      "path": "/ocr/internal/ocr/page",
+      "status": 422,
+      "content_type": "application/json",
+      "seconds": 0.0014,
+      "started_monotonic": 58882.469931172,
+      "completed_monotonic": 58882.471320557,
+      "phase": "boundary"
+    },
+    {
+      "method": "POST",
+      "path": "/ocr/v1/ocr/page",
+      "status": 422,
+      "content_type": "application/json",
+      "seconds": 0.002,
+      "started_monotonic": 58882.471328008,
+      "completed_monotonic": 58882.473281783,
+      "phase": "boundary"
+    },
+    {
+      "method": "POST",
+      "path": "/ocr/v1/chat/completions",
+      "status": 422,
+      "content_type": "application/json",
+      "seconds": 0.0013,
+      "started_monotonic": 58882.473310315996,
+      "completed_monotonic": 58882.474611538,
+      "phase": "boundary"
+    },
+    {
+      "method": "GET",
+      "path": "/",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/index-DJ3_qY_H.css",
+      "status": 200,
+      "content_type": "text/css; charset=utf-8",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/index-DyrcoX0s.js",
+      "status": 200,
+      "content_type": "application/javascript",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/atk-logo-notscuffed-BIuKPhzk.png",
+      "status": 200,
+      "content_type": "image/png",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/atk-logo-notscuffed-BIuKPhzk.png",
+      "status": 200,
+      "content_type": "image/png",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/index-DyrcoX0s.js",
+      "status": 200,
+      "content_type": "application/javascript",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/index-DJ3_qY_H.css",
+      "status": 200,
+      "content_type": "text/css; charset=utf-8",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/inputs/structure/",
+      "status": 200,
+      "content_type": "application/json",
+      "seconds": 0.0427,
+      "started_monotonic": 58883.919841041,
+      "completed_monotonic": 58883.962589793,
+      "phase": "concurrent_workload"
+    },
+    {
+      "method": "GET",
+      "path": "/configs/structure/",
+      "status": 200,
+      "content_type": "application/json",
+      "seconds": 0.0457,
+      "started_monotonic": 58883.919094150006,
+      "completed_monotonic": 58883.964769815,
+      "phase": "concurrent_workload"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/atk-logo-notscuffed-BIuKPhzk.png",
+      "status": 200,
+      "content_type": "image/png",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/pipelines/available",
+      "status": 200,
+      "content_type": "application/json",
+      "seconds": 0.053,
+      "started_monotonic": 58883.918250364004,
+      "completed_monotonic": 58883.971208848,
+      "phase": "concurrent_workload"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/atk-logo-notscuffed-BIuKPhzk.png",
+      "status": 200,
+      "content_type": "image/png",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/jobs",
+      "status": 200,
+      "content_type": "application/json",
+      "seconds": 0.0599,
+      "started_monotonic": 58883.923581705996,
+      "completed_monotonic": 58883.983493835,
+      "phase": "concurrent_workload"
+    },
+    {
+      "method": "GET",
+      "path": "/outputs/structure/",
+      "status": 200,
+      "content_type": "application/json",
+      "seconds": 0.0705,
+      "started_monotonic": 58883.924374356,
+      "completed_monotonic": 58883.994828314,
+      "phase": "concurrent_workload"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/index-DyrcoX0s.js",
+      "status": 200,
+      "content_type": "application/javascript",
+      "seconds": 0.0869,
+      "started_monotonic": 58883.919415825,
+      "completed_monotonic": 58884.006326113,
+      "phase": "concurrent_workload"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/index-DyrcoX0s.js",
+      "status": 200,
+      "content_type": "application/javascript",
+      "seconds": 0.0872,
+      "started_monotonic": 58883.922892337,
+      "completed_monotonic": 58884.010065612,
+      "phase": "concurrent_workload"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/index-DyrcoX0s.js",
+      "status": 200,
+      "content_type": "application/javascript",
+      "seconds": 0.0946,
+      "started_monotonic": 58883.91874370201,
+      "completed_monotonic": 58884.013363794,
+      "phase": "concurrent_workload"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/index-DyrcoX0s.js",
+      "status": 200,
+      "content_type": "application/javascript",
+      "seconds": 0.0888,
+      "started_monotonic": 58883.925991394004,
+      "completed_monotonic": 58884.014814471,
+      "phase": "concurrent_workload"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/index-DyrcoX0s.js",
+      "status": 200,
+      "content_type": "application/javascript",
+      "seconds": 0.0889,
+      "started_monotonic": 58883.926450276005,
+      "completed_monotonic": 58884.01533375,
+      "phase": "concurrent_workload"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/index-DyrcoX0s.js",
+      "status": 200,
+      "content_type": "application/javascript",
+      "seconds": 0.0925,
+      "started_monotonic": 58883.923396016,
+      "completed_monotonic": 58884.015858476,
+      "phase": "concurrent_workload"
+    },
+    {
+      "method": "GET",
+      "path": "/",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/index-DyrcoX0s.js",
+      "status": 200,
+      "content_type": "application/javascript",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/index-DJ3_qY_H.css",
+      "status": 200,
+      "content_type": "text/css; charset=utf-8",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/atk-logo-notscuffed-BIuKPhzk.png",
+      "status": 200,
+      "content_type": "image/png",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/atk-logo-notscuffed-BIuKPhzk.png",
+      "status": 200,
+      "content_type": "image/png",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/index-DyrcoX0s.js",
+      "status": 200,
+      "content_type": "application/javascript",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/index-DJ3_qY_H.css",
+      "status": 200,
+      "content_type": "text/css; charset=utf-8",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/atk-logo-notscuffed-BIuKPhzk.png",
+      "status": 200,
+      "content_type": "image/png",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/atk-logo-notscuffed-BIuKPhzk.png",
+      "status": 200,
+      "content_type": "image/png",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "POST",
+      "path": "/ocr/v1/ocr/page",
+      "status": 200,
+      "content_type": "application/json",
+      "seconds": 1.7131,
+      "started_monotonic": 58883.92397847399,
+      "completed_monotonic": 58885.637127898,
+      "phase": "concurrent_workload"
+    },
+    {
+      "method": "GET",
+      "path": "/",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/index-DyrcoX0s.js",
+      "status": 200,
+      "content_type": "application/javascript",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/index-DJ3_qY_H.css",
+      "status": 200,
+      "content_type": "text/css; charset=utf-8",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/atk-logo-notscuffed-BIuKPhzk.png",
+      "status": 200,
+      "content_type": "image/png",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/atk-logo-notscuffed-BIuKPhzk.png",
+      "status": 200,
+      "content_type": "image/png",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/index-DyrcoX0s.js",
+      "status": 200,
+      "content_type": "application/javascript",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/index-DJ3_qY_H.css",
+      "status": 200,
+      "content_type": "text/css; charset=utf-8",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/atk-logo-notscuffed-BIuKPhzk.png",
+      "status": 200,
+      "content_type": "image/png",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/atk-logo-notscuffed-BIuKPhzk.png",
+      "status": 200,
+      "content_type": "image/png",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/index-DyrcoX0s.js",
+      "status": 200,
+      "content_type": "application/javascript",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/index-DJ3_qY_H.css",
+      "status": 200,
+      "content_type": "text/css; charset=utf-8",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/atk-logo-notscuffed-BIuKPhzk.png",
+      "status": 200,
+      "content_type": "image/png",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/atk-logo-notscuffed-BIuKPhzk.png",
+      "status": 200,
+      "content_type": "image/png",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/index-DyrcoX0s.js",
+      "status": 200,
+      "content_type": "application/javascript",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/index-DJ3_qY_H.css",
+      "status": 200,
+      "content_type": "text/css; charset=utf-8",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/atk-logo-notscuffed-BIuKPhzk.png",
+      "status": 200,
+      "content_type": "image/png",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/atk-logo-notscuffed-BIuKPhzk.png",
+      "status": 200,
+      "content_type": "image/png",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/index-DyrcoX0s.js",
+      "status": 200,
+      "content_type": "application/javascript",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/index-DJ3_qY_H.css",
+      "status": 200,
+      "content_type": "text/css; charset=utf-8",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/atk-logo-notscuffed-BIuKPhzk.png",
+      "status": 200,
+      "content_type": "image/png",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/atk-logo-notscuffed-BIuKPhzk.png",
+      "status": 200,
+      "content_type": "image/png",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/index-DyrcoX0s.js",
+      "status": 200,
+      "content_type": "application/javascript",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/index-DJ3_qY_H.css",
+      "status": 200,
+      "content_type": "text/css; charset=utf-8",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/atk-logo-notscuffed-BIuKPhzk.png",
+      "status": 200,
+      "content_type": "image/png",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/atk-logo-notscuffed-BIuKPhzk.png",
+      "status": 200,
+      "content_type": "image/png",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/index-DyrcoX0s.js",
+      "status": 200,
+      "content_type": "application/javascript",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/index-DJ3_qY_H.css",
+      "status": 200,
+      "content_type": "text/css; charset=utf-8",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/atk-logo-notscuffed-BIuKPhzk.png",
+      "status": 200,
+      "content_type": "image/png",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/atk-logo-notscuffed-BIuKPhzk.png",
+      "status": 200,
+      "content_type": "image/png",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/pipelines/available",
+      "status": 200,
+      "content_type": "application/json",
+      "application_bearer_present": true,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/atk-logo-notscuffed-BIuKPhzk.png",
+      "status": 200,
+      "content_type": "image/png",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/inputs/structure/",
+      "status": 200,
+      "content_type": "application/json",
+      "application_bearer_present": true,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/atk-logo-notscuffed-BIuKPhzk.png",
+      "status": 200,
+      "content_type": "image/png",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/outputs/structure/",
+      "status": 200,
+      "content_type": "application/json",
+      "application_bearer_present": true,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/atk-logo-notscuffed-BIuKPhzk.png",
+      "status": 200,
+      "content_type": "image/png",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/configs/structure/",
+      "status": 200,
+      "content_type": "application/json",
+      "application_bearer_present": true,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/atk-logo-notscuffed-BIuKPhzk.png",
+      "status": 200,
+      "content_type": "image/png",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/atk-logo-notscuffed-BIuKPhzk.png",
+      "status": 200,
+      "content_type": "image/png",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/atk-logo-notscuffed-BIuKPhzk.png",
+      "status": 200,
+      "content_type": "image/png",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/atk-logo-notscuffed-BIuKPhzk.png",
+      "status": 200,
+      "content_type": "image/png",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/configs/structure/",
+      "status": 200,
+      "content_type": "application/json",
+      "application_bearer_present": true,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/atk-logo-notscuffed-BIuKPhzk.png",
+      "status": 200,
+      "content_type": "image/png",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/atk-logo-notscuffed-BIuKPhzk.png",
+      "status": 200,
+      "content_type": "image/png",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/atk-logo-notscuffed-BIuKPhzk.png",
+      "status": 200,
+      "content_type": "image/png",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/atk-logo-notscuffed-BIuKPhzk.png",
+      "status": 200,
+      "content_type": "image/png",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/configs/structure/",
+      "status": 200,
+      "content_type": "application/json",
+      "application_bearer_present": true,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/atk-logo-notscuffed-BIuKPhzk.png",
+      "status": 200,
+      "content_type": "image/png",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/atk-logo-notscuffed-BIuKPhzk.png",
+      "status": 200,
+      "content_type": "image/png",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/atk-logo-notscuffed-BIuKPhzk.png",
+      "status": 200,
+      "content_type": "image/png",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/atk-logo-notscuffed-BIuKPhzk.png",
+      "status": 200,
+      "content_type": "image/png",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/configs/structure/",
+      "status": 200,
+      "content_type": "application/json",
+      "application_bearer_present": true,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/atk-logo-notscuffed-BIuKPhzk.png",
+      "status": 200,
+      "content_type": "image/png",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/atk-logo-notscuffed-BIuKPhzk.png",
+      "status": 200,
+      "content_type": "image/png",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/atk-logo-notscuffed-BIuKPhzk.png",
+      "status": 200,
+      "content_type": "image/png",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/atk-logo-notscuffed-BIuKPhzk.png",
+      "status": 200,
+      "content_type": "image/png",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/configs/structure/",
+      "status": 200,
+      "content_type": "application/json",
+      "application_bearer_present": true,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/atk-logo-notscuffed-BIuKPhzk.png",
+      "status": 200,
+      "content_type": "image/png",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/atk-logo-notscuffed-BIuKPhzk.png",
+      "status": 200,
+      "content_type": "image/png",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/index-DyrcoX0s.js",
+      "status": 200,
+      "content_type": "application/javascript",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/index-DJ3_qY_H.css",
+      "status": 200,
+      "content_type": "text/css; charset=utf-8",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/atk-logo-notscuffed-BIuKPhzk.png",
+      "status": 200,
+      "content_type": "image/png",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/atk-logo-notscuffed-BIuKPhzk.png",
+      "status": 200,
+      "content_type": "image/png",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/index-DyrcoX0s.js",
+      "status": 200,
+      "content_type": "application/javascript",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/index-DJ3_qY_H.css",
+      "status": 200,
+      "content_type": "text/css; charset=utf-8",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/atk-logo-notscuffed-BIuKPhzk.png",
+      "status": 200,
+      "content_type": "image/png",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/atk-logo-notscuffed-BIuKPhzk.png",
+      "status": 200,
+      "content_type": "image/png",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/inputs",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/index-DyrcoX0s.js",
+      "status": 200,
+      "content_type": "application/javascript",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/index-DJ3_qY_H.css",
+      "status": 200,
+      "content_type": "text/css; charset=utf-8",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/atk-logo-notscuffed-BIuKPhzk.png",
+      "status": 200,
+      "content_type": "image/png",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/atk-logo-notscuffed-BIuKPhzk.png",
+      "status": 200,
+      "content_type": "image/png",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/inputs/structure/",
+      "status": 401,
+      "content_type": "application/json",
+      "application_bearer_present": false,
+      "phase": "browser_locked_401"
+    },
+    {
+      "method": "GET",
+      "path": "/inputs",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/index-DyrcoX0s.js",
+      "status": 200,
+      "content_type": "application/javascript",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/index-DJ3_qY_H.css",
+      "status": 200,
+      "content_type": "text/css; charset=utf-8",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/atk-logo-notscuffed-BIuKPhzk.png",
+      "status": 200,
+      "content_type": "image/png",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/atk-logo-notscuffed-BIuKPhzk.png",
+      "status": 200,
+      "content_type": "image/png",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/inputs/structure/",
+      "status": 401,
+      "content_type": "application/json",
+      "application_bearer_present": false,
+      "phase": "browser_locked_401"
+    },
+    {
+      "method": "GET",
+      "path": "/outputs",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/index-DyrcoX0s.js",
+      "status": 200,
+      "content_type": "application/javascript",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/index-DJ3_qY_H.css",
+      "status": 200,
+      "content_type": "text/css; charset=utf-8",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/atk-logo-notscuffed-BIuKPhzk.png",
+      "status": 200,
+      "content_type": "image/png",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/atk-logo-notscuffed-BIuKPhzk.png",
+      "status": 200,
+      "content_type": "image/png",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/outputs/structure/",
+      "status": 401,
+      "content_type": "application/json",
+      "application_bearer_present": false,
+      "phase": "browser_locked_401"
+    },
+    {
+      "method": "GET",
+      "path": "/outputs",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/index-DyrcoX0s.js",
+      "status": 200,
+      "content_type": "application/javascript",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/index-DJ3_qY_H.css",
+      "status": 200,
+      "content_type": "text/css; charset=utf-8",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/atk-logo-notscuffed-BIuKPhzk.png",
+      "status": 200,
+      "content_type": "image/png",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/atk-logo-notscuffed-BIuKPhzk.png",
+      "status": 200,
+      "content_type": "image/png",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/outputs/structure/",
+      "status": 401,
+      "content_type": "application/json",
+      "application_bearer_present": false,
+      "phase": "browser_locked_401"
+    },
+    {
+      "method": "GET",
+      "path": "/configs",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/index-DyrcoX0s.js",
+      "status": 200,
+      "content_type": "application/javascript",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/index-DJ3_qY_H.css",
+      "status": 200,
+      "content_type": "text/css; charset=utf-8",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/atk-logo-notscuffed-BIuKPhzk.png",
+      "status": 200,
+      "content_type": "image/png",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/atk-logo-notscuffed-BIuKPhzk.png",
+      "status": 200,
+      "content_type": "image/png",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/configs/structure/",
+      "status": 401,
+      "content_type": "application/json",
+      "application_bearer_present": false,
+      "phase": "browser_locked_401"
+    },
+    {
+      "method": "GET",
+      "path": "/configs",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/index-DyrcoX0s.js",
+      "status": 200,
+      "content_type": "application/javascript",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/index-DJ3_qY_H.css",
+      "status": 200,
+      "content_type": "text/css; charset=utf-8",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/atk-logo-notscuffed-BIuKPhzk.png",
+      "status": 200,
+      "content_type": "image/png",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/atk-logo-notscuffed-BIuKPhzk.png",
+      "status": 200,
+      "content_type": "image/png",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/configs/structure/",
+      "status": 401,
+      "content_type": "application/json",
+      "application_bearer_present": false,
+      "phase": "browser_locked_401"
+    },
+    {
+      "method": "GET",
+      "path": "/monitor",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/index-DyrcoX0s.js",
+      "status": 200,
+      "content_type": "application/javascript",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/index-DJ3_qY_H.css",
+      "status": 200,
+      "content_type": "text/css; charset=utf-8",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/atk-logo-notscuffed-BIuKPhzk.png",
+      "status": 200,
+      "content_type": "image/png",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/atk-logo-notscuffed-BIuKPhzk.png",
+      "status": 200,
+      "content_type": "image/png",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/tasks/queue",
+      "status": 401,
+      "content_type": "application/json",
+      "application_bearer_present": false,
+      "phase": "browser_locked_401"
+    },
+    {
+      "method": "GET",
+      "path": "/monitor",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/index-DyrcoX0s.js",
+      "status": 200,
+      "content_type": "application/javascript",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/index-DJ3_qY_H.css",
+      "status": 200,
+      "content_type": "text/css; charset=utf-8",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/atk-logo-notscuffed-BIuKPhzk.png",
+      "status": 200,
+      "content_type": "image/png",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/atk-logo-notscuffed-BIuKPhzk.png",
+      "status": 200,
+      "content_type": "image/png",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/tasks/queue",
+      "status": 401,
+      "content_type": "application/json",
+      "application_bearer_present": false,
+      "phase": "browser_locked_401"
+    },
+    {
+      "method": "GET",
+      "path": "/logs",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/index-DyrcoX0s.js",
+      "status": 200,
+      "content_type": "application/javascript",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/index-DJ3_qY_H.css",
+      "status": 200,
+      "content_type": "text/css; charset=utf-8",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/atk-logo-notscuffed-BIuKPhzk.png",
+      "status": 200,
+      "content_type": "image/png",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/logs",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/atk-logo-notscuffed-BIuKPhzk.png",
+      "status": 200,
+      "content_type": "image/png",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/logs",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/index-DyrcoX0s.js",
+      "status": 200,
+      "content_type": "application/javascript",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/index-DJ3_qY_H.css",
+      "status": 200,
+      "content_type": "text/css; charset=utf-8",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/atk-logo-notscuffed-BIuKPhzk.png",
+      "status": 200,
+      "content_type": "image/png",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/logs",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/atk-logo-notscuffed-BIuKPhzk.png",
+      "status": 200,
+      "content_type": "image/png",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/chat",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/index-DyrcoX0s.js",
+      "status": 200,
+      "content_type": "application/javascript",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/index-DJ3_qY_H.css",
+      "status": 200,
+      "content_type": "text/css; charset=utf-8",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/atk-logo-notscuffed-BIuKPhzk.png",
+      "status": 200,
+      "content_type": "image/png",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/atk-logo-notscuffed-BIuKPhzk.png",
+      "status": 200,
+      "content_type": "image/png",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/chat",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/index-DyrcoX0s.js",
+      "status": 200,
+      "content_type": "application/javascript",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/index-DJ3_qY_H.css",
+      "status": 200,
+      "content_type": "text/css; charset=utf-8",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/atk-logo-notscuffed-BIuKPhzk.png",
+      "status": 200,
+      "content_type": "image/png",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/atk-logo-notscuffed-BIuKPhzk.png",
+      "status": 200,
+      "content_type": "image/png",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/configs/example",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/index-DyrcoX0s.js",
+      "status": 200,
+      "content_type": "application/javascript",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/index-DJ3_qY_H.css",
+      "status": 200,
+      "content_type": "text/css; charset=utf-8",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/atk-logo-notscuffed-BIuKPhzk.png",
+      "status": 200,
+      "content_type": "image/png",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/atk-logo-notscuffed-BIuKPhzk.png",
+      "status": 200,
+      "content_type": "image/png",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/configs/content/example",
+      "status": 404,
+      "content_type": "application/json",
+      "application_bearer_present": false,
+      "phase": "browser_unqualified_legacy"
+    },
+    {
+      "method": "GET",
+      "path": "/configs/example",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/index-DyrcoX0s.js",
+      "status": 200,
+      "content_type": "application/javascript",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/index-DJ3_qY_H.css",
+      "status": 200,
+      "content_type": "text/css; charset=utf-8",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/atk-logo-notscuffed-BIuKPhzk.png",
+      "status": 200,
+      "content_type": "image/png",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/atk-logo-notscuffed-BIuKPhzk.png",
+      "status": 200,
+      "content_type": "image/png",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/configs/content/example",
+      "status": 404,
+      "content_type": "application/json",
+      "application_bearer_present": false,
+      "phase": "browser_unqualified_legacy"
+    },
+    {
+      "method": "GET",
+      "path": "/logs/example",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/index-DyrcoX0s.js",
+      "status": 200,
+      "content_type": "application/javascript",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/index-DJ3_qY_H.css",
+      "status": 200,
+      "content_type": "text/css; charset=utf-8",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/atk-logo-notscuffed-BIuKPhzk.png",
+      "status": 200,
+      "content_type": "image/png",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/atk-logo-notscuffed-BIuKPhzk.png",
+      "status": 200,
+      "content_type": "image/png",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/tasks/example/logs",
+      "status": 401,
+      "content_type": "application/json",
+      "application_bearer_present": false,
+      "phase": "browser_locked_401"
+    },
+    {
+      "method": "GET",
+      "path": "/logs/example",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/index-DyrcoX0s.js",
+      "status": 200,
+      "content_type": "application/javascript",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/index-DJ3_qY_H.css",
+      "status": 200,
+      "content_type": "text/css; charset=utf-8",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/atk-logo-notscuffed-BIuKPhzk.png",
+      "status": 200,
+      "content_type": "image/png",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/atk-logo-notscuffed-BIuKPhzk.png",
+      "status": 200,
+      "content_type": "image/png",
+      "application_bearer_present": false,
+      "phase": "browser"
+    },
+    {
+      "method": "GET",
+      "path": "/tasks/example/logs",
+      "status": 401,
+      "content_type": "application/json",
+      "application_bearer_present": false,
+      "phase": "browser_locked_401"
+    }
+  ],
+  "resources": [
+    {
+      "VmRSS": 309981184,
+      "VmHWM": 492834816,
+      "cpu_usage_usec": 2723451,
+      "observed_at_monotonic": 58882.275498285
+    },
+    {
+      "VmRSS": 311341056,
+      "VmHWM": 492834816,
+      "cpu_usage_usec": 2830986,
+      "observed_at_monotonic": 58882.6353372
+    },
+    {
+      "VmRSS": 311558144,
+      "VmHWM": 492834816,
+      "cpu_usage_usec": 2891280,
+      "observed_at_monotonic": 58883.328846752
+    },
+    {
+      "VmRSS": 311558144,
+      "VmHWM": 492834816,
+      "cpu_usage_usec": 3009762,
+      "observed_at_monotonic": 58884.011240383
+    },
+    {
+      "VmRSS": 663097344,
+      "VmHWM": 722227200,
+      "cpu_usage_usec": 4330627,
+      "observed_at_monotonic": 58884.709488167
+    },
+    {
+      "VmRSS": 829136896,
+      "VmHWM": 888160256,
+      "cpu_usage_usec": 5809845,
+      "observed_at_monotonic": 58885.425200163
+    },
+    {
+      "VmRSS": 321961984,
+      "VmHWM": 888160256,
+      "cpu_usage_usec": 6325779,
+      "observed_at_monotonic": 58886.05602165
+    },
+    {
+      "VmRSS": 321961984,
+      "VmHWM": 888160256,
+      "cpu_usage_usec": 6366022,
+      "observed_at_monotonic": 58886.679512616
+    },
+    {
+      "VmRSS": 321961984,
+      "VmHWM": 888160256,
+      "cpu_usage_usec": 6408758,
+      "observed_at_monotonic": 58887.302439236
+    },
+    {
+      "VmRSS": 321961984,
+      "VmHWM": 888160256,
+      "cpu_usage_usec": 6457454,
+      "observed_at_monotonic": 58887.942430298
+    },
+    {
+      "VmRSS": 321961984,
+      "VmHWM": 888160256,
+      "cpu_usage_usec": 6502828,
+      "observed_at_monotonic": 58888.589266186
+    },
+    {
+      "VmRSS": 321961984,
+      "VmHWM": 888160256,
+      "cpu_usage_usec": 6547822,
+      "observed_at_monotonic": 58889.237324916
+    },
+    {
+      "VmRSS": 321970176,
+      "VmHWM": 888160256,
+      "cpu_usage_usec": 6596352,
+      "observed_at_monotonic": 58889.90270683
+    },
+    {
+      "VmRSS": 321970176,
+      "VmHWM": 888160256,
+      "cpu_usage_usec": 6638987,
+      "observed_at_monotonic": 58890.527271995
+    },
+    {
+      "VmRSS": 321970176,
+      "VmHWM": 888160256,
+      "cpu_usage_usec": 6683345,
+      "observed_at_monotonic": 58891.167602665
+    },
+    {
+      "VmRSS": 321970176,
+      "VmHWM": 888160256,
+      "cpu_usage_usec": 6722847,
+      "observed_at_monotonic": 58891.791686955
+    },
+    {
+      "VmRSS": 321970176,
+      "VmHWM": 888160256,
+      "cpu_usage_usec": 6774627,
+      "observed_at_monotonic": 58892.429397354
+    },
+    {
+      "VmRSS": 321970176,
+      "VmHWM": 888160256,
+      "cpu_usage_usec": 6828065,
+      "observed_at_monotonic": 58893.074754302
+    },
+    {
+      "VmRSS": 321970176,
+      "VmHWM": 888160256,
+      "cpu_usage_usec": 6876971,
+      "observed_at_monotonic": 58893.726972588
+    },
+    {
+      "VmRSS": 321933312,
+      "VmHWM": 888160256,
+      "cpu_usage_usec": 6922866,
+      "observed_at_monotonic": 58894.377562154
+    },
+    {
+      "VmRSS": 321937408,
+      "VmHWM": 888160256,
+      "cpu_usage_usec": 6982513,
+      "observed_at_monotonic": 58895.071234812
+    },
+    {
+      "VmRSS": 321937408,
+      "VmHWM": 888160256,
+      "cpu_usage_usec": 7030725,
+      "observed_at_monotonic": 58895.720550393
+    },
+    {
+      "VmRSS": 321937408,
+      "VmHWM": 888160256,
+      "cpu_usage_usec": 7076912,
+      "observed_at_monotonic": 58896.372122245
+    },
+    {
+      "VmRSS": 321937408,
+      "VmHWM": 888160256,
+      "cpu_usage_usec": 7123641,
+      "observed_at_monotonic": 58896.998714252
+    },
+    {
+      "VmRSS": 321937408,
+      "VmHWM": 888160256,
+      "cpu_usage_usec": 7169057,
+      "observed_at_monotonic": 58897.646389059
+    },
+    {
+      "VmRSS": 321937408,
+      "VmHWM": 888160256,
+      "cpu_usage_usec": 7212975,
+      "observed_at_monotonic": 58898.26713663
+    },
+    {
+      "VmRSS": 321937408,
+      "VmHWM": 888160256,
+      "cpu_usage_usec": 7257894,
+      "observed_at_monotonic": 58898.89126303
+    },
+    {
+      "VmRSS": 321937408,
+      "VmHWM": 888160256,
+      "cpu_usage_usec": 7299685,
+      "observed_at_monotonic": 58899.519677646
+    },
+    {
+      "VmRSS": 321937408,
+      "VmHWM": 888160256,
+      "cpu_usage_usec": 7387901,
+      "observed_at_monotonic": 58900.288902909
+    },
+    {
+      "VmRSS": 321937408,
+      "VmHWM": 888160256,
+      "cpu_usage_usec": 7431765,
+      "observed_at_monotonic": 58900.913830184
+    },
+    {
+      "VmRSS": 321937408,
+      "VmHWM": 888160256,
+      "cpu_usage_usec": 7478702,
+      "observed_at_monotonic": 58901.556173318
+    },
+    {
+      "VmRSS": 321937408,
+      "VmHWM": 888160256,
+      "cpu_usage_usec": 7526527,
+      "observed_at_monotonic": 58902.199348508
+    },
+    {
+      "VmRSS": 321937408,
+      "VmHWM": 888160256,
+      "cpu_usage_usec": 7576365,
+      "observed_at_monotonic": 58902.84250836
+    },
+    {
+      "VmRSS": 321937408,
+      "VmHWM": 888160256,
+      "cpu_usage_usec": 7624098,
+      "observed_at_monotonic": 58903.478298925
+    },
+    {
+      "VmRSS": 321937408,
+      "VmHWM": 888160256,
+      "cpu_usage_usec": 7669822,
+      "observed_at_monotonic": 58903.886270932
+    }
+  ],
+  "image_id": "sha256:988df3fff72e447418714296333bad8abfbef8a5a419560bb8e0cfd2b0ccad73",
+  "command": [
+    "uvicorn",
+    "api:app",
+    "--host",
+    "0.0.0.0",
+    "--port",
+    "7860",
+    "--workers",
+    "1",
+    "--no-access-log",
+    "--limit-concurrency",
+    "32"
+  ],
+  "eight_idle_connections_status": 200,
+  "non_root_read_only_startup": true,
+  "mounted_ocr_ready": true,
+  "queue_execution_disabled": true,
+  "nine_classification_rejections": true,
+  "synthetic_d0": {
+    "seconds": 1.7132,
+    "result": {
+      "schema_version": "ocr-page/v1",
+      "page_index": 0,
+      "page_id": "agent-page",
+      "source": "cpu_ocr",
+      "engine": "pp-ocrv6-small",
+      "backend_version": "rapidocr/3.10.0;onnxruntime/1.24.1",
+      "provider_destination": "local-cpu",
+      "text": "Public\nOCR\nbenchmark.",
+      "markdown": "Public\nOCR\nbenchmark.",
+      "image_width": 1000,
+      "image_height": 160,
+      "rotation": 0,
+      "transform": "source-raster; normalized 0..1000",
+      "blocks": [
+        {
+          "type": "text",
+          "text": "Public",
+          "bbox_1000": [
+            20.0,
+            206.25,
+            195.0,
+            637.5
+          ],
+          "polygon_1000": [
+            [
+              21.0,
+              206.25
+            ],
+            [
+              195.0,
+              218.75
+            ],
+            [
+              194.0,
+              637.5
+            ],
+            [
+              20.0,
+              618.75
+            ]
+          ],
+          "confidence": 0.99996,
+          "confidence_kind": "rapidocr-recognition"
+        },
+        {
+          "type": "text",
+          "text": "OCR",
+          "bbox_1000": [
+            166.0,
+            168.75,
+            303.0,
+            625.0
+          ],
+          "polygon_1000": [
+            [
+              166.0,
+              175.0
+            ],
+            [
+              303.0,
+              168.75
+            ],
+            [
+              303.0,
+              618.75
+            ],
+            [
+              166.0,
+              625.0
+            ]
+          ],
+          "confidence": 0.99981,
+          "confidence_kind": "rapidocr-recognition"
+        },
+        {
+          "type": "text",
+          "text": "benchmark.",
+          "bbox_1000": [
+            295.0,
+            225.0,
+            601.0,
+            631.25
+          ],
+          "polygon_1000": [
+            [
+              295.0,
+              225.0
+            ],
+            [
+              601.0,
+              225.0
+            ],
+            [
+              601.0,
+              631.25
+            ],
+            [
+              295.0,
+              631.25
+            ]
+          ],
+          "confidence": 0.99999,
+          "confidence_kind": "rapidocr-recognition"
+        }
+      ],
+      "flags": [],
+      "route_reason": "",
+      "latency_ms": 0.0,
+      "attempt_count": 0,
+      "attempts": [],
+      "alternatives": [],
+      "sensitivity": "D0"
+    }
+  },
+  "browser_reloads": 10,
+  "route_navigations": 20,
+  "browser": {
+    "direct_refresh_routes": [
+      "/",
+      "/inputs",
+      "/outputs",
+      "/configs",
+      "/monitor",
+      "/logs",
+      "/chat",
+      "/configs/example",
+      "/logs/example"
+    ],
+    "unlock_inputs_lock_refresh_locked": true,
+    "javascript_errors": []
+  },
+  "steady_state_rss_growth_bytes": 11956224,
+  "cpu_average_cores": 0.229,
+  "one_server_process_no_job_worker": true,
+  "sanitized_server_logs": {
+    "concurrency_limit_warnings": 0,
+    "server_process_starts": 1,
+    "startup_complete": 1,
+    "tracebacks": 0
+  },
+  "five_listing_intervals_overlap": true,
+  "runtime_source_hashes": {
+    "api.py": "a475d2d1c83033e51c090729a84f08f4b9bf69e47fc23335e0028d92e095ba0d",
+    "Dockerfile": "a5428567b45e22d04a103b30196df15b493a5d60a17f4037f9fa3f8ec180edee"
+  },
+  "model_instance_evidence": "One PID 1 Uvicorn process, --workers 1, one startup, existing single-backend lifespan unchanged. Native model object count not separately instrumented."
+}
