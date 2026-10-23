@@ -35,6 +35,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 import input_files
 import private_configs
+import pilot_prepare
 from app_auth import verify_token
 from app_storage import confined_path, data_directory, StorageViolation, normalize_mutable_paths
 from queue_readiness import QUEUE_ERRORS, require_queue_ready, require_job_execution
@@ -880,6 +881,54 @@ def move_config(request: MoveItemRequest):
 @router.delete("/configs/{relative_path:path}")
 def delete_config(relative_path: str):
     return input_files.delete(CONFIGS_DIR, relative_path)
+
+
+class PreparationRequest(BaseModel):
+    source_path: str
+    config_path: str
+    sensitivity: Optional[str] = None
+
+
+def require_preparation():
+    if os.environ.get("ATK_PREPARATION_ENABLED", "false").lower() != "true":
+        raise HTTPException(503, "Dataset preparation is not enabled")
+    return pilot_prepare.service()
+
+
+@router.post("/pilot/preparation", status_code=202)
+def submit_preparation(request: PreparationRequest):
+    return require_preparation().submit(INPUTS_DIR, CONFIGS_DIR, request.source_path, request.config_path, request.sensitivity)
+
+
+@router.get("/pilot/preparation")
+def list_preparations():
+    return require_preparation().list()
+
+
+@router.get("/pilot/preparation/{job_id}")
+def preparation_status(job_id: str):
+    return require_preparation().status(job_id)
+
+
+@router.get("/pilot/preparation/{job_id}/outputs")
+def preparation_outputs(job_id: str):
+    service = require_preparation()
+    state = service.status(job_id)
+    return {"status": state["status"], "artifacts": sorted(pilot_prepare.ARTIFACTS) if state["status"] == "COMPLETED" else []}
+
+
+@router.get("/pilot/preparation/{job_id}/preview")
+def preparation_preview(job_id: str):
+    _, data = require_preparation().artifact(job_id, "records.jsonl")
+    return {"records": [json.loads(line) for line in data.splitlines()[:10]], "limit": 10}
+
+
+@router.get("/pilot/preparation/{job_id}/download/{name}")
+def preparation_download(job_id: str, name: str):
+    service = require_preparation()
+    with service.lock, input_files.LOCK:
+        path, _ = service.artifact(job_id, name)
+        return input_files.download(service.output, str(path.relative_to(service.output)))
 
 
 app.add_middleware(input_files.InputUploadLimit, prefix="/configs/content/", max_bytes=private_configs.MAX_BYTES, overhead=0)

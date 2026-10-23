@@ -148,3 +148,76 @@ def config_workflow(page, origin, token):
         "local_editor_bundle": True,
         "directory_beside_selected_root_file": True,
     }
+
+
+def preparation_workflow(page, origin, token):
+    """Real browser -> local process -> preview -> exact-byte JSONL download."""
+    import hashlib
+    import json
+    from urllib.parse import urlsplit
+
+    page.goto(origin + "/inputs", wait_until="networkidle")
+    with page.expect_response(
+        lambda r: "/inputs/structure/" in r.url and r.status == 200
+    ):
+        unlock(page, token)
+    page.wait_for_load_state("networkidle")
+    name = "Public preparation ü.txt"
+    content = ("Public synthetic D0 preparation.\r\n" * 80).encode()
+    with page.expect_response(lambda r: "/inputs/upload/" in r.url) as pending:
+        page.locator('input[type="file"]').set_input_files(
+            {"name": name, "mimeType": "text/plain", "buffer": content}
+        )
+    assert pending.value.status == 200
+    page.get_by_role("tree").get_by_text(name, exact=True).click()
+    panel = page.get_by_role("region", name="Dataset preparation")
+    panel.get_by_label("Private preparation config").select_option(
+        "Private ü configuration.yaml"
+    )
+    panel.get_by_role("checkbox").check()
+    with page.expect_response(
+        lambda r: (
+            urlsplit(r.url).path == "/pilot/preparation" and r.request.method == "POST"
+        )
+    ) as submitted:
+        panel.get_by_role("button", name="Prepare Dataset", exact=True).click()
+    assert submitted.value.status == 202
+    job = submitted.value.json()["job_id"]
+    page.wait_for_url("**/monitor")
+    panel = page.get_by_role("region", name="Dataset preparation")
+    panel.get_by_text("COMPLETED", exact=True).wait_for(timeout=20000)
+    panel.get_by_role("button", name="Preview JSONL").click()
+    panel.get_by_label("JSONL preview").wait_for()
+    with page.expect_download() as pending:
+        panel.get_by_role("button", name="Download JSONL").click()
+    downloaded = Path(pending.value.path()).read_bytes()
+    response = page.request.get(
+        f"{origin}/pilot/preparation/{job}/download/records.jsonl",
+        headers={"Authorization": "Bearer " + token},
+    )
+    assert response.status == 200 and response.body() == downloaded
+    rows = [json.loads(line) for line in downloaded.splitlines()]
+    assert len(rows) >= 2
+    assert all(
+        r["kind"] == "preparation_chunk"
+        and r["sensitivity"] == "D0"
+        and r["source_sha256"] == hashlib.sha256(content).hexdigest()
+        for r in rows
+    )
+    assert "".join(r["text"] for r in rows) == content.decode().replace("\r\n", "\n")
+    page.goto(origin + "/outputs", wait_until="networkidle")
+    unlock(page, token)
+    page.get_by_role("region", name="Dataset preparation").get_by_text(
+        "COMPLETED", exact=True
+    ).wait_for()
+    return {
+        "job_id": job,
+        "record_count": len(rows),
+        "source_sha256": hashlib.sha256(content).hexdigest(),
+        "download_sha256": hashlib.sha256(downloaded).hexdigest(),
+        "exact_browser_download": True,
+        "preview": True,
+        "outputs_listing": True,
+        "native_generation": "NOT_RUN",
+        "model_calls": 0,
+    }

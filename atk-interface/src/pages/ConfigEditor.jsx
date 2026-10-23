@@ -439,7 +439,7 @@ function ConfigEditor() {
             <div className="flex items-center gap-3">
               <EnhancedButton
                 onClick={handleRunClick}
-                disabled={calculatedDisabled}
+                disabled
                 className={`${buttonBase} ${
                   !isDirty && !hasPlaceholders // Attention markers do NOT affect pulse
                     ? 'animate-pulse-green-download'
@@ -454,7 +454,7 @@ function ConfigEditor() {
                 }
                 particleColor="#34d399"
               >
-                Run
+                Run — Not available
               </EnhancedButton>
               <button
                 onClick={handleReset}

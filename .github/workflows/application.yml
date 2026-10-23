@@ -24,7 +24,7 @@ jobs:
       - run: python -m playwright install --with-deps chromium
       - run: python -m py_compile api.py tasks.py
       - run: python -c "from api import app; print('API_IMPORT_OK')"
-      - run: ruff check app_auth.py app_storage.py queue_readiness.py input_files.py private_configs.py tests/parent
+      - run: ruff check app_auth.py app_storage.py queue_readiness.py input_files.py private_configs.py pilot_prepare.py tools/prepare_pilot_staging.py tests/parent
       - run: python -m pytest -c pytest-ocr.ini tests/parent 2>&1 | tee /tmp/gate04-parent-tests.log
       - run: python -m pytest -c pytest-ocr.ini tests/test_hf_space_recovery.py
         env:
