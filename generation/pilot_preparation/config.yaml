@@ -1,0 +1,5 @@
+# Copy this bundled template to private YAML before use.
+# Deterministic preparation only: no Q&A generation or model/provider settings.
+preparation:
+  chunk_chars: 1024
+  overlap_chars: 0

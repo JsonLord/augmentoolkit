@@ -1,3 +1,4 @@
+import PreparationPanel from '../components/PreparationPanel';
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Tree } from 'react-arborist';
 import { FiFile, FiFolder, FiFolderPlus, FiUploadCloud, FiDownloadCloud, FiTrash2, FiLoader, FiAlertTriangle, FiCheckCircle, FiChevronDown, FiChevronRight } from 'react-icons/fi';
@@ -753,6 +754,7 @@ function InputManager() {
               })}
             />
 
+            <PreparationPanel mode="submit" sourcePath={selectedNodes.length === 1 && !selectedNodes[0].is_dir ? selectedNodes[0].relativePath : ''} />
             {/* --- Add PourOverBackground --- */}
             <PourOverBackground
                 isActive={bgIsActive}

@@ -7,6 +7,7 @@ pipeline_order:
   #   config: rag-config
   
 path_aliases:
+  pilot-preparation-config: generation/pilot_preparation/config.yaml
   # Base Directory Aliases
   gen_comp: generation/core_composition
   gen_core: generation/core_pipelines

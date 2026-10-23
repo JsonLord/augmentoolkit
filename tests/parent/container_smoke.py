@@ -120,6 +120,8 @@ def main():
             "WORKER_TOKEN=" + token,
             "--env",
             "REDIS_PORT=1",
+            "--env",
+            "ATK_PREPARATION_ENABLED=true",
             "--mount",
             f"type=bind,src={fixture_root / 'template.yaml'},dst=/app/.gate04-config-fixture.yaml,readonly",
             "--mount",
@@ -421,10 +423,15 @@ def main():
                     page.get_by_label("Operator token").wait_for()
                 for future in futures:
                     future.result(timeout=60)
-                from file_workflows import config_workflow, input_workflow
+                from file_workflows import (
+                    config_workflow,
+                    input_workflow,
+                    preparation_workflow,
+                )
 
                 evidence["input_manager"] = input_workflow(page, origin, token)
                 evidence["config_editor"] = config_workflow(page, origin, token)
+                evidence["preparation"] = preparation_workflow(page, origin, token)
                 assert not errors, errors
                 evidence["browser"] = {
                     "direct_refresh_routes": PAGES,
@@ -432,6 +439,7 @@ def main():
                     "javascript_errors": errors,
                 }
             finally:
+                page.remove_listener("response", browser_response)
                 browser.close()
         listings = [
             r

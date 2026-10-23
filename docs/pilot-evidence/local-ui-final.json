@@ -1,0 +1,29 @@
+{
+  "passed": true,
+  "inputs": {
+    "upload_list_download_rename_refresh_delete_absence": true,
+    "directory_creation": true,
+    "download_bytes_match": true,
+    "Unicode_spaces": true,
+    "refresh_requires_unlock": true
+  },
+  "configs": {
+    "bundled_read_only": true,
+    "private_copy_edit_save_refresh_reopen": true,
+    "exact_bytes": true,
+    "Unicode_spaces": true,
+    "local_editor_bundle": true,
+    "directory_beside_selected_root_file": true
+  },
+  "preparation": {
+    "job_id": "40ee6413-dea6-476f-81d3-e5a7fe9a106e",
+    "record_count": 3,
+    "source_sha256": "dcf698894c227c32fbc780daca6df78510c289e609341f3400bb351d6b1131a3",
+    "download_sha256": "cc70b966599550a74a2e0d5e16f4fff937e8e9cca50c2539f0a29f35163257af",
+    "exact_browser_download": true,
+    "preview": true,
+    "outputs_listing": true,
+    "native_generation": "NOT_RUN",
+    "model_calls": 0
+  }
+}
