@@ -34,6 +34,21 @@ jobs:
       - run: npm --prefix atk-interface run build 2>&1 | tee /tmp/gate04-frontend-build.log
       - run: docker build --build-arg OCR_SOURCE_REVISION=${{ github.sha }} -t augmentoolkit-gate04 . 2>&1 | tee /tmp/gate04-docker-build.log
       - run: python tests/parent/container_smoke.py --evidence /tmp/gate04-container-results.json 2>&1 | tee /tmp/gate04-container-smoke.log
+      - name: Expose sanitized smoke failure diagnostics
+        if: failure()
+        run: |
+          python - <<'PYCODE'
+          from pathlib import Path
+          import re
+          p = Path("/tmp/gate04-container-smoke.log")
+          if p.exists():
+              text = "\n".join(p.read_text().splitlines()[-45:])[-6000:]
+              text = re.sub(r"https?://\S+", "<URL>", text)
+              text = re.sub(r"(?:Bearer |WORKER_TOKEN=)\S+", "<redacted>", text)
+              text = re.sub(r"synthetic-local-[a-f0-9]+", "<synthetic-token>", text)
+              text = text.replace("%", "%25").replace("\r", "%0D").replace("\n", "%0A")
+              print("::error title=Combined image smoke diagnostics::" + text)
+          PYCODE
       - uses: actions/upload-artifact@v4
         if: always()
         with:
