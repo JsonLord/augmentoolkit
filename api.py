@@ -34,6 +34,7 @@ from pydantic import BaseModel, Field
 from fastapi.middleware.cors import CORSMiddleware
 
 import input_files
+import private_configs
 from app_auth import verify_token
 from app_storage import confined_path, data_directory, StorageViolation, normalize_mutable_paths
 from queue_readiness import QUEUE_ERRORS, require_queue_ready, require_job_execution
@@ -795,7 +796,7 @@ def get_config_structure(relative_path: str = "."):
     except ValueError:
         raise HTTPException(status_code=403, detail="Path traversal detected")
 
-    return handle_get_structure(CONFIGS_DIR, relative_path)
+    return input_files.tree(CONFIGS_DIR, relative_path)
 
 
 # Register protected routes before the mount and SPA catch-all.
@@ -829,6 +830,60 @@ def delete_input(relative_path: str):
     return input_files.delete(INPUTS_DIR, relative_path)
 
 
+def bundled_config_source(name):
+    # Exact aliases only; resolve_authorized_config confines to bundled source.
+    if name in get_available_config_aliases():
+        return resolve_authorized_config(name)
+    return None
+
+
+@router.get("/configs/content/{relative_path:path}")
+def read_config_content(relative_path: str):
+    return private_configs.read(CONFIGS_DIR, relative_path, bundled_config_source(relative_path))
+
+
+@router.post("/configs/content/{relative_path:path}")
+async def save_config_content(relative_path: str, request: Request):
+    data = await request.body()
+    # CPU/file operations run in the normal thread pool, never on the ASGI loop.
+    from starlette.concurrency import run_in_threadpool
+
+    return await run_in_threadpool(private_configs.save, CONFIGS_DIR, relative_path,
+                                  data, request.headers.get("if-match"), bundled_config_source(relative_path))
+
+
+@router.post("/configs/duplicate")
+def duplicate_config(request: DuplicateConfigRequest):
+    source = bundled_config_source(request.source_alias)
+    if source is None:
+        raise HTTPException(400, "Expected an authorized bundled YAML alias")
+    if bundled_config_source(request.destination_relative_path) is not None:
+        raise HTTPException(409, "Destination is a bundled alias")
+    return private_configs.duplicate(CONFIGS_DIR, source, request.destination_relative_path)
+
+
+@router.post("/configs/directory")
+def create_config_directory(request: CreateDirectoryRequest):
+    return input_files.create_directory(CONFIGS_DIR, request.relative_path)
+
+
+@router.post("/configs/move")
+def move_config(request: MoveItemRequest):
+    if bundled_config_source(request.destination_relative_path) is not None:
+        raise HTTPException(409, "Destination is a bundled alias")
+    source = input_files.path(CONFIGS_DIR, request.source_relative_path, root=False)
+    if source.is_file():
+        private_configs.private_path(CONFIGS_DIR, request.destination_relative_path)
+    return input_files.move(CONFIGS_DIR, request.source_relative_path, request.destination_relative_path)
+
+
+@router.delete("/configs/{relative_path:path}")
+def delete_config(relative_path: str):
+    return input_files.delete(CONFIGS_DIR, relative_path)
+
+
+app.add_middleware(input_files.InputUploadLimit, prefix="/configs/content/", max_bytes=private_configs.MAX_BYTES, overhead=0)
+
 app.add_middleware(input_files.InputUploadLimit)
 app.include_router(router)
 app.mount("/ocr", ocr_app)
@@ -856,7 +911,7 @@ FRONTEND_DETAIL_PAGES = {"configs", "logs"}
 FRONTEND_RESERVED_IDS = {"structure", "content", "upload", "download", "directory", "move", "duplicate"}
 
 @app.get("/{full_path:path}", include_in_schema=False)
-async def serve_frontend(full_path: str):
+async def serve_frontend(full_path: str, request: Request):
     parts = full_path.rstrip("/").split("/")
     page = full_path.rstrip("/") in FRONTEND_PAGES or (
         len(parts) == 2
@@ -864,6 +919,9 @@ async def serve_frontend(full_path: str):
         and parts[1] not in FRONTEND_RESERVED_IDS
         and parts[1] not in {"", ".", ".."}
     )
+    raw_parts = request.scope.get("raw_path", b"").rstrip(b"/").split(b"/")
+    if len(raw_parts) == 3 and raw_parts[1] == b"configs" and len(parts) > 2 and parts[1] not in FRONTEND_RESERVED_IDS:
+        page = True
     if page:
         index_html = FRONTEND_DIST_DIR / "index.html"
         if index_html.is_file():

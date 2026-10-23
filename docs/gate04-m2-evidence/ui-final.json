@@ -1,0 +1,19 @@
+{
+  "passed": true,
+  "inputs": {
+    "upload_list_download_rename_refresh_delete_absence": true,
+    "directory_creation": true,
+    "download_bytes_match": true,
+    "Unicode_spaces": true,
+    "refresh_requires_unlock": true
+  },
+  "workflow": {
+    "bundled_read_only": true,
+    "private_copy_edit_save_refresh_reopen": true,
+    "exact_bytes": true,
+    "Unicode_spaces": true,
+    "local_editor_bundle": true,
+    "directory_beside_selected_root_file": true
+  },
+  "fixture_runtime": "Combined image augmentoolkit-m2 with final freshly built frontend mounted read-only; no OCR inference in this UI-only run"
+}

@@ -1,0 +1,82 @@
+{
+  "baseline": [
+    [
+      "ConfigEditor.jsx",
+      "no-unused-vars",
+      "'e' is defined but never used."
+    ],
+    [
+      "ConfigEditor.jsx",
+      "react-hooks/exhaustive-deps",
+      "React Hook useEffect has a missing dependency: 'updateLineMarkers'. Either include it or remove the dependency array."
+    ],
+    [
+      "ConfigSelector.jsx",
+      "no-unused-vars",
+      "'id' is defined but never used."
+    ],
+    [
+      "ConfigSelector.jsx",
+      "no-unused-vars",
+      "'index' is defined but never used."
+    ],
+    [
+      "ConfigSelector.jsx",
+      "no-unused-vars",
+      "'parentNode' is defined but never used."
+    ],
+    [
+      "api.js",
+      "no-unused-vars",
+      "'e' is defined but never used."
+    ],
+    [
+      "api.js",
+      "no-unused-vars",
+      "'e' is defined but never used."
+    ],
+    [
+      "api.js",
+      "no-unused-vars",
+      "'textError' is defined but never used."
+    ]
+  ],
+  "current": [
+    [
+      "ConfigEditor.jsx",
+      "no-unused-vars",
+      "'e' is defined but never used."
+    ],
+    [
+      "ConfigSelector.jsx",
+      "no-unused-vars",
+      "'id' is defined but never used."
+    ],
+    [
+      "ConfigSelector.jsx",
+      "no-unused-vars",
+      "'index' is defined but never used."
+    ],
+    [
+      "ConfigSelector.jsx",
+      "no-unused-vars",
+      "'parentNode' is defined but never used."
+    ],
+    [
+      "api.js",
+      "no-unused-vars",
+      "'e' is defined but never used."
+    ],
+    [
+      "api.js",
+      "no-unused-vars",
+      "'e' is defined but never used."
+    ],
+    [
+      "api.js",
+      "no-unused-vars",
+      "'textError' is defined but never used."
+    ]
+  ],
+  "new_findings": []
+}

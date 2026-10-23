@@ -238,17 +238,22 @@ def download(base, relative):
 class InputUploadLimit:
     """Bound multipart bytes before Starlette can spool an oversized request."""
 
-    def __init__(self, app):
+    def __init__(
+        self, app, prefix="/inputs/upload/", max_bytes=None, overhead=64 * 1024
+    ):
         self.app = app
+        self.prefix, self.max_bytes, self.overhead = prefix, max_bytes, overhead
 
     async def __call__(self, scope, receive, send):
         if (
             scope["type"] != "http"
             or scope["method"] != "POST"
-            or not scope["path"].startswith("/inputs/upload/")
+            or not scope["path"].startswith(self.prefix)
         ):
             return await self.app(scope, receive, send)
-        limit = MAX_UPLOAD_BYTES + 64 * 1024  # bounded multipart overhead
+        limit = (
+            MAX_UPLOAD_BYTES if self.max_bytes is None else self.max_bytes
+        ) + self.overhead
         headers = dict(scope.get("headers", []))
         try:
             too_large = int(headers.get(b"content-length", b"0")) > limit

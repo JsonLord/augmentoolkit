@@ -3,13 +3,21 @@
 /* ------------------------------------------------------------------ */
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import Editor from '@monaco-editor/react';
+import Editor, { loader } from '@monaco-editor/react';
+import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
+import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
+import 'monaco-editor/esm/vs/basic-languages/yaml/yaml.contribution';
+
+// Private configuration text must not depend on remotely loaded editor code.
+globalThis.MonacoEnvironment = { getWorker: () => new EditorWorker() };
+loader.config({ monaco });
 import yaml from 'js-yaml';
 import { FiChevronLeft, FiX, FiLoader } from 'react-icons/fi';
 import Modal from '../components/Modal';
 import EnhancedButton from '../components/EnhancedButton';
 import {
   fetchConfigContent,
+  duplicateConfig,
   saveConfigContent,
   fetchAvailablePipelines,
   runPipeline,
@@ -25,7 +33,9 @@ const ATTENTION_REGEX = /!!ATTENTION!!/;
 function ConfigEditor() {
   /* ---------- routing & refs ---------- */
   const { configId: encodedConfigId } = useParams();
-  const configId = decodeURIComponent(encodedConfigId || '');
+  const configId = encodedConfigId || ''; // React Router already decoded this segment.
+  const currentConfigId = useRef(configId);
+  currentConfigId.current = configId;
   const navigate = useNavigate();
   const editorRef = useRef(null);
   const monacoRef = useRef(null);
@@ -39,6 +49,11 @@ function ConfigEditor() {
   const [isSaving, setIsSaving] = useState(false);
   const [editorError, setEditorError] = useState(null);
   const [saveSuccess, setSaveSuccess] = useState(false);
+  const [configVersion, setConfigVersion] = useState(null);
+  const [readOnly, setReadOnly] = useState(false);
+  const [copyOpen, setCopyOpen] = useState(false);
+  const [copyName, setCopyName] = useState('private-copy.yaml');
+  const [copyError, setCopyError] = useState('');
   const isDirty = originalContent !== currentContent;
 
   /* ---------- placeholder/attention detection ---------- */
@@ -116,22 +131,29 @@ function ConfigEditor() {
      ================================================================== */
      useEffect(() => {
       if (!configId) return;
+      let active = true;
   
       (async () => {
         try {
           setIsLoading(true);
-          const text = await fetchConfigContent(configId);
+          setOriginalContent(''); setCurrentContent(''); setConfigVersion(null); setReadOnly(true);
+          const loaded = await fetchConfigContent(configId);
+          if (!active) return;
+          const text = loaded.content;
+          setConfigVersion(loaded.etag); setReadOnly(loaded.readOnly); setEditorError(null);
           setOriginalContent(text);
           setCurrentContent(text);
           setTimeout(() => updateLineMarkers(text), 0);
         } catch (e) {
+          if (!active) return;
           console.error(e);
           setEditorError(e.message || 'Failed to load configuration content.');
         } finally {
-          setIsLoading(false);
+          if (active) setIsLoading(false);
         }
       })();
-    }, [configId]);
+      return () => { active = false; };
+    }, [configId, updateLineMarkers]);
 
   /* ==================================================================
      Editor change handler
@@ -149,20 +171,22 @@ function ConfigEditor() {
      Save / Reset
      ================================================================== */
   const handleSave = useCallback(async () => {
-    if (!isDirty || isSaving || !configId) return;
+    if (!isDirty || isSaving || isLoading || !configId || readOnly) return;
     try {
       setIsSaving(true);
-      await saveConfigContent(configId, currentContent);
+      const saved = await saveConfigContent(configId, currentContent, configVersion);
+      if (currentConfigId.current !== configId) return;
+      setConfigVersion(saved.etag);
       setOriginalContent(currentContent);
       setSaveSuccess(true);
       setTimeout(() => setSaveSuccess(false), 3000);
     } catch (e) {
       console.error(e);
-      setEditorError(e.message || 'Failed to save configuration.');
+      if (currentConfigId.current === configId) setEditorError(e.message || 'Failed to save configuration.');
     } finally {
       setIsSaving(false);
     }
-  }, [configId, currentContent, isDirty, isSaving]);
+  }, [configId, currentContent, isDirty, isSaving, isLoading, readOnly, configVersion]);
 
   const handleReset = () => {
     if (!isDirty) return;
@@ -434,14 +458,14 @@ function ConfigEditor() {
               </EnhancedButton>
               <button
                 onClick={handleReset}
-                disabled={!isDirty || isSaving}
+                disabled={readOnly || !isDirty || isSaving || isLoading}
                 className={resetButtonClass}
               >
                 Reset
               </button>
               <button
                 onClick={handleSave}
-                disabled={!isDirty || isSaving}
+                disabled={readOnly || !isDirty || isSaving || isLoading}
                 className={saveButtonClass}
               >
                 {isSaving ? 'Saving…' : 'Save'}
@@ -453,11 +477,28 @@ function ConfigEditor() {
       {/* ---------------- Errors ---------------- */}
       {(editorError || runError) && (
         <div className='text-red-400 bg-red-900 bg-opacity-50 p-3 rounded border border-red-700 mb-4 text-sm'>
-          {editorError && <p>Editor/Save Error: {editorError}</p>}
+          {editorError && <p role="alert">Editor/Save Error: {editorError}</p>}
           {runError && !isRunModalOpen && <p>Run Error: {runError}</p>}
         </div>
       )}
 
+      <div className="px-6 py-2" role="status">
+        {readOnly ? <>
+          <span>Read-only bundled template. Create a private copy to edit.</span>
+          <button type="button" className="ml-4 underline" onClick={() => { setCopyError(''); setCopyOpen(true); }}>Create private copy</button>
+        </> : <span>Private editable configuration; saved in private ephemeral storage.</span>}
+      </div>
+      <Modal isOpen={copyOpen} onClose={() => setCopyOpen(false)} title="Create private configuration copy">
+        <label htmlFor="config-copy-name">Private YAML filename</label>
+        <input id="config-copy-name" className="text-black" value={copyName} onChange={e => setCopyName(e.target.value)} />
+        <p role="alert">{copyError}</p>
+        <button type="button" onClick={async () => {
+          try {
+            await duplicateConfig(configId, copyName);
+            setCopyOpen(false); navigate(`/configs/${encodeURIComponent(copyName)}`);
+          } catch (e) { setCopyError(e.message || 'Copy failed'); }
+        }}>Create copy</button>
+      </Modal>
       {/* ---------------- Monaco Editor ---------------- */}
       <div className='flex-grow relative border border-gray-700 rounded overflow-hidden min-h-[200px]'>
         {isLoading ? (
@@ -478,6 +519,7 @@ function ConfigEditor() {
             onChange={handleEditorChange}
             onMount={handleEditorDidMount}
             options={{
+              readOnly, ariaLabel: "Configuration YAML",
               minimap: { enabled: true },
               scrollBeyondLastLine: false,
               fontSize: 14,
