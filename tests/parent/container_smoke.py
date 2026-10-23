@@ -479,6 +479,10 @@ def main():
         ]
         assert not unintended, unintended
         evidence["passed"] = True
+    except Exception:
+        # Only synthetic paths/statuses; never headers, tokens or file contents.
+        print(json.dumps({"failure_recent_http": evidence["http"][-15:]}), flush=True)
+        raise
     finally:
         stop.set()
         if sampler:

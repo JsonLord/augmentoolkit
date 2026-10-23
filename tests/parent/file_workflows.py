@@ -11,14 +11,19 @@ def unlock(page, token):
 
 def input_workflow(page, origin, token):
     page.goto(origin + "/inputs", wait_until="networkidle")
-    unlock(page, token)
+    with page.expect_response(
+        lambda r: "/inputs/structure/" in r.url and r.status == 200
+    ):
+        unlock(page, token)
+    page.wait_for_load_state("networkidle")
     name = "Synthetic ü space.txt"
     renamed = "Renamed ü space.txt"
     content = b"Synthetic D0 input lifecycle.\n"
-    with page.expect_response(lambda r: "/inputs/upload/" in r.url and r.status == 200):
+    with page.expect_response(lambda r: "/inputs/upload/" in r.url) as upload_response:
         page.locator('input[type="file"]').set_input_files(
             {"name": name, "mimeType": "text/plain", "buffer": content}
         )
+    assert upload_response.value.status == 200
     page.get_by_text(name, exact=True).wait_for()
     page.get_by_text(name, exact=True).click()
     with page.expect_download(timeout=30000) as pending:
@@ -54,7 +59,7 @@ def input_workflow(page, origin, token):
         lambda r: r.request.method == "DELETE" and r.status == 200
     ):
         page.get_by_role("button", name="Delete", exact=True).last.click()
-    page.get_by_text(renamed, exact=True).wait_for(state="detached")
+    page.get_by_role("tree").get_by_text(renamed, exact=True).wait_for(state="detached")
     page.reload(wait_until="networkidle")
     unlock(page, token)
     page.get_by_text("Synthetic folder ü", exact=True).wait_for()
