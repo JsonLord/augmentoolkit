@@ -1,5 +1,8 @@
 name: Parent application and combined image
 on: [push, pull_request]
+defaults:
+  run:
+    shell: bash
 permissions:
   contents: read
 jobs:
@@ -21,18 +24,20 @@ jobs:
       - run: python -m playwright install --with-deps chromium
       - run: python -m py_compile api.py tasks.py
       - run: python -c "from api import app; print('API_IMPORT_OK')"
-      - run: ruff check app_auth.py app_storage.py queue_readiness.py tests/parent
-      - run: python -m pytest -c pytest-ocr.ini tests/parent
+      - run: ruff check app_auth.py app_storage.py queue_readiness.py input_files.py tests/parent
+      - run: python -m pytest -c pytest-ocr.ini tests/parent 2>&1 | tee /tmp/gate04-parent-tests.log
       - run: python -m pytest -c pytest-ocr.ini tests/test_hf_space_recovery.py
         env:
           # This existing test uses only mock Redis/HF/Popen. No worker runs.
           ATK_JOB_EXECUTION_ENABLED: 'true'
-      - run: npm --prefix atk-interface ci
-      - run: npm --prefix atk-interface run build
-      - run: docker build --build-arg OCR_SOURCE_REVISION=${{ github.sha }} -t augmentoolkit-gate04 .
-      - run: python tests/parent/container_smoke.py --evidence /tmp/gate04-container-results.json
+      - run: npm --prefix atk-interface ci 2>&1 | tee /tmp/gate04-npm-ci.log
+      - run: npm --prefix atk-interface run build 2>&1 | tee /tmp/gate04-frontend-build.log
+      - run: docker build --build-arg OCR_SOURCE_REVISION=${{ github.sha }} -t augmentoolkit-gate04 . 2>&1 | tee /tmp/gate04-docker-build.log
+      - run: python tests/parent/container_smoke.py --evidence /tmp/gate04-container-results.json 2>&1 | tee /tmp/gate04-container-smoke.log
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: combined-container-synthetic-evidence
-          path: /tmp/gate04-container-results.json
+          path: |
+            /tmp/gate04-container-results.json
+            /tmp/gate04-*.log

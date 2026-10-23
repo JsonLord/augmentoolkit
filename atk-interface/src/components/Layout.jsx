@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import { useNavigation } from '../context/NavigationContext';
 import OperatorAccess from './OperatorAccess';
+import { useFileManager } from '../context/FileManagerContext';
 import atkLogo from '../assets/atk-logo-notscuffed.png';
 
 const animationStyles = `
@@ -15,6 +16,7 @@ const animationStyles = `
 `;
 
 function Layout() {
+  const { clearFileData } = useFileManager();
   const { highlightedNavLink, setHighlightedNavLink } = useNavigation();
   const location = useLocation();
   const [operatorEpoch, setOperatorEpoch] = useState(0);
@@ -140,7 +142,7 @@ function Layout() {
         
         {/* TODO: Add Settings/Boring Mode Toggle */}
       </nav>
-      <OperatorAccess onChange={() => setOperatorEpoch((value) => value + 1)} />
+      <OperatorAccess onChange={() => { clearFileData(); setOperatorEpoch((value) => value + 1); }} />
       <main className="flex-grow overflow-auto">
         <Outlet key={operatorEpoch} /> {/* Child routes will render here */}
       </main>

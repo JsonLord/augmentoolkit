@@ -1,5 +1,8 @@
 name: Hybrid OCR offline tests
 on: [push, pull_request]
+defaults:
+  run:
+    shell: bash
 permissions:
   contents: read
 jobs:
@@ -14,4 +17,9 @@ jobs:
       - run: python -m pip install -r ocr/requirements-dev.txt
       - run: ruff check ocr augmentoolkit/utils/offline_chunking.py
       - run: ruff format --check ocr augmentoolkit/utils/offline_chunking.py
-      - run: python -m pytest -c pytest-ocr.ini
+      - run: python -m pytest -c pytest-ocr.ini 2>&1 | tee /tmp/gate04-ocr-tests.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: OCR-test-log
+          path: /tmp/gate04-ocr-tests.log

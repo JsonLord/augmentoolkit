@@ -406,6 +406,9 @@ def main():
                     page.get_by_label("Operator token").wait_for()
                 for future in futures:
                     future.result(timeout=60)
+                from file_workflows import input_workflow
+
+                evidence["input_manager"] = input_workflow(page, origin, token)
                 assert not errors, errors
                 evidence["browser"] = {
                     "direct_refresh_routes": PAGES,

@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext, useCallback } from 'react';
+import React, { createContext, useState, useContext, useCallback, useRef } from 'react';
 import { fetchInputStructure, fetchOutputStructure } from '../api'; // Assuming API functions exist
 
 const FileManagerContext = createContext();
@@ -30,6 +30,7 @@ const adaptAndSortApiData = (apiData) => {
 
 
 export const FileManagerProvider = ({ children }) => {
+    const fileEpoch = useRef(0);
     // --- Input State ---
     const [inputTreeData, setInputTreeData] = useState(null);
     const [isInputLoading, setIsInputLoading] = useState(false);
@@ -42,6 +43,7 @@ export const FileManagerProvider = ({ children }) => {
 
     // --- Fetch Input Data (with caching) ---
     const fetchInputData = useCallback(async (forceRefresh = false) => {
+        const epoch = fileEpoch.current;
         if (inputTreeData && !forceRefresh) {
             // console.log("Using cached input data");
             return; // Use cached data if available and not forcing refresh
@@ -51,19 +53,22 @@ export const FileManagerProvider = ({ children }) => {
         setInputError(null);
         try {
             const structure = await fetchInputStructure();
+            if (epoch !== fileEpoch.current) return;
             const adaptedData = adaptAndSortApiData(structure);
             setInputTreeData(adaptedData);
         } catch (e) {
+            if (epoch !== fileEpoch.current) return;
             console.error("Failed to fetch input structure:", e);
             setInputError(e.message || 'Failed to load input files structure.');
             setInputTreeData([]); // Set empty on error to stop loading indicators
         } finally {
-            setIsInputLoading(false);
+            if (epoch === fileEpoch.current) setIsInputLoading(false);
         }
     }, [inputTreeData]); // Re-run if cached data changes (relevant for forceRefresh logic)
 
     // --- Fetch Output Data (with caching) ---
     const fetchOutputData = useCallback(async (forceRefresh = false) => {
+        const epoch = fileEpoch.current;
         if (outputTreeData && !forceRefresh) {
             // console.log("Using cached output data");
             return; // Use cached data
@@ -73,14 +78,16 @@ export const FileManagerProvider = ({ children }) => {
         setOutputError(null);
         try {
             const structure = await fetchOutputStructure();
+            if (epoch !== fileEpoch.current) return;
             const adaptedData = adaptAndSortApiData(structure);
             setOutputTreeData(adaptedData);
         } catch (e) {
+            if (epoch !== fileEpoch.current) return;
             console.error("Failed to fetch output structure:", e);
             setOutputError(e.message || 'Failed to load output files structure.');
             setOutputTreeData([]); // Set empty on error
         } finally {
-            setIsOutputLoading(false);
+            if (epoch === fileEpoch.current) setIsOutputLoading(false);
         }
     }, [outputTreeData]); // Re-run if cached data changes
 
@@ -90,7 +97,15 @@ export const FileManagerProvider = ({ children }) => {
     const refreshOutputData = useCallback(() => fetchOutputData(true), [fetchOutputData]);
 
 
+    const clearFileData = useCallback(() => {
+        fileEpoch.current += 1;
+        setInputTreeData(null); setOutputTreeData(null);
+        setInputError(null); setOutputError(null);
+        setIsInputLoading(false); setIsOutputLoading(false);
+    }, []);
+
     const value = {
+        clearFileData,
         inputTreeData,
         isInputLoading,
         inputError,

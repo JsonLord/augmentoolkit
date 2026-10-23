@@ -1,0 +1,20 @@
+[
+  {
+    "file": "atk-interface/src/components/Layout.jsx",
+    "baseline_errors": 3,
+    "current_errors": 3,
+    "new_findings": []
+  },
+  {
+    "file": "atk-interface/src/context/FileManagerContext.jsx",
+    "baseline_errors": 0,
+    "current_errors": 0,
+    "new_findings": []
+  },
+  {
+    "file": "atk-interface/src/pages/InputManager.jsx",
+    "baseline_errors": 3,
+    "current_errors": 3,
+    "new_findings": []
+  }
+]
