@@ -14,6 +14,7 @@ import re
 import shutil
 import socket
 import subprocess
+import tempfile
 import threading
 import time
 import uuid
@@ -90,6 +91,16 @@ def main():
                 }
             )
 
+    fixtures = tempfile.TemporaryDirectory(prefix="atk-config-synthetic-")
+    fixture_root = Path(fixtures.name)
+    (fixture_root / "template.yaml").write_text(
+        "title: Synthetic configuration\nvalue: original\n"
+    )
+    (fixture_root / "aliases.yaml").write_text(
+        "path_aliases:\n  synthetic-config: .gate04-config-fixture.yaml\npipeline_order: []\n"
+    )
+    for fixture in fixture_root.iterdir():
+        fixture.chmod(0o444)
     try:
         docker(
             "run",
@@ -109,6 +120,10 @@ def main():
             "WORKER_TOKEN=" + token,
             "--env",
             "REDIS_PORT=1",
+            "--mount",
+            f"type=bind,src={fixture_root / 'template.yaml'},dst=/app/.gate04-config-fixture.yaml,readonly",
+            "--mount",
+            f"type=bind,src={fixture_root / 'aliases.yaml'},dst=/app/super_config.yaml,readonly",
             args.image,
         )
         evidence["image_id"] = docker("inspect", "--format", "{{.Image}}", name)
@@ -406,9 +421,10 @@ def main():
                     page.get_by_label("Operator token").wait_for()
                 for future in futures:
                     future.result(timeout=60)
-                from file_workflows import input_workflow
+                from file_workflows import config_workflow, input_workflow
 
                 evidence["input_manager"] = input_workflow(page, origin, token)
+                evidence["config_editor"] = config_workflow(page, origin, token)
                 assert not errors, errors
                 evidence["browser"] = {
                     "direct_refresh_routes": PAGES,
@@ -491,6 +507,7 @@ def main():
         subprocess.run(
             ["docker", "rm", "--force", name], check=False, capture_output=True
         )
+        fixtures.cleanup()
     assert evidence["passed"], evidence["sanitized_server_logs"]
     print(json.dumps({"passed": True, "evidence": args.evidence}))
 

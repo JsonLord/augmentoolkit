@@ -154,3 +154,19 @@ async def test_overlapping_ocr_is_bounded_before_second_inference():
             release.set()
             await first
         assert first.result().status_code == 200
+
+
+@pytest.mark.parametrize(
+    "path",
+    ["/configs/nested%2Fprivate%20%C3%BC.yaml", "/configs/nested%2Fdeep%2Ffile.yaml"],
+)
+def test_encoded_nested_configuration_refresh(frontend, path):
+    r = frontend.get(path)
+    assert r.status_code == 200 and r.headers["content-type"].startswith("text/html")
+
+
+@pytest.mark.parametrize(
+    "path", ["/configs/content%2Fmissing", "/configs/structure%2Fmissing"]
+)
+def test_encoded_config_data_paths_still_require_auth(frontend, path):
+    assert frontend.get(path).status_code == 401

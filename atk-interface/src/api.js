@@ -47,14 +47,16 @@ export async function fetchConfigStructure(relativePath = '') {
 export async function fetchConfigContent(relativePath) {
   if (!relativePath) throw new Error('Relative path is required for fetchConfigContent');
   const response = await authenticatedFetch(`${API_BASE_URL}/configs/content/${encodeURIComponent(relativePath)}`);
-  return handleApiResponse(response);
+  if (!response.ok) return handleApiResponse(response);
+  return { content: await response.text(), etag: response.headers.get('etag'),
+    readOnly: response.headers.get('x-config-read-only') === 'true' };
 }
 
-export async function saveConfigContent(relativePath, content) {
+export async function saveConfigContent(relativePath, content, etag) {
   if (!relativePath) throw new Error('Relative path is required for saveConfigContent');
   const response = await authenticatedFetch(`${API_BASE_URL}/configs/content/${encodeURIComponent(relativePath)}`, {
     method: 'POST',
-    headers: { 'Content-Type': 'text/plain' },
+    headers: { 'Content-Type': 'text/plain', ...(etag ? { 'If-Match': etag } : {}) },
     body: content,
   });
   return handleApiResponse(response);

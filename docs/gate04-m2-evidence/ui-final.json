@@ -1,0 +1,10 @@
+{
+  "passed": true,
+  "workflow": {
+    "bundled_read_only": true,
+    "private_copy_edit_save_refresh_reopen": true,
+    "exact_bytes": true,
+    "Unicode_spaces": true,
+    "local_editor_bundle": true
+  }
+}

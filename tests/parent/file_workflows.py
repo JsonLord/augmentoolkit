@@ -66,3 +66,72 @@ def input_workflow(page, origin, token):
         "Unicode_spaces": True,
         "refresh_requires_unlock": True,
     }
+
+
+def config_workflow(page, origin, token):
+    """Read bundled YAML, copy, edit, save, refresh, reopen and compare bytes."""
+    external_requests = []
+
+    def record_request(request):
+        if request.url.startswith(
+            ("http://", "https://")
+        ) and not request.url.startswith(origin + "/"):
+            external_requests.append(request.url.split("?")[0])
+
+    page.on("request", record_request)
+    page.goto(origin + "/configs", wait_until="networkidle")
+    unlock(page, token)
+    page.get_by_role("link", name="synthetic-config", exact=True).click()
+    page.get_by_text(
+        "Read-only bundled template. Create a private copy to edit.", exact=True
+    ).wait_for()
+    assert page.get_by_role("button", name="Save", exact=True).is_disabled()
+    page.get_by_role("button", name="Create private copy", exact=True).click()
+    name = "Private ü configuration.yaml"
+    page.get_by_label("Private YAML filename").fill(name)
+    page.get_by_role("button", name="Create copy", exact=True).click()
+    page.get_by_text(
+        "Private editable configuration; saved in private ephemeral storage.",
+        exact=True,
+    ).wait_for()
+    editor = page.get_by_role("textbox", name="Configuration YAML", exact=True)
+    editor.wait_for()
+    editor.focus()
+    page.keyboard.press("Control+a")
+    expected = "title: Synthetic ü configuration\nvalue: edited privately\n"
+    page.keyboard.insert_text(expected)
+    with page.expect_response(
+        lambda r: (
+            "/configs/content/" in r.url
+            and r.request.method == "POST"
+            and r.status == 200
+        )
+    ):
+        page.get_by_role("button", name="Save", exact=True).click()
+    page.reload(wait_until="networkidle")
+    unlock(page, token)
+    page.get_by_text(
+        "Private editable configuration; saved in private ephemeral storage.",
+        exact=True,
+    ).wait_for()
+    page.goto(origin + "/configs", wait_until="networkidle")
+    unlock(page, token)
+    page.get_by_text(name, exact=True).dblclick()
+    page.get_by_role("textbox", name="Configuration YAML", exact=True).wait_for()
+    from urllib.parse import quote
+
+    response = page.request.get(
+        origin + "/configs/content/" + quote(name),
+        headers={"Authorization": "Bearer " + token},
+    )
+    assert response.status == 200 and response.body() == expected.encode()
+    assert page.get_by_role("button", name="Save", exact=True).is_disabled()
+    page.remove_listener("request", record_request)
+    assert not external_requests, external_requests
+    return {
+        "bundled_read_only": True,
+        "private_copy_edit_save_refresh_reopen": True,
+        "exact_bytes": True,
+        "Unicode_spaces": True,
+        "local_editor_bundle": True,
+    }

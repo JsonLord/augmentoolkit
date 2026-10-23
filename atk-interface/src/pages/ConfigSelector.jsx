@@ -220,7 +220,8 @@ function ConfigSelector() {
     setActionStatus({ message: '', error: false, success: false }); // Clear status on refresh
 
     try {
-      const structure = await fetchConfigStructure();
+      const [structure, aliases] = await Promise.all([fetchConfigStructure(), fetchAvailableConfigAliases()]);
+      setAvailableAliases(aliases);
       let adaptedData = adaptApiDataToNodeData(structure);
 
       // Sort top-level items (folders first, then alphabetically)
@@ -782,6 +783,11 @@ function ConfigSelector() {
 
       </div> {/* End Main Content Wrapper */}
 
+
+      <section className="p-4" aria-label="Bundled templates">
+        <h2>Bundled templates (read-only)</h2>
+        {availableAliases.map(alias => <div key={alias}><Link to={`/configs/${encodeURIComponent(alias)}`}>{alias}</Link></div>)}
+      </section>
 
       {/* --- Modals --- */}
       {/* Modals remain outside the centered content, possibly covering the whole screen */}
