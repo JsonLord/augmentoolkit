@@ -33,4 +33,4 @@ USER atk
 EXPOSE 7860
 HEALTHCHECK --interval=30s --timeout=5s CMD python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:7860/health',timeout=3)"
 # One ASGI listener; the parent explicitly enters the mounted /ocr lifespan.
-CMD ["uvicorn", "api:app", "--host", "0.0.0.0", "--port", "7860", "--workers", "1", "--no-access-log", "--limit-concurrency", "8"]
+CMD ["uvicorn", "api:app", "--host", "0.0.0.0", "--port", "7860", "--workers", "1", "--no-access-log", "--limit-concurrency", "32"]

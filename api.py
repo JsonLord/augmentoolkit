@@ -823,24 +823,33 @@ for error_type in QUEUE_ERRORS:
 
 FRONTEND_DIST_DIR = SOURCE_ROOT / "atk-interface/dist"
 
+# React document routes only. Data routes above always win; unknown API paths
+# and missing assets must never become a successful HTML response.
+FRONTEND_PAGES = {"", "inputs", "outputs", "configs", "monitor", "logs", "chat"}
+FRONTEND_DETAIL_PAGES = {"configs", "logs"}
+FRONTEND_RESERVED_IDS = {"structure", "content", "upload", "download", "directory", "move", "duplicate"}
+
 @app.get("/{full_path:path}", include_in_schema=False)
 async def serve_frontend(full_path: str):
-    # API typos must not masquerade as successful HTML responses.
-    if full_path.split("/", 1)[0] in {"pipelines", "tasks", "jobs", "inputs", "outputs", "configs", "logs", "llm"}:
+    parts = full_path.rstrip("/").split("/")
+    page = full_path.rstrip("/") in FRONTEND_PAGES or (
+        len(parts) == 2
+        and parts[0] in FRONTEND_DETAIL_PAGES
+        and parts[1] not in FRONTEND_RESERVED_IDS
+        and parts[1] not in {"", ".", ".."}
+    )
+    if page:
+        index_html = FRONTEND_DIST_DIR / "index.html"
+        if index_html.is_file():
+            return FileResponse(index_html)
+        if not full_path:
+            return {"status": "ok", "message": "Augmentoolkit API is running (frontend not built)."}
+        raise HTTPException(404, "Frontend not built")
+
+    # Only the Vite assets namespace may serve files; it has no SPA fallback.
+    if not full_path.startswith("assets/"):
         raise HTTPException(404, "Not found")
     file_path = get_safe_path(FRONTEND_DIST_DIR, full_path)
     if file_path.is_file():
         return FileResponse(file_path)
-
-    assets_path = get_safe_path(FRONTEND_DIST_DIR, "assets/" + full_path)
-    if assets_path.is_file():
-        return FileResponse(assets_path)
-
-    index_html = FRONTEND_DIST_DIR / "index.html"
-    if index_html.is_file():
-        return FileResponse(index_html)
-
-    if not full_path or full_path == "/":
-        return {"status": "ok", "message": "Augmentoolkit API is running (frontend not built)."}
-
     raise HTTPException(status_code=404, detail="Not found")
