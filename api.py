@@ -33,6 +33,7 @@ from typing import List, Optional, Dict, Any
 from pydantic import BaseModel, Field
 from fastapi.middleware.cors import CORSMiddleware
 
+import input_files
 from app_auth import verify_token
 from app_storage import confined_path, data_directory, StorageViolation, normalize_mutable_paths
 from queue_readiness import QUEUE_ERRORS, require_queue_ready, require_job_execution
@@ -778,13 +779,7 @@ def get_output_structure(relative_path: str = "."):
 )
 @router.get("/inputs/structure/", include_in_schema=False)
 def get_input_structure(relative_path: str = "."):
-    try:
-        resolved_path = (INPUTS_DIR / relative_path).resolve()
-        resolved_path.relative_to(INPUTS_DIR)
-    except ValueError:
-        raise HTTPException(status_code=403, detail="Path traversal detected")
-
-    return handle_get_structure(INPUTS_DIR, relative_path)
+    return input_files.tree(INPUTS_DIR, relative_path)
 
 
 @router.get(
@@ -804,6 +799,37 @@ def get_config_structure(relative_path: str = "."):
 
 
 # Register protected routes before the mount and SPA catch-all.
+@router.post("/inputs/upload/{relative_path:path}")
+def upload_inputs(relative_path: str, files: List[UploadFile] = File(...)):
+    return input_files.upload(INPUTS_DIR, relative_path, files)
+
+
+@router.get("/inputs/download/{relative_path:path}")
+def download_input(relative_path: str):
+    return input_files.download(INPUTS_DIR, relative_path)
+
+
+@router.post("/inputs/directory")
+def create_input_directory(request: CreateDirectoryRequest):
+    return input_files.create_directory(INPUTS_DIR, request.relative_path)
+
+
+@router.post("/inputs/move")
+def move_input(request: MoveItemRequest):
+    return input_files.move(INPUTS_DIR, request.source_relative_path, request.destination_relative_path)
+
+
+@router.delete("/inputs", include_in_schema=False)
+def delete_input_root():
+    return input_files.delete(INPUTS_DIR, ".")
+
+
+@router.delete("/inputs/{relative_path:path}")
+def delete_input(relative_path: str):
+    return input_files.delete(INPUTS_DIR, relative_path)
+
+
+app.add_middleware(input_files.InputUploadLimit)
 app.include_router(router)
 app.mount("/ocr", ocr_app)
 

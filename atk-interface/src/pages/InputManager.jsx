@@ -114,6 +114,9 @@ function InputManager() {
 
     // Move/Drag State
     const [isMoving, setIsMoving] = useState(false);
+    const [isRenameOpen, setIsRenameOpen] = useState(false);
+    const [renameValue, setRenameValue] = useState('');
+    const [renameError, setRenameError] = useState('');
     const [moveError, setMoveError] = useState(null);
 
     // State for shake animation trigger
@@ -280,7 +283,7 @@ function InputManager() {
       //     setNewlyCreatedItemId(targetPath);
       // }
       console.log("LOG: handleUpload BEFORE refreshInputData call");
-      refreshInputData(); // Refresh data after upload
+      await refreshInputData(); // Refresh data after upload
       console.log("LOG: handleUpload AFTER refreshInputData call (refresh initiated)");
     }, [refreshInputData]);
 
@@ -398,7 +401,7 @@ function InputManager() {
              const firstNodeId = selectedNodes[0].id;
              const firstNode = treeRef.current?.get(firstNodeId);
              const parent = firstNode?.parent;
-             if (parent) {
+             if (parent?.data?.relativePath) {
                  parentPath = parent.data.relativePath;
                  parentNode = parent; // Get the parent node
              } else {
@@ -469,10 +472,15 @@ function InputManager() {
                 let filename = node.name;
                 const disposition = response.headers.get('content-disposition');
                 if (disposition && disposition.indexOf('attachment') !== -1) {
+                    const encodedName = /filename\*=UTF-8''([^;]+)/i.exec(disposition);
+                    if (encodedName) {
+                        try { filename = decodeURIComponent(encodedName[1]); } catch { filename = node.name; }
+                    } else {
                     const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
                     const matches = filenameRegex.exec(disposition);
                     if (matches != null && matches[1]) {
                         filename = matches[1].replace(/['"]/g, '');
+                    }
                     }
                 }
                  // If it's a directory download, API likely sends a zip
@@ -619,7 +627,7 @@ function InputManager() {
              const firstNodeId = selectedNodes[0].id;
              const firstNode = treeRef.current?.get(firstNodeId);
              const parent = firstNode?.parent;
-             if (parent) {
+             if (parent?.data?.relativePath) {
                  target = parent.data.relativePath;
                  targetNode = parent; // Target is the parent node
              } else {
@@ -713,7 +721,7 @@ function InputManager() {
     // Define the background click handler similar to ConfigSelector
     const handleBackgroundClick = useCallback((e) => {
         // Don't clear if a modal is open
-        if (isDeleteModalOpen || isCreateFolderModalOpen) return;
+        if (isDeleteModalOpen || isCreateFolderModalOpen || isRenameOpen) return;
 
         const clickedOnRow = e.target.closest('[role="treeitem"]');
         const clickedOnScrollbar = e.target.closest('.simplebar-scrollbar'); // Adjust if needed
@@ -733,7 +741,7 @@ function InputManager() {
                 setLastUploadedNames([]); // Also clear search list
             }
         }
-    }, [isDeleteModalOpen, isCreateFolderModalOpen]);
+    }, [isDeleteModalOpen, isCreateFolderModalOpen, isRenameOpen]);
 
     return (
         // Outer div for dropzone and background click handling, no padding here
@@ -741,10 +749,7 @@ function InputManager() {
             <input
               {...getInputProps({
                 multiple: true,
-                // Enable directory uploads (may require zipping)
-                webkitdirectory: "true",
-                mozdirectory: "true",
-                directory: "true",
+                // File picker accepts files; dropped folders keep existing ZIP handling.
               })}
             />
 
@@ -764,6 +769,11 @@ function InputManager() {
                 <div className="flex justify-between items-center mb-4 bg-gray-900 bg-opacity-80 backdrop-blur-sm p-4 rounded-t-lg border-b border-gray-700">
                     <h1 className="text-2xl font-bold text-gray-100">Input Manager</h1>
                     <div className="flex items-center gap-2">
+                        <button type="button" data-action-button="true"
+                            className={actionButtonClass} disabled={selectedNodes.length !== 1}
+                            onClick={() => { setRenameValue(selectedNodes[0].name); setRenameError(''); setIsRenameOpen(true); }}>
+                            Rename
+                        </button>
                         <EnhancedButton
                            onClick={openCreateFolderModal}
                            className={`${actionButtonClass} hover:bg-green-600 ${selectedNodes.length > 0 ? 'opacity-75' : ''}`}
@@ -907,6 +917,22 @@ function InputManager() {
 
             </div> { /* End Main Content Wrapper */ }
 
+            <Modal isOpen={isRenameOpen} onClose={() => setIsRenameOpen(false)} title="Rename input">
+                <label htmlFor="input-rename">New name</label>
+                <input id="input-rename" value={renameValue} onChange={e => setRenameValue(e.target.value)} className="text-black" />
+                <p role="alert">{renameError}</p>
+                <button type="button" onClick={async () => {
+                    if (!renameValue || renameValue.includes('/') || renameValue.includes('\\') || ['.', '..'].includes(renameValue)) {
+                        setRenameError('Enter a plain file or folder name.'); return;
+                    }
+                    try {
+                        const source = selectedNodes[0].relativePath;
+                        const parent = source.includes('/') ? source.slice(0, source.lastIndexOf('/') + 1) : '';
+                        await moveInputItem(source, parent + renameValue);
+                        setIsRenameOpen(false); setSelectedNodes([]); await refreshInputData();
+                    } catch (e) { setRenameError(e.message || 'Rename failed'); }
+                }}>Save name</button>
+            </Modal>
             {/* --- Modals --- */}            
             {/* Modals remain outside the centered content */}
             <Modal 
