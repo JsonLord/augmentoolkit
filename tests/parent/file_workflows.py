@@ -126,6 +126,13 @@ def config_workflow(page, origin, token):
     )
     assert response.status == 200 and response.body() == expected.encode()
     assert page.get_by_role("button", name="Save", exact=True).is_disabled()
+    page.goto(origin + "/configs", wait_until="networkidle")
+    unlock(page, token)
+    page.get_by_text(name, exact=True).click()
+    page.get_by_role("button", name="Create Folder", exact=True).click()
+    page.get_by_label("Folder Name:").fill("Synthetic config folder ü")
+    page.get_by_role("button", name="Create", exact=True).click()
+    page.get_by_text("Synthetic config folder ü", exact=True).wait_for()
     page.remove_listener("request", record_request)
     assert not external_requests, external_requests
     return {
@@ -134,4 +141,5 @@ def config_workflow(page, origin, token):
         "exact_bytes": True,
         "Unicode_spaces": True,
         "local_editor_bundle": True,
+        "directory_beside_selected_root_file": True,
     }

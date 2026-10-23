@@ -459,7 +459,7 @@ function ConfigSelector() {
       const firstNodeId = selectedNodes[0].id;
       const firstNode = treeRef.current?.get(firstNodeId);
       const parent = firstNode?.parent;
-      if (parent) {
+      if (parent?.data?.relativePath) {
           parentPath = parent.data.relativePath;
           parentNode = parent; // Get the parent node
       } else {

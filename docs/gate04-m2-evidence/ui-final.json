@@ -5,6 +5,8 @@
     "private_copy_edit_save_refresh_reopen": true,
     "exact_bytes": true,
     "Unicode_spaces": true,
-    "local_editor_bundle": true
-  }
+    "local_editor_bundle": true,
+    "directory_beside_selected_root_file": true
+  },
+  "fixture_runtime": "Combined image augmentoolkit-m2 with final freshly built frontend mounted read-only; no OCR inference in this UI-only run"
 }
