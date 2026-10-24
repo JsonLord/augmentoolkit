@@ -1,0 +1,36 @@
+name: Native factual offline import
+on:
+  push:
+    paths:
+      - 'generation/core_pipelines/factual_generation_individual/**'
+      - 'requirements/native-pilot/**'
+      - 'tools/native_factual_preflight.py'
+      - '.github/workflows/native-factual-preflight.yml'
+  pull_request:
+    paths:
+      - 'generation/core_pipelines/factual_generation_individual/**'
+      - 'requirements/native-pilot/**'
+      - 'tools/native_factual_preflight.py'
+      - '.github/workflows/native-factual-preflight.yml'
+permissions:
+  contents: read
+jobs:
+  offline-import:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m venv /tmp/native-worker
+      - run: /tmp/native-worker/bin/pip install --require-hashes -r requirements/native-pilot/worker.lock
+      - run: /tmp/native-worker/bin/python tools/native_factual_preflight.py --evidence /tmp/native-factual-preflight.json
+        env:
+          MPLCONFIGDIR: /tmp/native-matplotlib
+          XDG_CACHE_HOME: /tmp/native-cache
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: native-import-only-evidence
+          path: /tmp/native-factual-preflight.json

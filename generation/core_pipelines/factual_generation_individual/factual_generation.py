@@ -1,7 +1,6 @@
 import re
 import sys
 import os
-import nltk
 
 from augmentoolkit.generation_functions.cleanup import cleanup_dir
 from augmentoolkit.generation_functions.hashing_and_ordering import hash_input_list
@@ -47,7 +46,6 @@ from generation.core_pipelines.factual_generation_individual.factual_generation_
 )
 from redis_config import set_progress
 
-nltk.download("punkt", quiet=True)
 from augmentoolkit.generation_functions.process_multiturn_functions import (
     extract_conversation,
 )
@@ -118,11 +116,11 @@ async def generate_factual_qa_dataset(
     subset_size,
     double_check_counter,
     output_dir,
-    anonymize=False,
     cost_per_million_small_input,
     cost_per_million_small_output,
     cost_per_million_large_input,
     cost_per_million_large_output,
+    anonymize=False,
     read_files_manually=True,  # only set to false if it is being used as a node, we use kwargs to escape the default problem of clunkiness
     text_chunks_passed_in=[],  # also having node-based things means we need to return something doesn't it. May need to add additional args here. Do we assume that it's a proper dict? No?
     do_meta_datagen=False,
@@ -473,7 +471,8 @@ async def generate_factual_qa_dataset(
             keep_folder_structure=True,
             input_dir=input_dir,
             output_dir=chunking_output_dir if chunking_output_dir else output_dir,
-        , anonymize=anonymize)
+            anonymize=anonymize,
+        )
         if use_subset:
             sentence_chunks = subset_text_list(
                 subset_size=subset_size, text_list=sentence_chunks, seed=seed

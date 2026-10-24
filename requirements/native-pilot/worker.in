@@ -1,0 +1,11 @@
+# Isolated native API-generation worker; independent of frontend-only pins.
+-r extras.in
+openai
+cohere
+httpx
+requests
+huggingface-hub==0.36.0
+PyYAML
+pydantic
+redis
+tqdm

@@ -1,0 +1,9 @@
+# Isolated native factual worker extras; never installed in the frontend image.
+nltk
+beautifulsoup4
+matplotlib
+chardet
+Jinja2
+datasets>=3.6,<5
+
+tabulate
