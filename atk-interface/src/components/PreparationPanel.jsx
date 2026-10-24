@@ -64,8 +64,14 @@ export default function PreparationPanel({ sourcePath, mode = 'monitor' }) {
     </>}
     {error && <p role="alert">Not available: {error}</p>}
     {jobs.map(job => <article key={job.job_id} className="border p-2 my-2" aria-label={`Preparation ${job.job_id}`}>
-      <p>Job {job.job_id}: <strong>{job.status}</strong> — {job.phase}; {job.record_count} chunks</p>
+      <p>Job {job.job_id}: <strong>{job.status}</strong> — {job.phase}; {job.record_count} chunks; durability: {job.durability || "LOCAL_ONLY"}</p>
       {job.error && <p>{job.error}</p>}
+      {job.persistence_error && <p role="alert">{job.persistence_error}</p>}
+      {job.status === 'PERSISTENCE_FAILED' && <button disabled={busy} onClick={async () => {
+        setBusy(true);
+        try { await request('/' + job.job_id + '/retry-persistence', {method: 'POST'}); }
+        catch (e) { setError(e.message); } finally { setBusy(false); }
+      }}>Retry persistence</button>}
       {job.status === 'COMPLETED' && <>
         <button onClick={async () => { try { setPreview((await request('/' + job.job_id + '/preview')).records); } catch (e) { setError(e.message); } }}>Preview JSONL</button>
         {' '}<button onClick={() => download(job.job_id, 'records.jsonl')}>Download JSONL</button>

@@ -897,6 +897,8 @@ def require_preparation():
 
 @router.post("/pilot/preparation", status_code=202)
 def submit_preparation(request: PreparationRequest):
+    if request.sensitivity != "D0":
+        raise HTTPException(400, "Explicit D0 classification required")
     return require_preparation().submit(INPUTS_DIR, CONFIGS_DIR, request.source_path, request.config_path, request.sensitivity)
 
 
@@ -908,6 +910,11 @@ def list_preparations():
 @router.get("/pilot/preparation/{job_id}")
 def preparation_status(job_id: str):
     return require_preparation().status(job_id)
+
+
+@router.post("/pilot/preparation/{job_id}/retry-persistence", status_code=202)
+def retry_preparation_persistence(job_id: str):
+    return require_preparation().retry_persistence(job_id)
 
 
 @router.get("/pilot/preparation/{job_id}/outputs")

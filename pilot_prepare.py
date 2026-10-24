@@ -12,6 +12,7 @@ import threading
 import time
 import unicodedata
 import uuid
+from pathlib import Path
 
 from fastapi import HTTPException
 
@@ -61,6 +62,8 @@ def load_state(directory):
         value = json.loads(path.read_bytes())
         if value.get("job_id") != directory.name or value.get("status") not in {
             "RUNNING",
+            "PERSISTENCE_PENDING",
+            "PERSISTENCE_FAILED",
             "FAILED",
             "COMPLETED",
         }:
@@ -208,8 +211,10 @@ def execute(directory, output):
     )
     write_json(output / "manifest.json", manifest)
     state.update(
-        status="COMPLETED",
-        phase="ready",
+        status="PERSISTENCE_PENDING"
+        if state.get("durability") == "PENDING"
+        else "COMPLETED",
+        phase="persisting_outputs" if state.get("durability") == "PENDING" else "ready",
         record_count=len(rows),
         artifact_hashes={
             "records.jsonl": digest(data),
@@ -226,6 +231,10 @@ class Preparation:
         self.lock = threading.RLock()
         self.active = None
         self.runtime_errors = {}
+        from pilot_storage import configured
+
+        self.persistence = configured()
+        self.recovery_error = None
         self.root = data_directory("pilot_state")
         self.output = data_directory("outputs/preparation")
         for directory in self.root.iterdir():
@@ -246,8 +255,26 @@ class Preparation:
                     )
                     write_json(directory / "state.json", state)
                     shutil.rmtree(self.output / directory.name, ignore_errors=True)
-                for name in ["source.txt", "config.yaml"]:
-                    (directory / name).unlink(missing_ok=True)
+                if state["status"] == "PERSISTENCE_PENDING":
+                    state.update(
+                        status="PERSISTENCE_FAILED",
+                        phase="interrupted",
+                        persistence_error="Interrupted Dataset persistence; explicit retry required",
+                    )
+                    write_json(directory / "state.json", state)
+                if state["status"] not in {"PERSISTENCE_PENDING", "PERSISTENCE_FAILED"}:
+                    for name in ["source.txt", "config.yaml"]:
+                        (directory / name).unlink(missing_ok=True)
+        if self.persistence:
+            from augmentoolkit.hf_persistence.hf_manager import HFHubError
+
+            try:
+                revision, jobs = self.persistence.discover()
+                for job in jobs:
+                    if not (self.root / job).exists():
+                        self.persistence.recover(job, revision)
+            except HFHubError:
+                self.recovery_error = "Dataset recovery unavailable"
 
     def status(self, job_id):
         with self.lock:
@@ -297,11 +324,32 @@ class Preparation:
                 "config_revision": digest(cfg),
                 "record_count": 0,
                 "created_at": time.time(),
+                "code_revision": os.environ.get("OCR_SOURCE_REVISION", "unknown"),
+                "durability": "PENDING" if self.persistence else "LOCAL_ONLY",
             }
             try:
                 atomic(directory / "source.txt", raw)
                 atomic(directory / "config.yaml", cfg)
                 write_json(directory / "state.json", state)
+                if self.persistence:
+                    state.update(
+                        status="PERSISTENCE_PENDING", phase="persisting_inputs"
+                    )
+                    write_json(directory / "state.json", state)
+                    self.active = job_id
+                    try:
+                        threading.Thread(
+                            target=self.durable_start,
+                            args=(directory, state),
+                            daemon=True,
+                        ).start()
+                    except RuntimeError:
+                        self.active = None
+                        shutil.rmtree(directory, ignore_errors=True)
+                        raise HTTPException(
+                            503, "Preparation supervision unavailable"
+                        ) from None
+                    return state
                 process = subprocess.Popen(
                     [
                         sys.executable,
@@ -311,6 +359,7 @@ class Preparation:
                         job_id,
                         str(os.getpid()),
                     ],
+                    cwd=Path(__file__).resolve().parent,
                     stdin=subprocess.DEVNULL,
                     stdout=subprocess.DEVNULL,
                     stderr=subprocess.DEVNULL,
@@ -341,6 +390,101 @@ class Preparation:
                 ) from None
             return state
 
+    def durable_start(self, directory, state):
+        from augmentoolkit.hf_persistence.hf_manager import HFHubError
+
+        try:
+            receipt = self.persistence.prepare(state, directory)
+            state.update(status="RUNNING", phase="chunking", remote_receipt=receipt)
+            state.pop("persistence_error", None)
+            state.pop("persistence_error_code", None)
+            write_json(directory / "state.json", state)
+            process = subprocess.Popen(
+                [
+                    sys.executable,
+                    "-m",
+                    "pilot_prepare",
+                    "--worker",
+                    state["job_id"],
+                    str(os.getpid()),
+                ],
+                cwd=Path(__file__).resolve().parent,
+                stdin=subprocess.DEVNULL,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+            )
+            self.watch(state["job_id"], process)
+        except (HFHubError, OSError, HTTPException) as error:
+            with self.lock:
+                state.update(
+                    status="PERSISTENCE_FAILED",
+                    phase="persisting_inputs",
+                    durability="UNVERIFIED",
+                    persistence_error="Dataset input/configuration persistence failed; explicit retry required",
+                    persistence_error_code=type(error).__name__
+                    if isinstance(error, HFHubError)
+                    else "LOCAL_STORAGE_ERROR",
+                )
+                write_json(directory / "state.json", state)
+                self.active = None
+
+    def retry_persistence(self, job_id):
+        with self.lock:
+            if not self.persistence:
+                raise HTTPException(503, "Dataset persistence is not enabled")
+            if self.active is not None:
+                raise HTTPException(409, "A preparation task is active")
+            self.status(job_id)
+            directory = self.root / job_id
+            state = load_state(directory)
+            if state["status"] != "PERSISTENCE_FAILED":
+                raise HTTPException(409, "Only failed persistence can be retried")
+            self.active = job_id
+            state.update(status="PERSISTENCE_PENDING", durability="PENDING")
+            write_json(directory / "state.json", state)
+            target = (
+                self.persist_outputs
+                if state.get("artifact_hashes")
+                else self.durable_start
+            )
+            threading.Thread(
+                target=target, args=(directory, state), daemon=True
+            ).start()
+            return state
+
+    def persist_outputs(self, directory, state):
+        from augmentoolkit.hf_persistence.hf_manager import HFHubError
+
+        try:
+            receipt = self.persistence.finish(
+                state, directory, self.output / state["job_id"]
+            )
+            state.update(
+                status="COMPLETED",
+                phase="ready",
+                durability="VERIFIED",
+                remote_receipt=receipt,
+            )
+            state.pop("persistence_error", None)
+            state.pop("persistence_error_code", None)
+            write_json(directory / "state.json", state)
+            for name in ["source.txt", "config.yaml"]:
+                (directory / name).unlink(missing_ok=True)
+        except (HFHubError, OSError, ValueError) as error:
+            state.update(
+                status="PERSISTENCE_FAILED",
+                phase="persisting_outputs",
+                durability="UNVERIFIED",
+                persistence_error="Dataset output/final-manifest persistence failed; explicit retry required",
+                persistence_error_code=type(error).__name__
+                if isinstance(error, HFHubError)
+                else "LOCAL_STORAGE_ERROR",
+            )
+            write_json(directory / "state.json", state)
+        finally:
+            with self.lock:
+                self.active = None
+
     def watch(self, job_id, process):
         timed_out = False
         try:
@@ -363,7 +507,8 @@ class Preparation:
                         pass
                 self.active = None
                 return
-            if timed_out or process.returncode != 0 or state["status"] != "COMPLETED":
+            expected = "PERSISTENCE_PENDING" if self.persistence else "COMPLETED"
+            if timed_out or process.returncode != 0 or state["status"] != expected:
                 state.update(
                     status="FAILED",
                     phase="failed",
@@ -373,12 +518,22 @@ class Preparation:
                 )
                 write_json(directory / "state.json", state)
                 shutil.rmtree(self.output / job_id, ignore_errors=True)
+            elif self.persistence:
+                # Hub I/O must not block status reads behind the service lock.
+                state.update(phase="persisting_outputs")
+                write_json(directory / "state.json", state)
+                threading.Thread(
+                    target=self.persist_outputs, args=(directory, state), daemon=True
+                ).start()
+                return
             for name in ["source.txt", "config.yaml"]:
                 (directory / name).unlink(missing_ok=True)
             self.active = None
 
     def list(self):
         with self.lock:
+            if self.recovery_error:
+                raise HTTPException(503, self.recovery_error)
             return [
                 self.status(p.name) for p in sorted(self.root.iterdir()) if p.is_dir()
             ]
