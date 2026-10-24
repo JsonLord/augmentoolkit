@@ -1,0 +1,28 @@
+{
+  "base_sha": "40838772461e4b6d9c908a19ed956211d36a213e",
+  "hub_operations": "MOCKED_DISK_BACKED_TRANSPORT",
+  "preparation_subprocess": "REAL",
+  "recovery_interpreter": "REAL_FRESH_PROCESS",
+  "parent_tests": {
+    "command": "python -m pytest -c pytest-ocr.ini tests/parent",
+    "passed": 306,
+    "failed": 0
+  },
+  "dataset_tests": {
+    "passed": 28
+  },
+  "repository_sync_tests": {
+    "passed": 4
+  },
+  "configured_dataset_repositories": {
+    "HF_SOURCE_REPO": null,
+    "HF_WORK_REPO": null,
+    "HF_OUTPUT_REPO": null
+  },
+  "live_dataset_writes": false,
+  "real_hf_qualification": "BLOCKED_REPOSITORY_IDS_AND_WRITE_APPROVAL",
+  "space_repository_id_sync": "WAITING_FOR_REPOSITORY_IDS",
+  "space_settings_changed": false,
+  "native_generation": "NOT_RUN",
+  "automated_release_eligible": false
+}

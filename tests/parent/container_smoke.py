@@ -332,6 +332,7 @@ def main():
             try:
                 page = browser.new_page()
                 errors = []
+                expected_response_bodies = set()
                 page.on("pageerror", lambda error: errors.append(type(error).__name__))
 
                 def browser_response(r):
@@ -344,7 +345,7 @@ def main():
                         and not bearer_present
                         and "application/json" in content_type
                     ):
-                        assert r.json() == {"detail": "Unauthorized"}
+                        expected_response_bodies.add((r.request.method, path, 401))
                         phase = "browser_locked_401"
                     # Classify only documented, JSON backend failures; a plain
                     # Uvicorn admission 503 must still fail the workload.
@@ -358,8 +359,8 @@ def main():
                         r.status == 503
                         and path in {"/tasks/queue", "/tasks/example/logs"}
                         and "application/json" in content_type
-                        and r.json() == {"detail": "Huey/Redis unavailable"}
                     ):
+                        expected_response_bodies.add((r.request.method, path, 503))
                         phase = "browser_disabled_queue_503"
                     evidence["http"].append(
                         {
@@ -432,6 +433,29 @@ def main():
                 evidence["input_manager"] = input_workflow(page, origin, token)
                 evidence["config_editor"] = config_workflow(page, origin, token)
                 evidence["preparation"] = preparation_workflow(page, origin, token)
+                # Navigation can intentionally cancel unfinished browser fetches.
+                # Check every observed locked/disabled JSON contract with a fully
+                # completed request; never make reentrant body reads in callbacks.
+                evidence["browser_json_contract_checks"] = []
+                with httpx.Client(
+                    base_url=origin, trust_env=False, timeout=10
+                ) as verifier:
+                    for method, path, status in sorted(expected_response_bodies):
+                        assert method == "GET"
+                        response = verifier.get(
+                            path, headers=headers if status == 503 else {}
+                        )
+                        assert response.status_code == status
+                        assert "application/json" in response.headers["content-type"]
+                        expected_body = {
+                            "detail": "Unauthorized"
+                            if status == 401
+                            else "Huey/Redis unavailable"
+                        }
+                        assert response.json() == expected_body
+                        evidence["browser_json_contract_checks"].append(
+                            {"path": path, "status": status, "body_verified": True}
+                        )
                 assert not errors, errors
                 evidence["browser"] = {
                     "direct_refresh_routes": PAGES,

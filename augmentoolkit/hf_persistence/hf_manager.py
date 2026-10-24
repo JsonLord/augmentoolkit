@@ -32,6 +32,18 @@ class HFHubManager:
 
         self.api = HfApi(token=self.token)
 
+    def private_dataset_head(self, repo_id):
+        from .dataset_commit import private_head
+        return private_head(self, repo_id)
+
+    def read_dataset_verified(self, repo_id, path, revision, checksum, cache_dir):
+        from .dataset_commit import read_verified
+        return read_verified(self, repo_id, path, revision, checksum, cache_dir)
+
+    def commit_dataset_verified(self, repo_id, parent_commit, files, cache_dir, mutable=()):
+        from .dataset_commit import commit_verified
+        return commit_verified(self, repo_id, parent_commit, files, cache_dir, mutable)
+
     def check_auth(self) -> Dict[str, Any]:
         """Verifies Hugging Face authentication token."""
         if not self.token:
