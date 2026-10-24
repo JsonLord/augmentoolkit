@@ -518,3 +518,19 @@ def test_server_side_parent_commit_conflict_is_typed_and_sanitized(setup, monkey
             root / "hf_dataset_cache",
         )
     assert "secret" not in str(error.value)
+
+
+def test_child_imports_trusted_source_not_callers_working_directory(
+    setup, tmp_path, monkeypatch
+):
+    c, _root, _hub = setup
+    untrusted = tmp_path / "untrusted-cwd"
+    untrusted.mkdir()
+    (untrusted / "pilot_prepare.py").write_text(
+        "raise RuntimeError('untrusted module must never execute')\n"
+    )
+    monkeypatch.chdir(untrusted)
+    job = submit(c)
+    state = terminal(c, job)
+    assert state["status"] == "COMPLETED", state
+    assert state["durability"] == "VERIFIED"

@@ -5,11 +5,11 @@
   "recovery_interpreter": "REAL_FRESH_PROCESS",
   "parent_tests": {
     "command": "python -m pytest -c pytest-ocr.ini tests/parent",
-    "passed": 306,
+    "passed": 307,
     "failed": 0
   },
   "dataset_tests": {
-    "passed": 28
+    "passed": 29
   },
   "repository_sync_tests": {
     "passed": 4
@@ -24,5 +24,6 @@
   "space_repository_id_sync": "WAITING_FOR_REPOSITORY_IDS",
   "space_settings_changed": false,
   "native_generation": "NOT_RUN",
-  "automated_release_eligible": false
+  "automated_release_eligible": false,
+  "trusted_worker_import_regression": "PASS_REAL_CHILD_WITH_CONFLICTING_CALLER_MODULE"
 }
