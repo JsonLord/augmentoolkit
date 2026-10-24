@@ -1,0 +1,15 @@
+{
+  "native_import": "PASS",
+  "pipeline_id": "factual-gen-indiv-pipeline",
+  "runtime_network_attempts": 0,
+  "runtime_downloads": 0,
+  "missing_assets": [
+    "nltk:punkt_tab/english (must be provisioned and hashed at worker build)"
+  ],
+  "seconds": 1.524,
+  "peak_rss_bytes": 245092352,
+  "real_generation": "NOT_RUN",
+  "hf_jobs_launched": 0,
+  "provider_calls": 0,
+  "ready_for_live_generation": false
+}
