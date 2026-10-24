@@ -12,6 +12,7 @@ import threading
 import time
 import unicodedata
 import uuid
+from pathlib import Path
 
 from fastapi import HTTPException
 
@@ -358,6 +359,7 @@ class Preparation:
                         job_id,
                         str(os.getpid()),
                     ],
+                    cwd=Path(__file__).resolve().parent,
                     stdin=subprocess.DEVNULL,
                     stdout=subprocess.DEVNULL,
                     stderr=subprocess.DEVNULL,
@@ -406,6 +408,7 @@ class Preparation:
                     state["job_id"],
                     str(os.getpid()),
                 ],
+                cwd=Path(__file__).resolve().parent,
                 stdin=subprocess.DEVNULL,
                 stdout=subprocess.DEVNULL,
                 stderr=subprocess.DEVNULL,
